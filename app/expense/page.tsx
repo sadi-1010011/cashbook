@@ -9,7 +9,7 @@ export default function Expense() {
 
             <h2 className="capitalize font-bold text-lg my-2">Spend history</h2>
 
-                <div className={styles.expense_viewerwrapper}>
+                <div className={styles.currenttab_viewerwrapper}>
                     <div>daily</div>
                     <div className={styles.active_tab}>weekly</div>
                     <div>monthly</div>

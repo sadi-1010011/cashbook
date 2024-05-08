@@ -11,7 +11,7 @@
     box-shadow: 0 4px 10px -1px rgba(0,0,0,0.1), 0 2px 6px -2px rgba(0,0,0,0.2);
 }
 
-.expense_viewerwrapper {
+.currenttab_viewerwrapper {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -23,7 +23,7 @@
     /* background-color: #565656e3; */
 }
 
-.expense_viewerwrapper > div {
+.currenttab_viewerwrapper > div {
     background-color: #201f1fd2;
     color: #fff;
     padding: 14px 1rem;

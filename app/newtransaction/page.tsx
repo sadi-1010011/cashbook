@@ -7,7 +7,13 @@ export default function NewTransaction() {
         <div className={styles.newtrans_container}>
             <Header />
             <div className={styles.newamount_card}>
-                <h3 className="capitalize text-lg font-bold">Expense</h3>
+                <div className="w-full flex">
+                <div className={styles.currenttab_viewerwrapper}>
+                    <div className={styles.active_tab}>Expense</div>
+                    <div>Income</div>
+                </div>
+                </div>
+
                 <input className={styles.newinputamt} type="number" placeholder="$ Amount.." />
                 
                 <div className={styles.trans_catogorywrapper}>
@@ -24,7 +30,7 @@ export default function NewTransaction() {
                     <textarea className={styles.newdescription} placeholder="descripion.."></textarea>
                 </div>
             </div>
-            <Link href="/expense">
+            <Link href="/dashboard">
                 <button className="text-green-600 py-5 font-bold">Save</button>
             </Link>
         </div>
