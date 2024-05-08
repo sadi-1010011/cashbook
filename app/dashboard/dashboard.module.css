@@ -1,0 +1,48 @@
+/* styles for Dashboard page */
+
+.page_container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow-y: scroll;
+    height: 90%;
+    background-color: #f6f5f5fe;
+}
+
+.balance_card {
+    display: flex;
+    justify-content: space-between;
+    width: 80%;
+    margin: 2rem auto;
+    padding: 3.4rem 2rem;
+    background-color: #121212e2;
+    font-size: 2rem;
+    font-weight: bolder;
+    border-radius: 22px;
+    backdrop-filter: blur(2px);
+    box-shadow: 0 4px 10px -1px rgba(0,0,0,0.1), 0 2px 6px -2px rgba(0,0,0,0.2);
+}
+
+.balance_inr {
+    font-size: 1.12rem;
+    line-height: 1.7;
+}
+
+.recentexpenses_container {
+    width: 100%;
+    padding: 1rem 12px;
+}
+
+.recentexpense_card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 85%;
+    margin: 1.35rem auto;
+    padding: 1.72rem 1.82rem;
+    cursor: pointer;
+    background-color: #f1f1f1;
+    border-radius: 8px;
+    border: 0.7px solid #eee;
+    box-shadow: 0 4px 10px -1px rgba(0,0,0,0.1), 0 2px 6px -2px rgba(0,0,0,0.2);
+}

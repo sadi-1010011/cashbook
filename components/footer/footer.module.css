@@ -1,0 +1,15 @@
+/* styles for footer component */
+
+.common_footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    position: fixed;
+    bottom: 0px;
+    width: 100%;
+    padding: 20px 0;
+    z-index: 99;
+    border-top-left-radius: 1.8em;
+    border-top-right-radius: 1.8em;
+    box-shadow: 0 -4px 10px -5px rgba(115,115,115,0.75);
+}
