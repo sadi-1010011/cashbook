@@ -26,7 +26,7 @@ export default function NewTransaction() {
                 </div>
 
                 <div>
-                    <h3 className="capitalize text-lg font-bold">Description</h3>
+                    <h3 className="capitalize text-lg font-bold px-4">Description</h3>
                     <textarea className={styles.newdescription} placeholder="descripion.."></textarea>
                 </div>
             </div>

@@ -1,2 +1,19 @@
 /* styles for stats page */
 
+.graphbar {
+    position: relative;
+    color: #000;
+    border-radius: 0.75rem;
+    padding: 5px 12px;
+    font-size: 12px;
+    text-transform: capitalize;
+    /* background-color: #fff; */
+}
+
+.graphbar_name {
+    position:absolute;
+    color: white;
+    font-weight: 500;
+    left: 0;
+    top: 12px;
+}
