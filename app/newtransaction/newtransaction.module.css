@@ -22,6 +22,7 @@
     margin: 0.35rem auto;
     padding: 1rem 0.8rem;
     font-size: 2rem;
+    font-weight: bolder;
     background-color: transparent;
     border-bottom: 2px solid #000;
     border-bottom-left-radius: 4px;
@@ -88,8 +89,8 @@
 }
 
 .currenttab_viewerwrapper > div {
-    background-color: #201f1fd2;
-    color: #fff;
+    /* background-color: #201f1fd2;
+    color: #fff; */
     padding: 14px 1rem;
     margin: 0 1px;
     text-align: center;
@@ -98,9 +99,17 @@
     font-weight: 700;
     width: 100%;
     border-radius: 6px;
+    transition: 0.24s;
 }
 
-div.active_tab {
+/* active tab style ! */
+
+.normal_tab {
     color: #000;
     background-color: #fff;
+}
+
+.active_tab {
+    color: #fff;
+    background-color: #000;
 }
