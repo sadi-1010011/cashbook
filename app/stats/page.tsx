@@ -9,7 +9,7 @@ export default function Stats() {
             <Header />
 
             <div className="flex">
-                <div className={styles.expense_viewerwrapper}>
+                <div className={styles.currenttab_viewerwrapper}>
                     <div>daily</div>
                     <div className={styles.active_tab}>weekly</div>
                     <div>monthly</div>
@@ -79,8 +79,8 @@ export default function Stats() {
                 </div>
             </div>
 
-            <Link href="/">
-                <h4 className="text-xs text-slate-400 capitalize text-center py-1.5">See transaction history</h4>
+            <Link href="/history">
+                <h4 className="text-xs text-slate-400 capitalize text-center py-1.5 mb-4">See transaction history</h4>
             </Link>
 
         </div>

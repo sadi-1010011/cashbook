@@ -1,5 +1,6 @@
 import Header from "@/components/header/header";
 import styles from "./income.module.css";
+import TransCard from "@/components/transcard/transcard";
 
 export default function Income() {
     return (
@@ -15,50 +16,10 @@ export default function Income() {
                     <div>monthly</div>
                 </div>
 
-                <div className={styles.expense_card}>
-                    <span>income</span>
-                    <span className="font-bold text-green-500"> + 180</span>
-                </div>
+                <TransCard amount={1800} type="income" description="sallary credited" />
+                <TransCard amount={320} type="income" description="debt repayed mishal" />
+                <TransCard amount={140} type="income" description="commision from amazon affiliates" />
 
-                <div className={styles.expense_card}>
-                    <span>income</span>
-                    <span className="font-bold text-green-500"> + 320</span>
-                </div>
-
-                <div className={styles.expense_card}>
-                    <span>income</span>
-                    <span className="font-bold text-green-500"> + 1400 </span>
-                </div>
-
-                <div className={styles.expense_card}>
-                    <span>income</span>
-                    <span className="font-bold text-green-500"> + 200 </span>
-                </div>
-
-                <div className={styles.expense_card}>
-                    <span>income</span>
-                    <span className="font-bold text-green-500"> + 78 </span>
-                </div>
-
-                <div className={styles.expense_card}>
-                    <span>income</span>
-                    <span className="font-bold text-green-500"> + 50 </span>
-                </div>
-
-                <div className={styles.expense_card}>
-                    <span>income</span>
-                    <span className="font-bold text-green-500"> + 35 </span>
-                </div>
-
-                <div className={styles.expense_card}>
-                    <span>income</span>
-                    <span>rate</span>
-                </div>
-
-                <div className={styles.expense_card}>
-                    <span>expense</span>
-                    <span>rate</span>
-                </div>
             </div>
         </div>
     )

@@ -1,5 +1,6 @@
 import Header from "@/components/header/header";
 import styles from "./expense.module.css";
+import TransCard from "@/components/transcard/transcard";
 
 export default function Expense() {
     return (
@@ -15,50 +16,15 @@ export default function Expense() {
                     <div>monthly</div>
                 </div>
 
-                <div className={styles.expense_card}>
-                    <span>expense</span>
-                    <span className="font-bold text-red-500"> - 320</span>
-                </div>
-
-                <div className={styles.expense_card}>
-                    <span>expense</span>
-                    <span className="font-bold text-red-500"> - 30</span>
-                </div>
-
-                <div className={styles.expense_card}>
-                    <span>expense</span>
-                    <span className="font-bold text-red-500"> - 110</span>
-                </div>
-
-                <div className={styles.expense_card}>
-                    <span>expense</span>
-                    <span className="font-bold text-red-500"> - 320</span>
-                </div>
-
-                <div className={styles.expense_card}>
-                    <span>expense</span>
-                    <span className="font-bold text-red-500"> - 220</span>
-                </div>
-
-                <div className={styles.expense_card}>
-                    <span>expense</span>
-                    <span className="font-bold text-red-500"> - 1220</span>
-                </div>
-
-                <div className={styles.expense_card}>
-                    <span>expense</span>
-                    <span className="font-bold text-red-500"> - 380</span>
-                </div>
-
-                <div className={styles.expense_card}>
-                    <span>expense</span>
-                    <span className="font-bold text-red-500"> - 80</span>
-                </div>
-
-                <div className={styles.expense_card}>
-                    <span>expense</span>
-                    <span className="font-bold text-red-500"> - 200</span>
-                </div>
+                <TransCard amount={320} type="expense" description="Bike service" />
+                <TransCard amount={30} type="expense" description="Tea & snacks" />
+                <TransCard amount={3120} type="expense" description="rent to mishal" />
+                <TransCard amount={320} type="expense" description="tyre puncture" />
+                <TransCard amount={220} type="expense" description="mobile recharge" />
+                <TransCard amount={1400} type="expense" description="debt cleared to abhi" />
+                <TransCard amount={40} type="expense" description="dinner" />
+                <TransCard amount={200} type="expense" description="fuel" />
+              
             </div>
         </div>
     )

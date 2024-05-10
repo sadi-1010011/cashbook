@@ -18,7 +18,7 @@
     display: block;
     border: none;
     outline: none;
-    width: 80%;
+    width: 90%;
     margin: 0.35rem auto;
     padding: 1rem 0.8rem;
     font-size: 2rem;
@@ -33,14 +33,28 @@
 }
 
 .selectcatogory {
-    width: 100%;
-    padding: 1rem 0;
-    margin: 0 auto;
-    border: none;
-    outline: none;
-    font-size: 1.125rem;
-    line-height: 1.75rem;
-    background-color: transparent;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(2, auto);
+    gap: 10px;
+    margin-top: 2rem;
+}
+
+.selectcatogory > div {
+    background-color: #edecec;
+    padding: 20px 0;
+    border-radius: 8px;
+    text-align: center;
+    transition-duration: 0.22s;
+}
+
+.selectcatogory > div:hover {
+    background-color: rgb(134 239 172);
+}
+
+.selectcatogory > div:active {
+    background-color: rgb(77, 188, 117);
+    color: #fff;
 }
 
 .newdescription {
