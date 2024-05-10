@@ -1,8 +1,20 @@
+"use client"
 import Header from "@/components/header/header";
 import styles from "./newtransaction.module.css";
 import Link from "next/link";
+import { useState } from "react";
 
 export default function NewTransaction() {
+
+  const [newtransaction, setNewtransaction] = useState({
+    amount: 0,
+    catogory: "",
+    description: "",
+    transactiontype: ""
+  });
+
+  const [activetab, setActivetab] = useState(true);
+
   return (
     <div className={styles.newtrans_container}>
       <Header />
@@ -18,7 +30,12 @@ export default function NewTransaction() {
         <input
           className={styles.newinputamt}
           type="number"
+          name="amount"
           placeholder="$ Amount.."
+          onChange={ (e) => {
+            // const { value } = e.target;
+            // console.log(value);
+          }}
         />
 
         <div className={styles.trans_catogorywrapper}>
@@ -29,7 +46,7 @@ export default function NewTransaction() {
             <div>Entertains</div>
             <div>Haircut</div>
             <div>Medicine</div>
-            <div>other</div>
+            <div className="font-bold">+</div>
           </div>
         </div>
 

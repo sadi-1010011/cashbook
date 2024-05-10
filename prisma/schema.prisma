@@ -11,9 +11,10 @@ datasource db {
 }
 
 model Transaction {
-  id String @id @default(uuid())
-  type String 
+  id Int @id @default(autoincrement())
+  catogory String 
   description String
-  cashin Boolean
-  date DateTime
+  transactiontype String
+  createdAt DateTime @default(now())
+  updatedAt DateTime
 }
