@@ -3,6 +3,7 @@ import Header from "@/components/header/header";
 import styles from "./newtransaction.module.css";
 import Link from "next/link";
 import { useState } from "react";
+import saveNewTransaction from "@/utils/saveTransaction";
 
 export default function NewTransaction() {
 
@@ -13,8 +14,6 @@ export default function NewTransaction() {
     transactiontype: "expense" // trying.., by default new transactoin is expense
   });
 
-  const [activetab, setActivetab] = useState(true);
-
   const transaction_catogories = ["food", "travel", "Entertains", "haircut", "medicine", "others"];
   const transaction_types = ["income", "expense"]; // debt type coming soon in version 2
 
@@ -23,7 +22,7 @@ export default function NewTransaction() {
       <Header />
 
 
-      <div className={styles.newamount_card}>
+      <form action={saveNewTransaction} className={styles.newamount_card}>
 
         {/* DATA- TRANSACTION TYPE */}
 
@@ -107,17 +106,31 @@ export default function NewTransaction() {
             }}
           ></textarea>
         </div>
-      </div>
-
-      <Link href="/dashboard">
-        <button onClick={(newtransaction) => savenewtransaction(newtransaction) } className="text-green-600 py-5 font-bold">Save</button>
+      
+      <Link href="">
+        <button onClick={() => {
+            // create new formData from our input data
+            let formData = new FormData();
+            formData.append("amount", newtransaction.amount);
+            formData.append("catogory", newtransaction.catogory);
+            formData.append("description", newtransaction.description);
+            formData.append("transactointype", newtransaction.transactiontype);
+            // console.log(formData) // form data cannot be logged in console.
+        } } className="text-green-600 py-6 font-bold w-full">Save</button>
       </Link>
+
+      </form>
+
     </div>
   );
 }
 
+function transactionDataHandler(data = {}) {
+  // console.log('saving input data to server !', data.amount)
 
-function savenewtransaction(transaction) {
-  // needs to declare type , so learn Typescript well
-  console.log(transaction);
+  // const { amount, catogory, descripion, transactiontype } = data;
+
+  // check if inputs are filled
+  // if (!(amount && catogory && descripion && transactiontype)) return
+
 }
