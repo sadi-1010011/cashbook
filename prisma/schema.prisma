@@ -12,6 +12,7 @@ datasource db {
 
 model Transaction {
   id Int @id @default(autoincrement())
+  amount String
   catogory String 
   description String
   transactiontype String

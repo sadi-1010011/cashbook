@@ -17,7 +17,7 @@ export default function Home() {
     <main className="mainpage">
         <div className="fullscreenimg">
           <Link href="/dashboard">
-              <Image id="brandlogo" src={BrandLogo} width={120} height={120} alt="brand logo" />
+              <Image priority={true} id="brandlogo" src={BrandLogo} width={120} height={120} alt="brand logo" />
           </Link>
         </div>
     </main>

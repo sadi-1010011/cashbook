@@ -42,7 +42,8 @@
 }
 
 .selectcatogory > div {
-    background-color: #edecec;
+    /* background-color: #edecec; */
+    text-transform: capitalize;
     padding: 20px 0;
     border-radius: 8px;
     text-align: center;
@@ -112,4 +113,14 @@
 .active_tab {
     color: #fff;
     background-color: #000;
+}
+
+.activeCatogory_tab {
+    color: #000;
+    background-color: rgb(134 239 172);
+}
+
+.normalCatogory_tab {
+    color: #000;
+    background-color: #edecec;
 }

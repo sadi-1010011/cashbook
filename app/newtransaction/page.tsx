@@ -3,15 +3,15 @@ import Header from "@/components/header/header";
 import styles from "./newtransaction.module.css";
 import Link from "next/link";
 import { useState } from "react";
-import saveNewTransaction from "@/utils/saveTransaction";
+import { redirect } from "next/navigation";
 
 export default function NewTransaction() {
 
   const [newtransaction, setNewtransaction] = useState({
-    amount: 0, // got
+    amount: "", // got
     catogory: "", // got 
     description: "", // got
-    transactiontype: "expense" // trying.., by default new transactoin is expense
+    transactiontype: "expense" // by default new transactoin is expense
   });
 
   const transaction_catogories = ["food", "travel", "Entertains", "haircut", "medicine", "others"];
@@ -22,7 +22,7 @@ export default function NewTransaction() {
       <Header />
 
 
-      <form action={saveNewTransaction} className={styles.newamount_card}>
+      <form className={styles.newamount_card}>
 
         {/* DATA- TRANSACTION TYPE */}
 
@@ -54,7 +54,7 @@ export default function NewTransaction() {
           name="amount"
           placeholder="$ Amount.."
           onChange={ e => {
-            const { value } = e.target;
+            const { value } = e.currentTarget;
             setNewtransaction(previousdata => {
               return {
                 ...previousdata,
@@ -72,7 +72,8 @@ export default function NewTransaction() {
             {
               transaction_catogories.map((item, index) => 
                 <div key={index}
-                    onClick={ (e) => {
+                     className={ newtransaction.catogory == item ? styles.activeCatogory_tab : styles.normalCatogory_tab }
+                     onClick={ (e) => {
                       let value = e.currentTarget.textContent;
                       setNewtransaction(previousdata => {
                         return {
@@ -108,15 +109,56 @@ export default function NewTransaction() {
         </div>
       
       <Link href="">
-        <button onClick={() => {
-            // create new formData from our input data
-            let formData = new FormData();
-            formData.append("amount", newtransaction.amount);
-            formData.append("catogory", newtransaction.catogory);
-            formData.append("description", newtransaction.description);
-            formData.append("transactointype", newtransaction.transactiontype);
-            // console.log(formData) // form data cannot be logged in console.
-        } } className="text-green-600 py-6 font-bold w-full">Save</button>
+        <button
+            type="submit"
+            onClick={ (event) => {
+              // prevent default actions
+              event.preventDefault();
+
+              const savetoDB = async function () {
+                
+                try {
+                  console.log('saving new transaction data to backend !');
+
+                  const res = await fetch("/api/newTransaction", {
+                    method: 'POST',
+                    headers: {
+                      'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                      time: new Date().toISOString(),
+                      amount: newtransaction.amount,
+                      catogory: newtransaction.catogory,
+                      description: newtransaction.description,
+                      transactiontype: newtransaction.transactiontype,
+                    }),
+                  });
+
+                  const result = await res.json()
+                  console.log(result);
+
+                  redirect("/dashboard");
+
+
+                  // if (!result.ok) return console.log("some error in saving data !"); // always logging issue!
+
+                }
+
+                catch (error) {
+                  console.log('somethin wrong in saving data, server side !');
+                  console.log(error);
+                }
+
+
+              }              
+             
+              savetoDB();
+
+                
+            }
+
+
+        } className="text-green-600 py-6 font-bold w-full">Save</button>
       </Link>
 
       </form>
@@ -125,12 +167,14 @@ export default function NewTransaction() {
   );
 }
 
-function transactionDataHandler(data = {}) {
-  // console.log('saving input data to server !', data.amount)
+// Handle data inputs before submiting to backend!
 
-  // const { amount, catogory, descripion, transactiontype } = data;
+// function transactionDataHandler(data = {}) {
+//   // console.log('saving input data to server !', data.amount)
 
-  // check if inputs are filled
-  // if (!(amount && catogory && descripion && transactiontype)) return
+//   // const { amount, catogory, descripion, transactiontype } = data;
 
-}
+//   // check if inputs are filled
+//   // if (!(amount && catogory && descripion && transactiontype)) return
+
+// }
