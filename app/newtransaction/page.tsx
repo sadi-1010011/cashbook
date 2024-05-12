@@ -3,9 +3,11 @@ import Header from "@/components/header/header";
 import styles from "./newtransaction.module.css";
 import Link from "next/link";
 import { useState } from "react";
-import { redirect } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
 
 export default function NewTransaction() {
+
+  const router = useRouter();
 
   const [newtransaction, setNewtransaction] = useState({
     amount: "", // got
@@ -108,7 +110,7 @@ export default function NewTransaction() {
           ></textarea>
         </div>
       
-      <Link href="">
+      {/* <Link href="/dashboard"> */}
         <button
             type="submit"
             onClick={ (event) => {
@@ -137,9 +139,6 @@ export default function NewTransaction() {
                   const result = await res.json()
                   console.log(result);
 
-                  redirect("/dashboard");
-
-
                   // if (!result.ok) return console.log("some error in saving data !"); // always logging issue!
 
                 }
@@ -153,13 +152,13 @@ export default function NewTransaction() {
               }              
              
               savetoDB();
-
+              router.push('/dashboard');
                 
             }
 
 
         } className="text-green-600 py-6 font-bold w-full">Save</button>
-      </Link>
+      {/* </Link> */}
 
       </form>
 

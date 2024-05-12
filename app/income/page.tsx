@@ -1,8 +1,20 @@
 import Header from "@/components/header/header";
 import styles from "./income.module.css";
 import TransCard from "@/components/transcard/transcard";
+import { prisma } from "../db";
+import MishalToggle from "@/components/mishaltoggle/mishalToggle";
 
-export default function Income() {
+export default async function Income() {
+
+    const transaction_income_history = await prisma.transaction.findMany({
+        where: {
+            transactiontype: "income"
+        },
+        orderBy: {
+            createdAt: 'desc', // or 'asc' for descending order
+        },
+    });
+
     return (
         <div className="container">
             <Header />
@@ -10,15 +22,12 @@ export default function Income() {
 
             <h2 className="capitalize font-bold text-lg my-2">Income history</h2>
 
-                <div className={styles.expense_viewerwrapper}>
-                    <div>daily</div>
-                    <div className={styles.active_tab}>weekly</div>
-                    <div>monthly</div>
-                </div>
+            <MishalToggle active="monthly" />
 
-                <TransCard amount={1800} type="income" description="sallary credited" />
-                <TransCard amount={320} type="income" description="debt repayed mishal" />
-                <TransCard amount={140} type="income" description="commision from amazon affiliates" />
+                {
+                    transaction_income_history.map(transaction => <TransCard key={transaction.id} amount={transaction.amount} type={transaction.transactiontype} description={transaction.description} />)
+
+                }
 
             </div>
         </div>
