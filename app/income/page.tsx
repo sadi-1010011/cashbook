@@ -9,13 +9,13 @@ import Loading from "@/components/loading/Loading";
 
 export default function Income() {
 
-    const [transaction_income_history, setTransaction_income_history] = useState<unknown>();
+    const [transaction_income_history, setTransaction_income_history] = useState<any>();
 
     useState(() => {
         GET_Transaction_Income_History().then(data => {
             setTransaction_income_history(data as any);
         });
-    }, []);
+    });
 
     return (
         (transaction_income_history) ?
@@ -28,7 +28,7 @@ export default function Income() {
             <MishalToggle active="monthly" />
 
                 {
-                    transaction_income_history.map(transaction => <TransCard key={transaction.id} id={transaction.id} amount={Number(transaction.amount)} date={transaction.createdAt} type={transaction.transactiontype} catogory={transaction.catogory} description={transaction.description} />)
+                    transaction_income_history.map((transaction: any) => <TransCard key={transaction.id} id={transaction.id} amount={Number(transaction.amount)} date={transaction.createdAt} type={transaction.transactiontype} catogory={transaction.catogory} description={transaction.description} />)
 
                 }
 
