@@ -19,10 +19,6 @@ export default function History() {
         });
     }, []);
 
-    useEffect(() => {
-        router.refresh();
-    }, [transactions]);
-
     return (
         (transactions) ?
         (<div className="container w-full">
@@ -30,7 +26,7 @@ export default function History() {
             <MishalToggle active="daily" />
             <div className="flex items-center flex-col my-2 mx-auto py-2 px-4">
                 {
-                    transactions ? (transactions.map(transaction => <TransCard key={transaction.id} id={transaction.id} amount={Number(transaction.amount)} date={String(transaction.updatedAt)} type={transaction.transactiontype} catogory={transaction.catogory} description={transaction.description} />)) : <Loading />
+                    transactions ? (transactions.map((transaction: any) => <TransCard key={transaction.id} id={transaction.id} amount={Number(transaction.amount)} date={String(transaction.updatedAt)} type={transaction.transactiontype} catogory={transaction.catogory} description={transaction.description} />)) : <Loading />
                 }
             </div>
         </div>)
