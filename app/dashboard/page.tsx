@@ -16,8 +16,8 @@ export default function Dashboard() {
 
     const [allTransactions, setAllTransactions] = useState<any>();
 
-    let totalIncomeSum: Number = 0;
-    let totalExpenseSum: Number = 0;
+    let totalIncomeSum: any = 0;
+    let totalExpenseSum: any = 0;
 
     useEffect(() => {
         // pull all trans data
