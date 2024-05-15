@@ -12,7 +12,7 @@ import OthersIcon from "@/assets/others.png";
 
 export default function RecentTransCard({ amount, catogory, type}: { amount: Number, catogory: String, type: String}) {
 
-    const iconsheat = {
+    const iconsheat: any = {
         'travel': TravelIcon,
         'food': FoodIcon,
         'movies': MoviesIcon,

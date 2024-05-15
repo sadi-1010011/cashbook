@@ -1,3 +1,3 @@
-export default function getPercent(value: Number, totalValue: Number) {
+export default function getPercent(value: any, totalValue: any) {
     return Number(((value/totalValue) * 100).toFixed());
 }

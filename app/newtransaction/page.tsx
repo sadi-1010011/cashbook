@@ -32,7 +32,7 @@ export default function NewTransaction() {
   const transaction_income_catogories = ["salary", "tip", "others"];
   const transaction_types = ["income", "expense"]; // debt type coming soon in version 2
 
-  const iconsheat = {
+  const iconsheat: any = {
     'travel': TravelIcon,
     'food': FoodIcon,
     'movies': MoviesIcon,
@@ -105,7 +105,7 @@ export default function NewTransaction() {
                      className={ newtransaction.catogory == item ? styles.activeCatogory_tab : styles.normalCatogory_tab }
                      onClick={ (e) => {
                       let value = e.currentTarget.textContent;
-                      setNewtransaction(previousdata => {
+                      setNewtransaction((previousdata: any) => {
                         return {
                           ...previousdata,
                           catogory: value
@@ -122,7 +122,7 @@ export default function NewTransaction() {
                      className={ newtransaction.catogory == item ? styles.activeCatogory_tab : styles.normalCatogory_tab }
                      onClick={ (e) => {
                       let value = e.currentTarget.textContent;
-                      setNewtransaction(previousdata => {
+                      setNewtransaction((previousdata: any) => {
                         return {
                           ...previousdata,
                           catogory: value

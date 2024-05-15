@@ -13,7 +13,7 @@ import DELETE_Transaction from "@/actions/DELETETransaction";
 export default function TransCard({ id, amount=0, date="", type="", catogory="", description="", expanded=false}: any ) {
 
     const router = useRouter();
-    const toggleref = useRef();
+    const toggleref: any = useRef();
     const [togglestate, setTogglestate] = useState(expanded);
 
     const dateInFormat = getDateSliced(date);
@@ -39,7 +39,7 @@ export default function TransCard({ id, amount=0, date="", type="", catogory="",
     }
    
     return (
-        <div className={styles.trans_card} onClick={ () => expandedInfo(togglestate) } ref={toggleref}>
+        <div className={styles.trans_card} onClick={ () => expandedInfo(togglestate) } ref={toggleref as any}>
 
             <div className="inline-flex w-full items-center justify-between">
                 <span className="capitalize">{ description.length ? description : catogory }</span>
