@@ -1,8 +1,12 @@
 "use server"
 
-export default async function POST_Transactions( newtransaction: Object) {
+export default async function POST_Transactions( newtransaction: any) {
     
     try {
+        interface myreqbody {
+            [key: string]: any,
+        }
+
         console.log('saving new transaction data to backend !');
 
         const res = await fetch("http://localhost:3000/api/newTransaction", {
@@ -12,7 +16,7 @@ export default async function POST_Transactions( newtransaction: Object) {
         },
         body: JSON.stringify({
             time: new Date().toISOString(),
-            amount: newtransaction.amount,
+            amount: newtransaction.amount ,
             catogory: newtransaction.catogory,
             description: newtransaction.description,
             transactiontype: newtransaction.transactiontype,
