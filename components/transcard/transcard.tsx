@@ -1,6 +1,6 @@
 "use client"
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import styles from "./transcard.module.css";
 import Image from "next/image";
 import SaveIcon from "@/assets/edit.png";
@@ -10,7 +10,7 @@ import { getDateSliced, getDateTimeSliced } from "@/utils/getDateTime";
 import DELETE_Transaction from "@/actions/DELETETransaction";
 
 
-export default function TransCard({ id, amount=0, date="", type="", catogory="", description="", expanded=false} ) {
+export default function TransCard({ id, amount=0, date="", type="", catogory="", description="", expanded=false}: any ) {
 
     const router = useRouter();
     const toggleref = useRef();
@@ -18,6 +18,10 @@ export default function TransCard({ id, amount=0, date="", type="", catogory="",
 
     const dateInFormat = getDateSliced(date);
     const dateTimeInFormat = getDateTimeSliced(date);
+
+    useEffect(() => {
+        router.refresh();
+    }, [togglestate]);
    
     function expandedInfo(isToggleON: Boolean) {
         

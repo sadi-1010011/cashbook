@@ -13,6 +13,7 @@
     width: 80%;
     padding-top: 1rem;
     margin: 0.8rem auto;
+    text-align: center;
 }
 
 .newinputamt {
@@ -42,20 +43,19 @@
 }
 
 .selectcatogory > div {
-    /* background-color: #edecec; */
     text-transform: capitalize;
-    padding: 20px 0;
+    padding: 16px 0;
     border-radius: 8px;
     text-align: center;
     transition-duration: 0.22s;
 }
 
 .selectcatogory > div:hover {
-    background-color: rgb(134 239 172);
+    background-color: rgb(210,210,210);
 }
 
 .selectcatogory > div:active {
-    background-color: rgb(77, 188, 117);
+    background-color: rgb(226 232 240 );
     color: #fff;
 }
 
@@ -117,7 +117,7 @@
 
 .activeCatogory_tab {
     color: #000;
-    background-color: rgb(134 239 172);
+    background-color: rgb(220,220,220);
 }
 
 .normalCatogory_tab {

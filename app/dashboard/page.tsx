@@ -9,19 +9,15 @@ import EditIcon from "@/assets/edit-white.png";
 import getIncomeExpenseDiff from "@/utils/getIEDifference";
 import GET_Transactions from "@/actions/GETTransactions";
 import RecentTransCard from "@/components/recentTransCard/recentTransCard";
+import RupeeIcon from "@/assets/rupee.png";
 import Image from "next/image";
 
 export default function Dashboard() {
 
     const [allTransactions, setAllTransactions] = useState<any>();
-    const [recentTransactions, setRecentTransactions] = useState<any>();
 
     let totalIncomeSum: Number = 0;
     let totalExpenseSum: Number = 0;
-
-    let totalTravelExpense = 0;
-    let totalFoodExpense = 0;
-    let totalMoviesExpense = 0;
 
     useEffect(() => {
         // pull all trans data
@@ -30,10 +26,6 @@ export default function Dashboard() {
         });
 
     }, []);
-
-    if (allTransactions) {
-
-    }
 
     
     if (allTransactions) {
@@ -55,7 +47,10 @@ export default function Dashboard() {
         <div className={styles.page_container}>
             
             <div className={`${styles.balance_card}`}>
-                <h1 className="text-white">{ `$ ${ getIncomeExpenseDiff(totalIncomeSum, totalExpenseSum) }` }</h1>
+                <h1 className="text-white inline-flex items-center justify-center">
+                    <Image src={RupeeIcon} alt="rupee icon" width={22} height={22} className="mx-1" />
+                    {`${ getIncomeExpenseDiff(totalIncomeSum, totalExpenseSum) || '...' }` }
+                </h1>
                 {/* <span className={styles.editbalance}><Image src={EditIcon} width={15} height={15} alt="edit icon"/></span> */}
                 <span className={`${styles.balance_inr} text-white`}>INR</span>
             </div>
@@ -66,9 +61,8 @@ export default function Dashboard() {
                 {
                     (typeof allTransactions === 'undefined') ? <Loading />
                     :
-                    allTransactions.map((item,index) => index < 3 ? <RecentTransCard key={item.id} catogory={String(item.catogory)} amount={Number(item.amount)} type={item.transactiontype} /> : false)
-                }
- 
+                    allTransactions.map((item: any,index: any) => index < 3 ? <RecentTransCard key={item.id} catogory={String(item.catogory)} amount={Number(item.amount)} type={item.transactiontype} /> : false)
+                } 
 
             </div>
 

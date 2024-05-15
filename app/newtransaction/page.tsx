@@ -1,10 +1,21 @@
 "use client"
 
+// ICONS
+import TravelIcon from "@/assets/travelicon.png";
+import FoodIcon from "@/assets/foodicon.png";
+import MoviesIcon from "@/assets/entertainmenticon.png";
+import MedicineIcon from "@/assets/medicine.png";
+import HaircutIcon from "@/assets/haircut.png";
+import SalaryIcon from "@/assets/salary.png";
+import MoneyIcon from "@/assets/money.png";
+import OthersIcon from "@/assets/others.png";
+// components and functions
 import Header from "@/components/header/header";
 import styles from "./newtransaction.module.css";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import POST_Transactions from "@/actions/POSTtransactions";
+import Image from "next/image";
 
 export default function NewTransaction() {
 
@@ -20,6 +31,17 @@ export default function NewTransaction() {
   const transaction_expense_catogories = ["food", "travel", "movies", "haircut", "medicine", "others"];
   const transaction_income_catogories = ["salary", "tip", "others"];
   const transaction_types = ["income", "expense"]; // debt type coming soon in version 2
+
+  const iconsheat = {
+    'travel': TravelIcon,
+    'food': FoodIcon,
+    'movies': MoviesIcon,
+    'medicine': MedicineIcon,
+    'haircut': HaircutIcon,
+    'others': OthersIcon,
+    'salary': SalaryIcon,
+    'tip': MoneyIcon,
+}
 
   return (
     <div className={styles.newtrans_container}>
@@ -59,6 +81,7 @@ export default function NewTransaction() {
           placeholder="$ Amount.."
           onChange={ e => {
             const { value } = e.currentTarget;
+            if (Number(value) < 0) { e.currentTarget.value = '0'; return alert('negative values are not allowed, use expense ..');}
             setNewtransaction(previousdata => {
               return {
                 ...previousdata,
@@ -89,7 +112,8 @@ export default function NewTransaction() {
                         }
                       })  
                     } }>
-                  {item}
+                  <Image src={ (Object.hasOwn(iconsheat, `${item}`)) ? iconsheat[`${item}`] : OthersIcon } width={25} height={25} className="m-auto" alt="catogory" />
+                  <span className="mt-1 text-sm">{ item }</span>
                 </div>) 
               )
               :
@@ -105,7 +129,8 @@ export default function NewTransaction() {
                         }
                       })  
                     } }>
-                  {item}
+                    <Image src={ (Object.hasOwn(iconsheat, `${item}`)) ? iconsheat[`${item}`] : OthersIcon } width={25} height={25} className="m-auto" alt="catogory" />
+                    <span className="mt-1 text-sm">{ item }</span>
                 </div>) 
               )
             }
@@ -134,7 +159,7 @@ export default function NewTransaction() {
       {/* <Link href="/dashboard"> */}
         <button
             type="submit"
-            onClick={ (event) => { event.preventDefault(); POST_Transactions(newtransaction).then( () => router.push("/dashboard")); } } className="text-green-600 py-6 font-bold w-full">Save</button>
+            onClick={ (event) => { event.preventDefault(); POST_Transactions(newtransaction).then( () => router.push("/dashboard")); } } className="text-green-600 mt-8 mx-auto py-3 px-6 font-bold bg-green-200 rounded-md hover:bg-green-400 hover:text-green-50">Save</button>
       {/* </Link> */}
 
       </form>

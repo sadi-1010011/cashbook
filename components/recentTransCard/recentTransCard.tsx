@@ -4,6 +4,11 @@ import styles from "./recentTransCard.module.css";
 import TravelIcon from "@/assets/travelicon.png";
 import FoodIcon from "@/assets/foodicon.png";
 import MoviesIcon from "@/assets/entertainmenticon.png";
+import MedicineIcon from "@/assets/medicine.png";
+import HaircutIcon from "@/assets/haircut.png";
+import SalaryIcon from "@/assets/salary.png";
+
+import OthersIcon from "@/assets/others.png";
 
 export default function RecentTransCard({ amount, catogory, type}: { amount: Number, catogory: String, type: String}) {
 
@@ -11,13 +16,16 @@ export default function RecentTransCard({ amount, catogory, type}: { amount: Num
         'travel': TravelIcon,
         'food': FoodIcon,
         'movies': MoviesIcon,
+        'medicine': MedicineIcon,
+        'haircut': HaircutIcon,
+        'salary': SalaryIcon,
     }
 
 
     return (
         <div className={styles.recentexpense_card}>
             <div className="flex px-1 items-center justify-evenly">
-                <Image src={(Object.hasOwn(iconsheat, `${catogory}`)) ? iconsheat[`${catogory}`] : TravelIcon} width={30} height={30} alt="travel icon" />
+                <Image src={(Object.hasOwn(iconsheat, `${catogory}`)) ? iconsheat[`${catogory}`] : OthersIcon} width={26} height={26} alt="travel icon" />
                 <span className="font-semibold px-3 capitalize">{ catogory || 'Transaction' }</span>
             </div>
             <span className={`${ type === 'income' ? 'text-green-500' : 'text-red-500' } font-bold`}>{ `$ ${ amount }` }</span>

@@ -1,0 +1,11 @@
+/* styles for settings page */
+
+.animatedSettingsIcon {
+    margin: 2rem auto;
+    animation: animatedSettingsIcon 2s linear infinite;
+}
+
+@keyframes animatedSettingsIcon {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}

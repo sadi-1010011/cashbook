@@ -139,7 +139,7 @@ export default async function Stats() {
             </div>
 
             <Link href="/history">
-                <h4 className="text-xs text-slate-400 capitalize text-center py-1.5 mb-4">See transaction history</h4>
+                <h4 className="text-sm text-slate-500 font-semibold capitalize text-center py-1.5 mb-8">See transaction history</h4>
             </Link>
 
         </div>
