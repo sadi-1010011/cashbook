@@ -1,9 +1,10 @@
 "use client"
+
 import Header from "@/components/header/header";
 import styles from "./newtransaction.module.css";
-import Link from "next/link";
 import { useState } from "react";
-import { redirect, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
+import POST_Transactions from "@/actions/POSTtransactions";
 
 export default function NewTransaction() {
 
@@ -16,7 +17,8 @@ export default function NewTransaction() {
     transactiontype: "expense" // by default new transactoin is expense
   });
 
-  const transaction_catogories = ["food", "travel", "Entertains", "haircut", "medicine", "others"];
+  const transaction_expense_catogories = ["food", "travel", "movies", "haircut", "medicine", "others"];
+  const transaction_income_catogories = ["salary", "tip", "others"];
   const transaction_types = ["income", "expense"]; // debt type coming soon in version 2
 
   return (
@@ -69,10 +71,13 @@ export default function NewTransaction() {
         {/* DATA- CATOGORY */}
 
         <div className={styles.trans_catogorywrapper}>
-          <h3 className="capitalize text-lg font-bold">expenses made for</h3>
+          <h3 className="capitalize text-lg font-bold text-center">
+            { newtransaction.transactiontype === 'expense' ? 'expense made for' : 'income from' }
+          </h3>
           <div className={styles.selectcatogory}>
             {
-              transaction_catogories.map((item, index) => 
+              newtransaction.transactiontype === 'expense' ?
+              (transaction_expense_catogories.map((item, index) => 
                 <div key={index}
                      className={ newtransaction.catogory == item ? styles.activeCatogory_tab : styles.normalCatogory_tab }
                      onClick={ (e) => {
@@ -85,7 +90,23 @@ export default function NewTransaction() {
                       })  
                     } }>
                   {item}
-                </div>
+                </div>) 
+              )
+              :
+              (transaction_income_catogories.map((item, index) => 
+                <div key={index}
+                     className={ newtransaction.catogory == item ? styles.activeCatogory_tab : styles.normalCatogory_tab }
+                     onClick={ (e) => {
+                      let value = e.currentTarget.textContent;
+                      setNewtransaction(previousdata => {
+                        return {
+                          ...previousdata,
+                          catogory: value
+                        }
+                      })  
+                    } }>
+                  {item}
+                </div>) 
               )
             }
           </div>
@@ -94,10 +115,10 @@ export default function NewTransaction() {
         {/* DATA- DESCRIPTION */}
 
         <div>
-          <h3 className="capitalize text-lg font-bold px-4">Description</h3>
-          <textarea
+          <input
+            type="text"
             className={styles.newdescription}
-            placeholder="descripion.."
+            placeholder="Add descripion.."
             onChange={ (e) => {
               const { value } = e.target;
               setNewtransaction(previousdata => {
@@ -107,57 +128,13 @@ export default function NewTransaction() {
                 }
               })
             }}
-          ></textarea>
+          />
         </div>
       
       {/* <Link href="/dashboard"> */}
         <button
             type="submit"
-            onClick={ (event) => {
-              // prevent default actions
-              event.preventDefault();
-
-              const savetoDB = async function () {
-                
-                try {
-                  console.log('saving new transaction data to backend !');
-
-                  const res = await fetch("/api/newTransaction", {
-                    method: 'POST',
-                    headers: {
-                      'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                      time: new Date().toISOString(),
-                      amount: newtransaction.amount,
-                      catogory: newtransaction.catogory,
-                      description: newtransaction.description,
-                      transactiontype: newtransaction.transactiontype,
-                    }),
-                  });
-
-                  const result = await res.json()
-                  console.log(result);
-
-                  // if (!result.ok) return console.log("some error in saving data !"); // always logging issue!
-
-                }
-
-                catch (error) {
-                  console.log('somethin wrong in saving data, server side !');
-                  console.log(error);
-                }
-
-
-              }              
-             
-              savetoDB();
-              router.push('/dashboard');
-                
-            }
-
-
-        } className="text-green-600 py-6 font-bold w-full">Save</button>
+            onClick={ (event) => { event.preventDefault(); POST_Transactions(newtransaction).then( () => router.push("/dashboard")); } } className="text-green-600 py-6 font-bold w-full">Save</button>
       {/* </Link> */}
 
       </form>

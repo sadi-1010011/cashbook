@@ -25,7 +25,7 @@ export default async function Expense() {
                 <MishalToggle active="weekly" />
 
                {
-                    transaction_expense_history.map(transaction => <TransCard key={transaction.id} amount={transaction.amount} type={transaction.transactiontype} description={transaction.description} />)
+                    transaction_expense_history.map(transaction => <TransCard key={transaction.id} id={transaction.id} amount={Number(transaction.amount)} date={transaction.createdAt} type={transaction.transactiontype} catogory={transaction.catogory} description={transaction.description} />)
                }
               
             </div>

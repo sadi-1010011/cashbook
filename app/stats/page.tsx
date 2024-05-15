@@ -2,8 +2,8 @@ import Header from "@/components/header/header";
 import styles from "./stats.module.css";
 import Link from "next/link";
 import MishalToggle from "@/components/mishaltoggle/mishalToggle";
-import { prisma } from "../db";
 import getPercent from "@/utils/getPercent";
+import GET_Transactions from "@/actions/GETTransactions";
 
 
 export default async function Stats() {
@@ -14,41 +14,59 @@ export default async function Stats() {
     // total income, expense
     let totalIncomeSum = 0;
     let totalExpenseSum = 0;
+
     let totalTravelExpense = 0;
     let totalFoodExpense = 0;
-    let totalEntertainsExpense = 0;
+    let totalMoviesExpense = 0;
+
+    let totalSalaryIncome = 0;
+    let totalTipIncome = 0;
+    let totalOthersIncome = 0;
+
+
     let travelexpensePercent = 0;
     let foodexpensePercent = 0;
-    let entertainsexpensePercent = 0;
+    let moviesxpensePercent = 0;
 
-    // get data from DB
-    const totalIncome = await prisma.transaction.findMany({
-        orderBy: {
-            createdAt: 'desc' // asc for ascending
-        }
-    });
+    let salaryIncomePercent = 0;
+    let tipIncomePercent = 0;
+    let othersIncomePercent = 0;
+
+
+    const allTransactions = await GET_Transactions();
+
 
     // calculate income, expense
-    for (const record of totalIncome) {
+    for (const record of allTransactions) {
         if (record.transactiontype === "income")
             totalIncomeSum += Number(record.amount);
         if (record.transactiontype === "expense")
             totalExpenseSum += Number(record.amount);
         
-        // get travel only data
-        if (record.catogory === "travel")
-            totalTravelExpense += Number(record.amount);
-        if (record.catogory === "food")
-            totalFoodExpense += Number(record.amount);
-        if (record.catogory === "entertains")
-            totalEntertainsExpense += Number(record.amount);
+        // get catogorywise only data - EXPESES
+        switch (record.catogory) {
+            case "travel": totalTravelExpense += Number(record.amount); break;
+            case "food": totalFoodExpense += Number(record.amount); break;
+            case "movies": totalMoviesExpense += Number(record.amount); break;
+        }
+
+        // get catogorywise only data - INCOME
+        switch (record.catogory) {
+            case "salary": totalSalaryIncome += Number(record.amount); break;
+            case "tip": totalTipIncome += Number(record.amount); break;
+            case "others": totalOthersIncome += Number(record.amount); break;
+        }
     }
 
-    // get percentage data
+    // get percentage data - EXPENSE
     travelexpensePercent = getPercent(totalTravelExpense, totalExpenseSum);
     foodexpensePercent = getPercent(totalFoodExpense, totalExpenseSum);
-    entertainsexpensePercent = getPercent(totalEntertainsExpense, totalExpenseSum);
+    moviesxpensePercent = getPercent(totalMoviesExpense, totalExpenseSum);
 
+    // get percentage data - INCOME
+    salaryIncomePercent = getPercent(totalSalaryIncome, totalIncomeSum);
+    tipIncomePercent = getPercent(totalTipIncome, totalIncomeSum);
+    othersIncomePercent = getPercent(totalOthersIncome, totalIncomeSum);
 
 
     return (
@@ -76,10 +94,10 @@ export default async function Stats() {
                 </div>
 
                 <div className="flex items-center justify-between my-3">
-                    <span className={`${styles.graphbar} bg-red-300`} style={{ "width": `${entertainsexpensePercent}%`}}>
-                        <span className={styles.graphbar_name}>Entertainment</span>
+                    <span className={`${styles.graphbar} bg-red-300`} style={{ "width": `${moviesxpensePercent}%`}}>
+                        <span className={styles.graphbar_name}>Movies</span>
                     </span>
-                    <span className="text-sm px-1 font-semibold whitespace-nowrap">{ `$ ${ totalEntertainsExpense }` }</span>
+                    <span className="text-sm px-1 font-semibold whitespace-nowrap">{ `$ ${ totalMoviesExpense }` }</span>
                 </div>
             </div>
 
@@ -88,24 +106,24 @@ export default async function Stats() {
                 <h2 className="font-bold text-center py-1.5 uppercase">Income</h2>
                 
                 <div className="flex items-center justify-between my-4">
-                    <span className={`${styles.graphbar} w-4/5 bg-green-500`}>
-                        <span className={styles.graphbar_name}>Rent</span>
+                    <span className={`${styles.graphbar} bg-green-500`} style={{ "width": `${ salaryIncomePercent }%`}}>
+                        <span className={styles.graphbar_name}>salary</span>
                     </span>
-                    <span className="text-sm px-1 font-semibold whitespace-nowrap">$1100</span>
+                    <span className="text-sm px-1 font-semibold whitespace-nowrap">{ `$ ${ totalSalaryIncome }` }</span>
                 </div>
 
                 <div className="flex items-center justify-between my-3">
-                    <span className={`${styles.graphbar} w-1/2 bg-green-400`}>
-                        <span className={styles.graphbar_name}>sallary</span>
+                    <span className={`${styles.graphbar} bg-green-400`} style={{ "width": `${tipIncomePercent}%`}}>
+                        <span className={styles.graphbar_name}>tip</span>
                     </span>
-                    <span className="text-sm px-1 font-semibold whitespace-nowrap">$700</span>
+                    <span className="text-sm px-1 font-semibold whitespace-nowrap">{ `$ ${ totalTipIncome }` }</span>
                 </div>
 
                 <div className="flex items-center justify-between my-3">
-                    <span style={{ 'width': '100%'}} className={`${styles.graphbar} bg-green-300`}>
-                        <span className={styles.graphbar_name}>Bonus</span>
+                    <span className={`${styles.graphbar} bg-green-300`} style={{ "width": `${othersIncomePercent}%`}}>
+                        <span className={styles.graphbar_name}>others</span>
                     </span>
-                    <span className="text-sm px-1 font-semibold whitespace-nowrap">$250</span>
+                    <span className="text-sm px-1 font-semibold whitespace-nowrap">{ `$ ${ totalOthersIncome }` }</span>
                 </div>
             </div>
 

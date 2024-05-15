@@ -1,22 +1,25 @@
+"use client"
+
 import Header from "@/components/header/header";
-import styles from "./income.module.css";
 import TransCard from "@/components/transcard/transcard";
-import { prisma } from "../db";
 import MishalToggle from "@/components/mishaltoggle/mishalToggle";
+import GET_Transaction_Income_History from "@/actions/GETTransactionIncomeHistory";
+import { useState } from "react";
+import Loading from "@/components/loading/Loading";
 
-export default async function Income() {
+export default function Income() {
 
-    const transaction_income_history = await prisma.transaction.findMany({
-        where: {
-            transactiontype: "income"
-        },
-        orderBy: {
-            createdAt: 'desc', // or 'asc' for descending order
-        },
-    });
+    const [transaction_income_history, setTransaction_income_history] = useState<unknown>();
+
+    useState(() => {
+        GET_Transaction_Income_History().then(data => {
+            setTransaction_income_history(data as any);
+        });
+    }, []);
 
     return (
-        <div className="container">
+        (transaction_income_history) ?
+        (<div className="container">
             <Header />
             <div className="flex items-center flex-col my-2 mx-auto py-2 px-4">
 
@@ -25,11 +28,13 @@ export default async function Income() {
             <MishalToggle active="monthly" />
 
                 {
-                    transaction_income_history.map(transaction => <TransCard key={transaction.id} amount={transaction.amount} type={transaction.transactiontype} description={transaction.description} />)
+                    transaction_income_history.map(transaction => <TransCard key={transaction.id} id={transaction.id} amount={Number(transaction.amount)} date={transaction.createdAt} type={transaction.transactiontype} catogory={transaction.catogory} description={transaction.description} />)
 
                 }
 
             </div>
-        </div>
-    )
+        </div>)
+        :
+        <Loading />
+    );
 }
