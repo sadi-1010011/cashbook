@@ -59,7 +59,7 @@ export default function NewTransaction() {
                 <div key={index} className={ newtransaction.transactiontype === item ? styles.active_tab : styles.normal_tab} onClick={
                   e => {
                     const value = e.currentTarget.textContent;
-                    setNewtransaction(previousdata => {
+                    setNewtransaction((previousdata: any) => {
                       return {
                         ...previousdata,
                         transactiontype: value
