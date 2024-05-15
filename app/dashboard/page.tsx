@@ -33,9 +33,9 @@ export default function Dashboard() {
     // calculate income, expense
         for (const record of allTransactions) {
             if (record.transactiontype === "income")
-                totalIncomeSum += Number(record.amount);
+                totalIncomeSum = Number(record.amount) + totalIncomeSum;
             if (record.transactiontype === "expense")
-                totalExpenseSum += Number(record.amount);
+                totalExpenseSum = Number(record.amount) + totalExpenseSum;
             
         }
     }
