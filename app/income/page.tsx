@@ -12,9 +12,14 @@ export default function Income() {
     const [transaction_income_history, setTransaction_income_history] = useState<any>();
 
     useState(() => {
-        GET_Transaction_Income_History().then(data => {
-            setTransaction_income_history(data as any);
-        });
+        try {
+            GET_Transaction_Income_History().then(data => {
+                setTransaction_income_history(data as any);
+            });
+        } catch (error) {
+            console.log(error);
+            setTransaction_income_history('')
+        }
     });
 
     return (

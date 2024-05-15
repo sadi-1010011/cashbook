@@ -6,14 +6,20 @@ import MishalToggle from "@/components/mishaltoggle/mishalToggle";
 
 export default async function Expense() {
 
-    const transaction_expense_history = await prisma.transaction.findMany({
-        where: {
-            transactiontype: "expense"
-        },
-        orderBy: {
-            createdAt: 'desc', // or 'desc' for descending order
-          },
-    });
+    let transaction_expense_history: any;
+    try {
+        transaction_expense_history = await prisma.transaction.findMany({
+            where: {
+                transactiontype: "expense"
+            },
+            orderBy: {
+                createdAt: 'desc', // or 'desc' for descending order
+            },
+        });
+    } catch (error) {
+        console.log(error);
+        transaction_expense_history = '';
+    }
 
     return (
         <div className="container">
@@ -25,7 +31,7 @@ export default async function Expense() {
                 <MishalToggle active="weekly" />
 
                {
-                    transaction_expense_history.map(transaction => <TransCard key={transaction.id} id={transaction.id} amount={Number(transaction.amount)} date={transaction.createdAt} type={transaction.transactiontype} catogory={transaction.catogory} description={transaction.description} />)
+                    transaction_expense_history.map((transaction: any) => <TransCard key={transaction.id} id={transaction.id} amount={Number(transaction.amount)} date={transaction.createdAt} type={transaction.transactiontype} catogory={transaction.catogory} description={transaction.description} />)
                }
               
             </div>

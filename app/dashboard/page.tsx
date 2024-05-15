@@ -21,9 +21,14 @@ export default function Dashboard() {
 
     useEffect(() => {
         // pull all trans data
-        GET_Transactions().then(data => {
-            setAllTransactions(data);
-        });
+        try {
+            GET_Transactions().then(data => {
+                setAllTransactions(data);
+            });
+        } catch (error){
+            console.log(error);
+            setAllTransactions('');
+        }
 
     }, []);
 

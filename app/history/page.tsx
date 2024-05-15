@@ -14,9 +14,14 @@ export default function History() {
     const router = useRouter();
 
    useEffect(() => {
-        GET_Transactions().then(data => {
-            setTransactions(data as any)
-        });
+        try {
+            GET_Transactions().then(data => {
+                setTransactions(data as any)
+            });
+        } catch (error) {
+            console.log(error);
+            setTransactions('');
+        }
     }, []);
 
     return (
