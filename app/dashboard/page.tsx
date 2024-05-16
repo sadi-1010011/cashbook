@@ -54,7 +54,7 @@ export default function Dashboard() {
             <div className={`${styles.balance_card}`}>
                 <h1 className="text-white inline-flex items-center justify-center">
                     <Image src={RupeeIcon} alt="rupee icon" width={22} height={22} className="mx-1" />
-                    {`${ getIncomeExpenseDiff(totalIncomeSum, totalExpenseSum) || '..' }` }
+                    {`${ getIncomeExpenseDiff(totalIncomeSum, totalExpenseSum) || '0' }` }
                 </h1>
                 {/* <span className={styles.editbalance}><Image src={EditIcon} width={15} height={15} alt="edit icon"/></span> */}
                 <span className={`${styles.balance_inr} text-white`}>INR</span>
@@ -82,7 +82,9 @@ export default function Dashboard() {
 
         :
         
-        <Loading />
+        // <Loading /> // hiding in vercel deploy bcz no backend available
+        <RecentTransCard catogory={'no transactions yet'} amount={0} type={'income'} />
+        
 
     }
 

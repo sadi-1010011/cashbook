@@ -81,7 +81,7 @@ export default function Stats() {
 
 
     return (
-        <div className="container w-full">
+        <div className="container w-full" style={{ backgroundColor: '#f6f5f5fe' }}>
             <Header />
 
             <MishalToggle active="daily" />
@@ -155,7 +155,9 @@ export default function Stats() {
             </>
             )
             :
-            <Loading />
+            <div style={{ minHeight: '60vh', display: "flex", alignItems: 'center' }}>
+                <Loading />
+            </div>
             }
 
             <Link href="/history">
