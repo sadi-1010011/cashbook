@@ -54,22 +54,37 @@ export default function Dashboard() {
             <div className={`${styles.balance_card}`}>
                 <h1 className="text-white inline-flex items-center justify-center">
                     <Image src={RupeeIcon} alt="rupee icon" width={22} height={22} className="mx-1" />
-                    {`${ getIncomeExpenseDiff(totalIncomeSum, totalExpenseSum) || '...' }` }
+                    {`${ getIncomeExpenseDiff(totalIncomeSum, totalExpenseSum) || '..' }` }
                 </h1>
                 {/* <span className={styles.editbalance}><Image src={EditIcon} width={15} height={15} alt="edit icon"/></span> */}
                 <span className={`${styles.balance_inr} text-white`}>INR</span>
             </div>
 
-            <div className={`${styles.recentexpenses_container} text-black capitalize`}>
+        {
+            (allTransactions) ?
+
+            (<div className={`${styles.recentexpenses_container} text-black capitalize`}>
                 <h2 className="capitalize text-black px-2 py-2 font-bold text-xl text-center">Recent transactions</h2>
 
                 {
-                    (typeof allTransactions === 'undefined') ? <Loading />
-                    :
+                    (allTransactions.length) 
+                        ? 
                     allTransactions.map((item: any,index: any) => index < 3 ? <RecentTransCard key={item.id} catogory={String(item.catogory)} amount={Number(item.amount)} type={item.transactiontype} /> : false)
+                        :
+                    (
+                        <RecentTransCard catogory={'no transactions yet'} amount={0} type={'income'} />
+                        
+                    )
                 } 
 
-            </div>
+
+            </div>)
+
+        :
+        
+        <Loading />
+
+    }
 
         </div>
         <Footer />

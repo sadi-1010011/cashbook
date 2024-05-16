@@ -1,28 +1,21 @@
-"use client"
-
 import Header from "@/components/header/header";
 import TransCard from "@/components/transcard/transcard";
 import MishalToggle from "@/components/mishaltoggle/mishalToggle";
 import GET_Transactions from "@/actions/GETTransactions";
-import { useEffect, useState } from "react";
 import Loading from "@/components/loading/Loading";
-import { useRouter } from "next/navigation";
 
 export default function History() {    
 
-    const [transactions, setTransactions] = useState<any>();
-    const router = useRouter();
+    let transactions: any;
 
-   useEffect(() => {
-        try {
-            GET_Transactions().then(data => {
-                setTransactions(data as any)
-            });
-        } catch (error) {
-            console.log(error);
-            setTransactions('');
-        }
-    }, []);
+    try {
+        transactions = GET_Transactions().then(data => {
+            if (data) transactions = data;
+        });
+    } catch (error) {
+        console.log(error);
+        transactions = '';
+    }
 
     return (
         (transactions) ?
@@ -31,7 +24,12 @@ export default function History() {
             <MishalToggle active="daily" />
             <div className="flex items-center flex-col my-2 mx-auto py-2 px-4">
                 {
-                    transactions ? (transactions.map((transaction: any) => <TransCard key={transaction.id} id={transaction.id} amount={Number(transaction.amount)} date={String(transaction.updatedAt)} type={transaction.transactiontype} catogory={transaction.catogory} description={transaction.description} />)) : <Loading />
+                    (transactions.length)
+                        ?
+                    (transactions.map((transaction: any) => <TransCard key={transaction.id} id={transaction.id} amount={Number(transaction.amount)} date={String(transaction.updatedAt)} type={transaction.transactiontype} catogory={transaction.catogory} description={transaction.description} />))
+                        :
+                    (<span className="capitalize font-semibold text-lg w-full my-10 text-center text-slate-500">no transactions made yet</span>)
+                    
                 }
             </div>
         </div>)

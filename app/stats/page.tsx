@@ -1,12 +1,24 @@
+"use client"
+
 import Header from "@/components/header/header";
 import styles from "./stats.module.css";
 import Link from "next/link";
 import MishalToggle from "@/components/mishaltoggle/mishalToggle";
 import getPercent from "@/utils/getPercent";
 import GET_Transactions from "@/actions/GETTransactions";
+import { useEffect, useState } from "react";
+import Loading from "@/components/loading/Loading";
 
 
-export default async function Stats() {
+export default function Stats() {
+
+    const [allTransactions, setAllTransactions] = useState<any>();
+
+    useEffect(() => {
+        GET_Transactions().then(data => {
+            setAllTransactions(data);
+        });
+    }, []);
 
     // here we need to fetch some data and then
     // do calculations on them and show in UI
@@ -33,40 +45,39 @@ export default async function Stats() {
     let othersIncomePercent = 0;
 
 
-    const allTransactions = await GET_Transactions();
+    if (allTransactions) {
+        // calculate income, expense
+        for (const record of allTransactions) {
+            if (record.transactiontype === "income")
+                totalIncomeSum += Number(record.amount);
+            if (record.transactiontype === "expense")
+                totalExpenseSum += Number(record.amount);
+            
+            // get catogorywise only data - EXPESES
+            switch (record.catogory) {
+                case "travel": totalTravelExpense += Number(record.amount); break;
+                case "food": totalFoodExpense += Number(record.amount); break;
+                case "movies": totalMoviesExpense += Number(record.amount); break;
+            }
 
-
-    // calculate income, expense
-    for (const record of allTransactions) {
-        if (record.transactiontype === "income")
-            totalIncomeSum += Number(record.amount);
-        if (record.transactiontype === "expense")
-            totalExpenseSum += Number(record.amount);
-        
-        // get catogorywise only data - EXPESES
-        switch (record.catogory) {
-            case "travel": totalTravelExpense += Number(record.amount); break;
-            case "food": totalFoodExpense += Number(record.amount); break;
-            case "movies": totalMoviesExpense += Number(record.amount); break;
+            // get catogorywise only data - INCOME
+            switch (record.catogory) {
+                case "salary": totalSalaryIncome += Number(record.amount); break;
+                case "tip": totalTipIncome += Number(record.amount); break;
+                case "others": totalOthersIncome += Number(record.amount); break;
+            }
         }
 
-        // get catogorywise only data - INCOME
-        switch (record.catogory) {
-            case "salary": totalSalaryIncome += Number(record.amount); break;
-            case "tip": totalTipIncome += Number(record.amount); break;
-            case "others": totalOthersIncome += Number(record.amount); break;
-        }
+        // get percentage data - EXPENSE
+        travelexpensePercent = getPercent(totalTravelExpense, totalExpenseSum);
+        foodexpensePercent = getPercent(totalFoodExpense, totalExpenseSum);
+        moviesxpensePercent = getPercent(totalMoviesExpense, totalExpenseSum);
+
+        // get percentage data - INCOME
+        salaryIncomePercent = getPercent(totalSalaryIncome, totalIncomeSum);
+        tipIncomePercent = getPercent(totalTipIncome, totalIncomeSum);
+        othersIncomePercent = getPercent(totalOthersIncome, totalIncomeSum);
     }
-
-    // get percentage data - EXPENSE
-    travelexpensePercent = getPercent(totalTravelExpense, totalExpenseSum);
-    foodexpensePercent = getPercent(totalFoodExpense, totalExpenseSum);
-    moviesxpensePercent = getPercent(totalMoviesExpense, totalExpenseSum);
-
-    // get percentage data - INCOME
-    salaryIncomePercent = getPercent(totalSalaryIncome, totalIncomeSum);
-    tipIncomePercent = getPercent(totalTipIncome, totalIncomeSum);
-    othersIncomePercent = getPercent(totalOthersIncome, totalIncomeSum);
 
 
     return (
@@ -74,7 +85,11 @@ export default async function Stats() {
             <Header />
 
             <MishalToggle active="daily" />
+            {
+                (allTransactions) ?
 
+            (
+            <>
             <div className="flex flex-col ite w-10/12 text-white bg-black my-4 mx-auto px-4 py-4 rounded-xl">
                 
                 <h2 className="font-bold text-center py-1.5 uppercase">expense</h2>
@@ -137,6 +152,11 @@ export default async function Stats() {
                     <h2 className="font-bold py-1.5">{ `$ ${totalExpenseSum}` }</h2>
                 </div>
             </div>
+            </>
+            )
+            :
+            <Loading />
+            }
 
             <Link href="/history">
                 <h4 className="text-sm text-slate-500 font-semibold capitalize text-center py-1.5 mb-8">See transaction history</h4>
