@@ -1,21 +1,25 @@
+"use client"
+
 import Header from "@/components/header/header";
 import TransCard from "@/components/transcard/transcard";
 import MishalToggle from "@/components/mishaltoggle/mishalToggle";
 import GET_Transactions from "@/actions/GETTransactions";
 import Loading from "@/components/loading/Loading";
+import { useEffect, useState } from "react";
 
 export default function History() {    
 
-    let transactions: any;
+    const [transactions, setTransactions] = useState<any>();
 
-    try {
-        transactions = GET_Transactions().then(data => {
-            if (data) transactions = data;
-        });
-    } catch (error) {
-        console.log(error);
-        transactions = '';
-    }
+    useEffect(() => {
+        try {
+            GET_Transactions().then(data => {
+                if (data) setTransactions(data);
+            });
+        } catch (error) {
+            console.log(error);
+        }
+    });
 
     return (
         (transactions) ?
