@@ -6,7 +6,7 @@ export default async function DELETE_Transaction(id: any) {
                         
     try {
         console.log('deleting: ', id);
-            const res = await fetch("http://localhost:3000/api/deleteTransaction", {
+            const res = await fetch(`https://kaayi.vercel.app/api/deleteTransaction`, {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',

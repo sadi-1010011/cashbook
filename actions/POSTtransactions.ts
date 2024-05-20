@@ -9,7 +9,7 @@ export default async function POST_Transactions( newtransaction: any) {
 
         console.log('saving new transaction data to backend !');
 
-        const res = await fetch("http://localhost:3000/api/newTransaction", {
+        const res = await fetch("https://kaayi.vercel.app/api/newTransaction", {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
