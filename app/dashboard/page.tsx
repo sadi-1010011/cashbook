@@ -4,8 +4,8 @@ import Header from "@/components/header/header"
 import Footer from "@/components/footer/footer"
 import styles from './dashboard.module.css';
 import {  useEffect, useState } from "react";
-import Loading from "@/components/loading/Loading";
-import EditIcon from "@/assets/edit-white.png";
+// import Loading from "@/components/loading/Loading";
+// import EditIcon from "@/assets/edit-white.png";
 import getIncomeExpenseDiff from "@/utils/getIEDifference";
 import GET_Transactions from "@/actions/GETTransactions";
 import RecentTransCard from "@/components/recentTransCard/recentTransCard";

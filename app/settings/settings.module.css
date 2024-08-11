@@ -1,6 +1,12 @@
 /* styles for settings page */
 
+.settings-page {
+    background-color: #27374D;
+}
+
 .animatedSettingsIcon {
+    border-radius: 50%;
+    background-color: white;
     margin: 2rem auto;
     animation: animatedSettingsIcon 2s linear infinite;
 }

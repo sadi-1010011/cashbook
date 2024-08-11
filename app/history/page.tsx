@@ -6,7 +6,7 @@ import MishalToggle from "@/components/mishaltoggle/mishalToggle";
 import GET_Transactions from "@/actions/GETTransactions";
 import Loading from "@/components/loading/Loading";
 import { useEffect, useState } from "react";
-
+ 
 export default function History() {    
 
     const [transactions, setTransactions] = useState<any>();

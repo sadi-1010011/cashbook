@@ -4,14 +4,14 @@ import Header from "@/components/header/header";
 import TransCard from "@/components/transcard/transcard";
 import MishalToggle from "@/components/mishaltoggle/mishalToggle";
 import GET_Transaction_Income_History from "@/actions/GETTransactionIncomeHistory";
-import { useState } from "react";
 import Loading from "@/components/loading/Loading";
+import { useState, useEffect } from "react";
 
 export default function Income() {
 
-    const [transaction_income_history, setTransaction_income_history] = useState<any>();
+    const [transaction_income_history, setTransaction_income_history] = useState<any>(0);
 
-    useState(() => {
+    useEffect(() => {
         try {
             GET_Transaction_Income_History().then(data => {
                 if (!data) return 0;
@@ -19,7 +19,7 @@ export default function Income() {
             });
         } catch (error) {
             console.log(error);
-            // setTransaction_income_history('')
+            setTransaction_income_history(0);
         }
     });
 

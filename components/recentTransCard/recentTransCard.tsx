@@ -28,7 +28,7 @@ export default function RecentTransCard({ amount, catogory, type}: { amount: Num
                 { catogory === 'no transactions yet' ? false : <Image src={(Object.hasOwn(iconsheat, `${catogory}`)) ? iconsheat[`${catogory}`] : OthersIcon} width={26} height={26} alt="travel icon" />}
                 <span className={`px-3 ${ catogory === 'no transactions yet' ? 'text-sm font-light text-gray-500' : 'font-semibold capitalize' }`}>{ catogory || 'Transaction' }</span>
             </div>
-            <span className={`${ type === 'income' ? 'text-green-500' : 'text-red-500' } font-bold`}>{ `$ ${ amount }` }</span>
+            <span className={`${ type === 'income' ? 'text-green-500' : 'text-red-500' } font-bold`}>{ `₹ ${ amount }` }</span>
         </div>
     )
 }

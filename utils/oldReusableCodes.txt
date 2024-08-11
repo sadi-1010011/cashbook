@@ -1,0 +1,57 @@
+
+// STATS PAGE - INCOME CHART
+
+            {/* <div className="flex flex-col w-10/12 text-white bg-black my-4 mx-auto px-4 py-4 rounded-xl">
+                
+                <h2 className="font-bold text-center py-1.5 uppercase">Income</h2>
+                
+                <div className="flex items-center justify-between my-4">
+                    <span className={`${styles.graphbar} bg-green-500`} style={{ "width": `${ salaryIncomePercent }%`}}>
+                        <span className={styles.graphbar_name}>salary</span>
+                    </span>
+                    <span className="text-sm px-1 font-semibold whitespace-nowrap">{ `$ ${ totalSalaryIncome }` }</span>
+                </div>
+
+                <div className="flex items-center justify-between my-3">
+                    <span className={`${styles.graphbar} bg-green-400`} style={{ "width": `${tipIncomePercent}%`}}>
+                        <span className={styles.graphbar_name}>tip</span>
+                    </span>
+                    <span className="text-sm px-1 font-semibold whitespace-nowrap">{ `$ ${ totalTipIncome }` }</span>
+                </div>
+
+                <div className="flex items-center justify-between my-3">
+                    <span className={`${styles.graphbar} bg-green-300`} style={{ "width": `${othersIncomePercent}%`}}>
+                        <span className={styles.graphbar_name}>others</span>
+                    </span>
+                    <span className="text-sm px-1 font-semibold whitespace-nowrap">{ `$ ${ totalOthersIncome }` }</span>
+                </div>
+            </div> */}
+
+
+// STATS PAGE - EXPENSE CHART
+
+        {/* <div className="flex flex-col w-10/12 text-white bg-black my-4 mx-auto px-4 py-4 rounded-xl">
+                
+                <h2 className="font-bold text-center py-1.5 uppercase">expense</h2>
+                
+                <div className="flex items-center justify-between my-4">
+                    <span className={`${styles.graphbar} bg-red-500`} style={{ "width": `${travelexpensePercent}%`}}>
+                        <span className={styles.graphbar_name}>Travel</span>
+                    </span>
+                    <span className="text-sm px-1 font-semibold whitespace-nowrap">{ `$ ${ totalTravelExpense }` }</span>
+                </div>
+
+                <div className="flex items-center justify-between my-3">
+                    <span className={`${styles.graphbar} bg-red-400`} style={{ "width": `${foodexpensePercent}%`}}>
+                        <span className={styles.graphbar_name}>food</span>
+                    </span>
+                    <span className="text-sm px-1 font-semibold whitespace-nowrap">{ `$ ${ totalFoodExpense }` }</span>
+                </div>
+
+                <div className="flex items-center justify-between my-3">
+                    <span className={`${styles.graphbar} bg-red-300`} style={{ "width": `${moviesxpensePercent}%`}}>
+                        <span className={styles.graphbar_name}>Movies</span>
+                    </span>
+                    <span className="text-sm px-1 font-semibold whitespace-nowrap">{ `$ ${ totalMoviesExpense }` }</span>
+                </div>
+            </div> */}

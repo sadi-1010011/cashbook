@@ -5,7 +5,6 @@ import Image from "next/image";
 import BrandLogo from "@/assets/logo.png";
 import { useRouter } from "next/navigation";
 
-
 export default function Home() {
 
   const router = useRouter();
@@ -14,12 +13,12 @@ export default function Home() {
   }, 2500)
 
   return (
-    <main className="mainpage">
-        <div className="fullscreenimg">
-          <Link href="/dashboard">
-              <Image priority={true} id="brandlogo" src={BrandLogo} width={120} height={120} alt="brand logo" />
-          </Link>
-        </div>
-    </main>
+      <main className="mainpage">
+          <div className="fullscreenimg">
+            <Link href="/dashboard">
+                <Image priority={true} id="brandlogo" src={BrandLogo} width={120} height={120} alt="brand logo" />
+            </Link>
+          </div>
+      </main>
   )
 }

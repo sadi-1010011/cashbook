@@ -8,27 +8,28 @@ import getPercent from "@/utils/getPercent";
 import GET_Transactions from "@/actions/GETTransactions";
 import { useEffect, useRef, useState } from "react";
 import Loading from "@/components/loading/Loading";
-import Chart from 'chart.js/auto';
+import PlotPieChart from "@/utils/plotPieChart";
 
 export default function Stats() {
 
     const [allTransactions, setAllTransactions] = useState<any>();
-    const incomecanvas = useRef(null);
-    const expensecanvas = useRef(null);
+    const [totalIncome, setTotalIncomeSum] = useState<number>(0);
+    const [totalExpense, setTotalExpenseSum] = useState<number>(0);
+    const incomecanvas = useRef(null); // initial value of cnvs set to null
+    const expensecanvas = useRef(null); // bcs it won't be rendered yet to draw on
 
+    // here we need to fetch some data and then
     useEffect(() => {
         GET_Transactions().then(data => {
             setAllTransactions(data);
         });
     }, []);
 
-    // here we need to fetch some data and then
     // do calculations on them and show in UI
 
-    // total income, expense
+    // total income, expense etc
     let totalIncomeSum = 0;
     let totalExpenseSum = 0;
-
     let totalTravelExpense = 0;
     let totalFoodExpense = 0;
     let totalMoviesExpense = 0;
@@ -47,7 +48,6 @@ export default function Stats() {
     let othersIncomePercent = 0;
 
 
-    
     // PIE CHART REPRESENTATION
     
     useEffect(() => {
@@ -87,94 +87,19 @@ export default function Stats() {
             othersIncomePercent = getPercent(totalOthersIncome, totalIncomeSum);
     
         }
-        const ctx1 = incomecanvas.current!;
-        
-        let chartStatus1 = Chart.getChart('incomechart');
-          if (chartStatus1 != undefined) {
-            chartStatus1.destroy();
-        }
-    
-        const incomechart = new Chart(ctx1, {
-          type: 'pie',
-          data: {
-            labels: ['sallary', 'tip', 'others'],
-            datasets: [
-              {
-                label: 'Income',
-                data: [salaryIncomePercent/3, tipIncomePercent/3, othersIncomePercent/3,],
-                backgroundColor: [
-                  'rgba(255, 99, 132, 0.2)',
-                  'rgba(54, 162, 235, 0.2)',
-                  'rgba(255, 206, 86, 0.2)',
-                ],
-                borderColor: [
-                  'rgba(255, 99, 132, 1)',
-                  'rgba(54, 162, 235, 1)',
-                  'rgba(255, 206, 86, 1)',
-                ],
-                borderWidth: 1,
-              },
-            ],
-          },
-          options: {
-            responsive: true,
-            plugins: {
-              legend: {
-                position: 'top',
-              },
-              title: {
-                display: true,
-                text: 'Income',
-              },
-            },
-          },
-        });
 
+        // set total in-out amount
+        setTotalIncomeSum(totalIncomeSum);
+        setTotalExpenseSum(totalExpenseSum);
 
-// EXPENSE CHART
+        // INCOME PIE CHART
+        const ctx1 = incomecanvas.current!; // plot only after acquiring context
+        if (ctx1) PlotPieChart(ctx1, 'incomechart', 'Income', ['salary', 'tip', 'others'], [salaryIncomePercent/3, tipIncomePercent/3, othersIncomePercent/3,]);
 
-        const ctx2 = expensecanvas.current!;
+        // EXPENSE PIE CHART
+        const ctx2 = expensecanvas.current!; // here too
+        if (ctx2) PlotPieChart(ctx2, 'expensechart', 'Expense', ['Travel', 'Food', 'Movies'], [travelexpensePercent/3, foodexpensePercent/3, moviesxpensePercent/3,]);
 
-        let chartStatus2 = Chart.getChart('expensechart');
-          if (chartStatus2 != undefined) {
-            chartStatus2.destroy();
-        }
-    
-        const expensechart = new Chart(ctx2, {
-          type: 'pie',
-          data: {
-            labels: ['Travel', 'Food', 'Movies'],
-            datasets: [
-              {
-                label: 'Expense',
-                data: [travelexpensePercent/3, foodexpensePercent/3, moviesxpensePercent/3,],
-                backgroundColor: [
-                    'rgba(255, 206, 86, 0.2)',
-                    'rgba(54, 162, 235, 0.2)',
-                    'rgba(255, 99, 132, 0.2)',
-                ],
-                borderColor: [
-                    'rgba(255, 206, 86, 1)',
-                    'rgba(54, 162, 235, 1)',
-                    'rgba(255, 99, 132, 1)',
-                ],
-                borderWidth: 1,
-              },
-            ],
-          },
-          options: {
-            responsive: true,
-            plugins: {
-              legend: {
-                position: 'top',
-              },
-              title: {
-                display: true,
-                text: 'Income',
-              },
-            },
-          },
-        });
       }, [allTransactions]);
 
 
@@ -185,85 +110,39 @@ export default function Stats() {
 
             <MishalToggle active="daily" />
             {
-                (allTransactions) ?
-
+              (allTransactions) ?
             (
             <>
-            {/* <div className="flex flex-col w-10/12 text-white bg-black my-4 mx-auto px-4 py-4 rounded-xl">
-                
-                <h2 className="font-bold text-center py-1.5 uppercase">expense</h2>
-                
-                <div className="flex items-center justify-between my-4">
-                    <span className={`${styles.graphbar} bg-red-500`} style={{ "width": `${travelexpensePercent}%`}}>
-                        <span className={styles.graphbar_name}>Travel</span>
-                    </span>
-                    <span className="text-sm px-1 font-semibold whitespace-nowrap">{ `$ ${ totalTravelExpense }` }</span>
-                </div>
 
-                <div className="flex items-center justify-between my-3">
-                    <span className={`${styles.graphbar} bg-red-400`} style={{ "width": `${foodexpensePercent}%`}}>
-                        <span className={styles.graphbar_name}>food</span>
-                    </span>
-                    <span className="text-sm px-1 font-semibold whitespace-nowrap">{ `$ ${ totalFoodExpense }` }</span>
-                </div>
-
-                <div className="flex items-center justify-between my-3">
-                    <span className={`${styles.graphbar} bg-red-300`} style={{ "width": `${moviesxpensePercent}%`}}>
-                        <span className={styles.graphbar_name}>Movies</span>
-                    </span>
-                    <span className="text-sm px-1 font-semibold whitespace-nowrap">{ `$ ${ totalMoviesExpense }` }</span>
-                </div>
-            </div> */}
-
+            {/* EXPENSE CANVAS */}
             <div className="flex w-10/12 my-4 mx-auto px-4 py-4">
-                {/* EXPENSE CANVAS */}
                 <canvas id="expensechart" className="m-auto" ref={expensecanvas}></canvas>
             </div>
 
-            {/* <div className="flex flex-col w-10/12 text-white bg-black my-4 mx-auto px-4 py-4 rounded-xl">
-                
-                <h2 className="font-bold text-center py-1.5 uppercase">Income</h2>
-                
-                <div className="flex items-center justify-between my-4">
-                    <span className={`${styles.graphbar} bg-green-500`} style={{ "width": `${ salaryIncomePercent }%`}}>
-                        <span className={styles.graphbar_name}>salary</span>
-                    </span>
-                    <span className="text-sm px-1 font-semibold whitespace-nowrap">{ `$ ${ totalSalaryIncome }` }</span>
-                </div>
-
-                <div className="flex items-center justify-between my-3">
-                    <span className={`${styles.graphbar} bg-green-400`} style={{ "width": `${tipIncomePercent}%`}}>
-                        <span className={styles.graphbar_name}>tip</span>
-                    </span>
-                    <span className="text-sm px-1 font-semibold whitespace-nowrap">{ `$ ${ totalTipIncome }` }</span>
-                </div>
-
-                <div className="flex items-center justify-between my-3">
-                    <span className={`${styles.graphbar} bg-green-300`} style={{ "width": `${othersIncomePercent}%`}}>
-                        <span className={styles.graphbar_name}>others</span>
-                    </span>
-                    <span className="text-sm px-1 font-semibold whitespace-nowrap">{ `$ ${ totalOthersIncome }` }</span>
-                </div>
-            </div> */}
-
+            {/* INCOME CANVAS */}
             <div className="flex w-10/12 my-4 mx-auto px-4 py-4">
-                {/* INCOME CANVAS */}
                 <canvas id="incomechart" className="m-auto" ref={incomecanvas}></canvas>
             </div>
 
+            {/* TOTAL IN-EX */}
             <div className="flex items-center justify-evenly my-3 mx-auto px-3 w-full capitalize">
                 <div className="my-1 mx-1 py-5 bg-green-100 w-1/2 text-center rounded-lg hover:bg-green-200">
                     <Link href="/income" className="text-sm font-bold text-slate-500">total income</Link>
-                    <h2 className="font-bold py-1.5">{ `$ ${totalIncomeSum}` }</h2>
+                    <h2 className="font-bold py-1.5">{ `₹ ${ totalIncome }` }</h2>
                 </div>
                 <div className="my-1 mx-1 py-5 bg-red-100 w-1/2 text-center rounded-lg hover:bg-red-200">
                     <Link href="/expense" className="text-sm font-bold text-slate-500">total expense</Link>
-                    <h2 className="font-bold py-1.5">{ `$ ${totalExpenseSum}` }</h2>
+                    <h2 className="font-bold py-1.5">{ `₹ ${ totalExpense }` }</h2>
                 </div>
             </div>
+
             </>
             )
+
             :
+
+            // LOADING UI
+
             <div style={{ minHeight: '60vh', display: "flex", alignItems: 'center' }}>
                 <Loading />
             </div>

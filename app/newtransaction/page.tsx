@@ -78,10 +78,10 @@ export default function NewTransaction() {
           className={styles.newinputamt}
           type="number"
           name="amount"
-          placeholder="$ Amount.."
+          placeholder="₹ Amount.."
           onChange={ e => {
             const { value } = e.currentTarget;
-            if (Number(value) < 0) { e.currentTarget.value = '0'; return alert('negative values are not allowed, use expense ..');}
+            if (Number(value) < 0) { e.currentTarget.value = '0'; return alert('use expense for negative values..');}
             setNewtransaction(previousdata => {
               return {
                 ...previousdata,
@@ -156,11 +156,9 @@ export default function NewTransaction() {
           />
         </div>
       
-      {/* <Link href="/dashboard"> */}
         <button
             type="submit"
-            onClick={ (event) => { event.preventDefault(); POST_Transactions(newtransaction).then( () => router.push("/dashboard")); } } className="text-green-600 mt-8 mx-auto py-3 px-6 font-bold bg-green-200 rounded-md hover:bg-green-400 hover:text-green-50">Save</button>
-      {/* </Link> */}
+            onClick={ (event) => { event.preventDefault(); event.currentTarget.disabled = true; POST_Transactions(newtransaction).then( () => router.push("/dashboard")); } } className="text-green-600 mt-8 mx-auto py-3 px-6 font-bold bg-green-200 rounded-md hover:bg-green-400 hover:text-green-50">Save</button>
 
       </form>
 
