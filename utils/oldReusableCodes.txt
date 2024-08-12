@@ -55,3 +55,29 @@
                     <span className="text-sm px-1 font-semibold whitespace-nowrap">{ `$ ${ totalMoviesExpense }` }</span>
                 </div>
             </div> */}
+
+// APP > LOCALSTORAGE > KAAYISCHEMA - DB SCHEMA
+
+import { v4 as uuidv4 } from 'uuid';
+
+interface Transaction {
+    id: String,
+    amount: Number,
+    catogory: String,
+    description: String,
+    transactiontype: String,
+    createdAt: Date,
+    updatedAt: Date
+}
+
+const transaction: Transaction = {
+    id: uuidv4(),
+    amount: 0, // Initialize with a default number
+    catogory: "", // Initialize with a default string
+    description: "", // Initialize with a default string
+    transactiontype: "", // Initialize with a default string
+    createdAt: new Date(),
+    updatedAt: new Date()
+};
+
+export default transaction;

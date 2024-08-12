@@ -3,23 +3,24 @@
 import Header from "@/components/header/header";
 import TransCard from "@/components/transcard/transcard";
 import MishalToggle from "@/components/mishaltoggle/mishalToggle";
-import GET_Transactions from "@/actions/GETTransactions";
 import Loading from "@/components/loading/Loading";
 import { useEffect, useState } from "react";
+import Localbase from "localbase";
  
 export default function History() {    
 
     const [transactions, setTransactions] = useState<any>();
+    const db = new Localbase('kaayidb');
 
     useEffect(() => {
         try {
-            GET_Transactions().then(data => {
-                if (data) setTransactions(data);
+            db.collection('alltransactions').orderBy('createdAt', 'desc').get().then((transactions: any) => {
+                if (transactions.length) setTransactions(transactions);
             });
         } catch (error) {
             console.log(error);
         }
-    });
+    }, []);
 
     return (
         (transactions) ?

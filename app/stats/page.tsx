@@ -5,13 +5,14 @@ import styles from "./stats.module.css";
 import Link from "next/link";
 import MishalToggle from "@/components/mishaltoggle/mishalToggle";
 import getPercent from "@/utils/getPercent";
-import GET_Transactions from "@/actions/GETTransactions";
 import { useEffect, useRef, useState } from "react";
 import Loading from "@/components/loading/Loading";
 import PlotPieChart from "@/utils/plotPieChart";
+import Localbase from "localbase";
 
 export default function Stats() {
 
+    const db = new Localbase('kaayidb');
     const [allTransactions, setAllTransactions] = useState<any>();
     const [totalIncome, setTotalIncomeSum] = useState<number>(0);
     const [totalExpense, setTotalExpenseSum] = useState<number>(0);
@@ -20,8 +21,8 @@ export default function Stats() {
 
     // here we need to fetch some data and then
     useEffect(() => {
-        GET_Transactions().then(data => {
-            setAllTransactions(data);
+        db.collection('alltransactions').get().then((transactions: any) => {
+            if (transactions.length) setAllTransactions(transactions);
         });
     }, []);
 

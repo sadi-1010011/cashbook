@@ -1,6 +1,6 @@
 // finds income-expense difference;
 
-export default function getIncomeExpenseDiff(income: Number, expense: Number) {
+export default function getIncomeExpenseDiff(income: Number = 0, expense: Number = 0) {
     // check for types and ensure type safety
     const i = Number(income);
     const e = Number(expense);

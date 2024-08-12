@@ -3,11 +3,11 @@
 import { useEffect, useRef, useState } from "react";
 import styles from "./transcard.module.css";
 import Image from "next/image";
-import SaveIcon from "@/assets/edit.png";
+import EditIcon from "@/assets/edit.png";
 import DeleteIcon from "@/assets/delete.png";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { getDateSliced, getDateTimeSliced } from "@/utils/getDateTime";
-import DELETE_Transaction from "@/actions/DELETETransaction";
+import Localbase from "localbase";
 
 
 export default function TransCard({ id, amount=0, date="", type="", catogory="", description="", expanded=false}: any ) {
@@ -63,14 +63,17 @@ export default function TransCard({ id, amount=0, date="", type="", catogory="",
 
 export function TransCardTools({ id, date, time }: any) {
 
+    const db = new Localbase('kaayidb');
     const router = useRouter();
-    // edit, delete transaction tools
+    const currentPath = usePathname();
 
     return (
         <>
             <div className="inline-flex items-center w-full my-0.5 p-0.5 rounded-xl">
                 <div className="w-full inline-flex items-center justify-between mx-1.5 p-1 text-sm capitalize">
-                    <Image src={SaveIcon} width={20} height={20} alt="edit icon" />
+                    <Image src={EditIcon} width={20} height={20} alt="edit icon" onClick={ () => {
+                        console.log('functionality under progress..');
+                    }} />
                     <div className="text-center">
                         <span className="text-sm font-semibold text-slate-400 whitespace-nowrap">
                                 { date || 'date unavailable' }
@@ -82,9 +85,9 @@ export function TransCardTools({ id, date, time }: any) {
                     </div>
                     <Image src={DeleteIcon} width={20} height={20} alt="delete icon" onClick={ () => {
                         console.log('deleting ',id)
-                        DELETE_Transaction(id); 
+                        db.collection('alltransactions').doc({ id: id }).delete();
                         // refresh data
-                        router.refresh(); 
+                        router.refresh();
                     } } />
                 </div>
             </div>

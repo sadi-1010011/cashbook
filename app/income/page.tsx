@@ -3,25 +3,29 @@
 import Header from "@/components/header/header";
 import TransCard from "@/components/transcard/transcard";
 import MishalToggle from "@/components/mishaltoggle/mishalToggle";
-import GET_Transaction_Income_History from "@/actions/GETTransactionIncomeHistory";
 import Loading from "@/components/loading/Loading";
 import { useState, useEffect } from "react";
+import Localbase from "localbase";
+
 
 export default function Income() {
 
+    const db = new Localbase('kaayidb');
     const [transaction_income_history, setTransaction_income_history] = useState<any>(0);
 
     useEffect(() => {
         try {
-            GET_Transaction_Income_History().then(data => {
-                if (!data) return 0;
-                setTransaction_income_history(data as any);
+            db.collection('alltransactions').doc({ 'transactiontype': 'income' }).orderBy('createdAt', 'desc').get().then((transactions: any) => {
+                console.log('api block')
+                console.log(transactions)
+                if (transactions) setTransaction_income_history(transactions);
             });
         } catch (error) {
+            console.log('err block')
             console.log(error);
             setTransaction_income_history(0);
         }
-    });
+    }, []);
 
     return (
         (transaction_income_history) ?
@@ -34,11 +38,11 @@ export default function Income() {
             <MishalToggle active="daily" />
 
                 {
-                    // (transaction_income_history.length)
-                        // ?
+                    (transaction_income_history.length)
+                        ?
                     transaction_income_history.map((transaction: any) => <TransCard key={transaction.id} id={transaction.id} amount={Number(transaction.amount)} date={transaction.createdAt} type={transaction.transactiontype} catogory={transaction.catogory} description={transaction.description} />)
-                        // :
-                    // <span className="capitalize font-semibold text-lg w-full my-10 text-center text-slate-500">no transactions made yet</span>
+                        :
+                    <span className="capitalize font-semibold text-lg w-full my-10 text-center text-slate-500">no transactions made yet</span>
 
                 }
 

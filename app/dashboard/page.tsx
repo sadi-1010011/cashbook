@@ -6,43 +6,53 @@ import styles from './dashboard.module.css';
 import {  useEffect, useState } from "react";
 // import Loading from "@/components/loading/Loading";
 // import EditIcon from "@/assets/edit-white.png";
+// import GET_Transactions from "@/actions/GETTransactions";
 import getIncomeExpenseDiff from "@/utils/getIEDifference";
-import GET_Transactions from "@/actions/GETTransactions";
 import RecentTransCard from "@/components/recentTransCard/recentTransCard";
 import RupeeIcon from "@/assets/rupee.png";
 import Image from "next/image";
+import Localbase from "localbase";
+
 
 export default function Dashboard() {
-
+    
     const [allTransactions, setAllTransactions] = useState<any>();
+    let totalIncomeSum: number = 0;
+    let totalExpenseSum: number = 0;
+    
+    
+    function getAllTransactions() {
+        console.log('getting all transactions from db!');
+        const db = new Localbase('kaayidb');
+        db.collection('alltransactions').orderBy('createdAt', 'desc').get().then((alltransactions: any) => {
+            console.log(alltransactions)
+            setAllTransactions(alltransactions);
+        }); 
+    }
 
-    let totalIncomeSum: any = 0;
-    let totalExpenseSum: any = 0;
-
+    // new offline storage 
     useEffect(() => {
-        // pull all trans data
+        // if db already exist
         try {
-            GET_Transactions().then(data => {
-                setAllTransactions(data);
-            });
-        } catch (error){
-            console.log(error);
-            setAllTransactions('');
+            getAllTransactions();
+        } catch (error) {
+            console.log('db unavailable')
+            // initDefaultDB();
         }
 
     }, []);
+        
 
-    
+    // calculate income, expense
     if (allTransactions) {
         let lastRecentTransactionUpto = 3;
-    // calculate income, expense
-        for (const record of allTransactions) {
-            if (record.transactiontype === "income")
-                totalIncomeSum = Number(record.amount) + totalIncomeSum;
-            if (record.transactiontype === "expense")
-                totalExpenseSum = Number(record.amount) + totalExpenseSum;
-            
-        }
+
+        allTransactions.map((transaction: any) => {
+            if (transaction.transactiontype === "income")
+                totalIncomeSum = Number(transaction.amount) + totalIncomeSum;
+            if (transaction.transactiontype === "expense")
+                totalExpenseSum = Number(transaction.amount) + totalExpenseSum;
+        })
     }
     
 

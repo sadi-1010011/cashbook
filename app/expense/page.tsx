@@ -3,27 +3,27 @@
 import Header from "@/components/header/header";
 import styles from "./expense.module.css";
 import TransCard from "@/components/transcard/transcard";
-import { prisma } from "../db";
 import MishalToggle from "@/components/mishaltoggle/mishalToggle";
 import Loading from "@/components/loading/Loading";
 import { useEffect, useState } from "react";
-import GET_Transaction_Expense_History from "@/actions/GETTransactionExpenseHistory";
+import Localbase from "localbase";
+
 
 export default function Expense() {
-
+    
+    const db = new Localbase('kaayidb');
     const [transaction_expense_history, setTransaction_expense_history] = useState<any>(0);
 
     useEffect(()=> {
         try {
-           GET_Transaction_Expense_History().then(data => {
-                if (!data) return 0;
-                setTransaction_expense_history(data as any);
-           });
+            db.collection('alltransactions').orderBy('createdAt', 'desc').get().then((transactions: any) => {
+                if (transactions.length) setTransaction_expense_history(transactions);
+            });
         } catch (error) {
             console.log(error);
             setTransaction_expense_history(0);
         }
-    });
+    }, []);
 
     return (
         (transaction_expense_history) ?

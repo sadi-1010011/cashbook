@@ -14,7 +14,8 @@ import Header from "@/components/header/header";
 import styles from "./newtransaction.module.css";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import POST_Transactions from "@/actions/POSTtransactions";
+import addNewTransaction from "./addNewTransaction";
+import { v4 as uuidv4 } from 'uuid';
 import Image from "next/image";
 
 export default function NewTransaction() {
@@ -22,9 +23,12 @@ export default function NewTransaction() {
   const router = useRouter();
 
   const [newtransaction, setNewtransaction] = useState({
+    id: uuidv4(),
     amount: "", // got
     catogory: "", // got 
     description: "", // got
+    createdAt: new Date(),
+    updatedAt: new Date(),
     transactiontype: "expense" // by default new transactoin is expense
   });
 
@@ -158,7 +162,13 @@ export default function NewTransaction() {
       
         <button
             type="submit"
-            onClick={ (event) => { event.preventDefault(); event.currentTarget.disabled = true; POST_Transactions(newtransaction).then( () => router.push("/dashboard")); } } className="text-green-600 mt-8 mx-auto py-3 px-6 font-bold bg-green-200 rounded-md hover:bg-green-400 hover:text-green-50">Save</button>
+            onClick={ (event) => {
+              event.preventDefault();
+              event.currentTarget.disabled = true;
+              // offline data saving !
+              addNewTransaction(newtransaction as any)
+              router.push("/dashboard"); 
+            }} className="text-green-600 mt-8 mx-auto py-3 px-6 font-bold bg-green-200 rounded-md hover:bg-green-400 hover:text-green-50">Save</button>
 
       </form>
 
