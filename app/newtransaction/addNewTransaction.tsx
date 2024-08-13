@@ -1,6 +1,7 @@
 import Localbase from "localbase";
 
 const db = new Localbase('kaayidb');
+db.config.debug = false
 
 type TransactionType = {
     id: string;

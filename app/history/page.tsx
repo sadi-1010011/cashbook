@@ -11,6 +11,7 @@ export default function History() {
 
     const [transactions, setTransactions] = useState<any>();
     const db = new Localbase('kaayidb');
+    db.config.debug = false
 
     useEffect(() => {
         try {

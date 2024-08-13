@@ -12,12 +12,14 @@ import Localbase from "localbase";
 export default function Expense() {
     
     const db = new Localbase('kaayidb');
+    db.config.debug = false
     const [transaction_expense_history, setTransaction_expense_history] = useState<any>(0);
 
     useEffect(()=> {
         try {
             db.collection('alltransactions').orderBy('createdAt', 'desc').get().then((transactions: any) => {
-                if (transactions.length) setTransaction_expense_history(transactions);
+                const expensetransactions = transactions.filter((item: any) => item.transactiontype === 'income')
+                if (transactions) setTransaction_expense_history(expensetransactions);
             });
         } catch (error) {
             console.log(error);

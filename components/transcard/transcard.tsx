@@ -64,6 +64,7 @@ export default function TransCard({ id, amount=0, date="", type="", catogory="",
 export function TransCardTools({ id, date, time }: any) {
 
     const db = new Localbase('kaayidb');
+    db.config.debug = false;
     const router = useRouter();
     const currentPath = usePathname();
 

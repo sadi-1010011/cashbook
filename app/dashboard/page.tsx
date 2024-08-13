@@ -24,6 +24,7 @@ export default function Dashboard() {
     function getAllTransactions() {
         console.log('getting all transactions from db!');
         const db = new Localbase('kaayidb');
+        db.config.debug = false
         db.collection('alltransactions').orderBy('createdAt', 'desc').get().then((alltransactions: any) => {
             console.log(alltransactions)
             setAllTransactions(alltransactions);

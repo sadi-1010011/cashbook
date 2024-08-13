@@ -81,3 +81,19 @@ const transaction: Transaction = {
 };
 
 export default transaction;
+
+
+// NEXT CONFIG FILE
+
+
+
+/** @type {import('next').NextConfig} */
+
+import withPWA from 'next-pwa';
+
+const nextConfig = withPWA({
+    dest: 'public',
+    }
+);
+
+export default nextConfig;

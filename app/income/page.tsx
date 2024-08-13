@@ -11,14 +11,15 @@ import Localbase from "localbase";
 export default function Income() {
 
     const db = new Localbase('kaayidb');
+    db.config.debug = false
     const [transaction_income_history, setTransaction_income_history] = useState<any>(0);
 
     useEffect(() => {
         try {
-            db.collection('alltransactions').doc({ 'transactiontype': 'income' }).orderBy('createdAt', 'desc').get().then((transactions: any) => {
+            db.collection('alltransactions').orderBy('createdAt', 'desc').get().then((transactions: any) => {
                 console.log('api block')
-                console.log(transactions)
-                if (transactions) setTransaction_income_history(transactions);
+                const incometransactions = transactions.filter((item: any) => item.transactiontype === 'income')
+                if (transactions) setTransaction_income_history(incometransactions);
             });
         } catch (error) {
             console.log('err block')
