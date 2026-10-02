@@ -1,7 +1,6 @@
 "use client"
 
 import Header from "@/components/header/header";
-import styles from "./expense.module.css";
 import TransCard from "@/components/transcard/transcard";
 import MishalToggle from "@/components/mishaltoggle/mishalToggle";
 import Loading from "@/components/loading/Loading";
@@ -29,7 +28,7 @@ export default function Expense() {
 
     return (
         (transaction_expense_history) ?
-        (<div className="container">
+        (<div className="container bg-[#f6f5f5] dark:bg-slate-950 min-h-full text-black dark:text-white transition-colors duration-200">
             <Header />
             <div className="flex items-center flex-col my-2 mx-auto py-2 px-4">
 

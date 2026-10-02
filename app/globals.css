@@ -2,8 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-
-::-webkit-scrollbar {display: none;}
+::-webkit-scrollbar { display: none; }
 
 * { box-sizing: border-box; }
 
@@ -17,4 +16,79 @@ html, body {
 body {
     font-size: medium;
     line-height: 1.2;
+    @apply bg-[#f6f5f5] text-black dark:bg-slate-950 dark:text-white transition-colors duration-200;
 }
+
+/* ========== SPLASH PAGE ========== */
+.mainpage {
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.fullscreenimg {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    @apply bg-[#f6f5f5] dark:bg-slate-950;
+}
+
+#brandlogo {
+    animation: animatedlogo 0.62s linear infinite;
+    animation-iteration-count: 1;
+    animation-delay: 2s;
+}
+
+@keyframes animatedlogo {
+    0% { transform: scale(0); }
+    50% { transform: scale(200); }
+    100% { transform: scale(800); }
+}
+
+/* ========== SETTINGS ICON ANIMATION ========== */
+@keyframes settingsRotate {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.animated-settings-icon {
+    border-radius: 50%;
+    @apply bg-white dark:bg-slate-800;
+    animation: settingsRotate 2s linear infinite;
+}
+
+/* ========== LOADING ========== */
+.bg-mybgcolor {
+    @apply bg-[#f6f5f5] dark:bg-slate-950;
+}
+
+/* Sleek scrollbar utility */
+.sleek-scrollbar::-webkit-scrollbar {
+  width: 4px;
+}
+.sleek-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+.sleek-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(156, 163, 175, 0.5);
+  border-radius: 10px;
+}
+.sleek-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(107, 114, 128, 0.8);
+}
+
+/* ========== ANIMATIONS ========== */
+@keyframes fade-in-up {
+  0% { opacity: 0; transform: translateY(15px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+.animate-fade-in-up { animation: fade-in-up 0.5s ease-out both; }
+
+@keyframes fade-in {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+.animate-fade-in { animation: fade-in 0.4s ease-out both; }

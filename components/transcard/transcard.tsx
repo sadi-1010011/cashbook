@@ -1,19 +1,18 @@
 "use client"
 
 import { useEffect, useRef, useState } from "react";
-import styles from "./transcard.module.css";
 import Image from "next/image";
 import EditIcon from "@/assets/edit.png";
 import DeleteIcon from "@/assets/delete.png";
 import { usePathname, useRouter } from "next/navigation";
 import { getDateSliced, getDateTimeSliced } from "@/utils/getDateTime";
-import Localbase from "localbase";
+import { useTransactionStore } from "@/store/transactionStore";
 
 
 export default function TransCard({ id, amount=0, date="", type="", catogory="", description="", expanded=false}: any ) {
 
     const router = useRouter();
-    const toggleref: any = useRef();
+    const toggleref: any = useRef(null);
     const [togglestate, setTogglestate] = useState(expanded);
 
     const dateInFormat = getDateSliced(date);
@@ -39,7 +38,7 @@ export default function TransCard({ id, amount=0, date="", type="", catogory="",
     }
    
     return (
-        <div className={styles.trans_card} onClick={ () => expandedInfo(togglestate) } ref={toggleref as any}>
+        <div className="flex flex-col items-center justify-between w-full px-8 pt-5 pb-1 my-2.5 mx-auto rounded-[14px] transition-[padding] duration-300 shadow-[0_4px_10px_-1px_rgba(0,0,0,0.1),_0_2px_6px_-2px_rgba(0,0,0,0.2)] bg-white dark:bg-slate-900 text-black dark:text-white border border-gray-100 dark:border-slate-800" onClick={ () => expandedInfo(togglestate) } ref={toggleref as any}>
 
             <div className="inline-flex w-full items-center justify-between">
                 <span className="capitalize">{ description.length ? description : catogory }</span>
@@ -62,9 +61,6 @@ export default function TransCard({ id, amount=0, date="", type="", catogory="",
 }
 
 export function TransCardTools({ id, date, time }: any) {
-
-    const db = new Localbase('kaayidb');
-    db.config.debug = false;
     const router = useRouter();
     const currentPath = usePathname();
 
@@ -72,8 +68,8 @@ export function TransCardTools({ id, date, time }: any) {
         <>
             <div className="inline-flex items-center w-full my-0.5 p-0.5 rounded-xl">
                 <div className="w-full inline-flex items-center justify-between mx-1.5 p-1 text-sm capitalize">
-                    <Image src={EditIcon} width={20} height={20} alt="edit icon" onClick={ () => {
-                        console.log('functionality under progress..');
+                    <Image src={EditIcon} width={20} height={20} alt="edit icon" className="dark:invert" onClick={ () => {
+                        router.push(`/newtransaction?editId=${id}`);
                     }} />
                     <div className="text-center">
                         <span className="text-sm font-semibold text-slate-400 whitespace-nowrap">
@@ -84,11 +80,9 @@ export function TransCardTools({ id, date, time }: any) {
                                 { time || 'time unavailable' }
                         </span>
                     </div>
-                    <Image src={DeleteIcon} width={20} height={20} alt="delete icon" onClick={ () => {
+                    <Image src={DeleteIcon} width={20} height={20} alt="delete icon" className="dark:invert" onClick={ async () => {
                         console.log('deleting ',id)
-                        db.collection('alltransactions').doc({ id: id }).delete();
-                        // refresh data
-                        router.refresh();
+                        await useTransactionStore.getState().deleteTransaction(id);
                     } } />
                 </div>
             </div>

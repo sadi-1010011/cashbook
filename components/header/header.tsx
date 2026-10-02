@@ -1,13 +1,12 @@
 import Link from "next/link";
-import Logo from "@/assets/logo.png";
+import SettingsIcon from "@/assets/settings.png";
 import Image from "next/image";
-import styles from "./header.module.css";
 
 export default function Header() {
     return (
-        <header className={styles.common_header}>
-            <Link href="/" className={`${styles.applogo} font-extrabold uppercase`}>kaayi</Link>
-            <Link href="/"><Image src={Logo} alt="logo" width="30" height="30" /></Link>
+        <header className="flex items-center justify-between w-full px-8 py-4 mx-auto bg-white dark:bg-slate-950 text-black dark:text-white transition-colors duration-200">
+            <Link href="/" className="font-extrabold uppercase text-[1.2rem] tracking-wider py-1">kaayi</Link>
+            <Link href="/settings"><Image src={SettingsIcon} alt="settings" width="24" height="24" className="dark:invert" /></Link>
         </header>
     )
 }

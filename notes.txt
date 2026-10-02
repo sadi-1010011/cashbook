@@ -1,0 +1,23 @@
+Developer Notes
+
+1. Edit Transactions (Finish WIP)
+Current State: In TransCardTools, the edit button logs "functionality under progress..".
+Improvement: We can implement a simple modal or redirect the user to the /newtransaction page with query parameters to pre-fill the form. Localbase makes updating a breeze: db.collection('alltransactions').doc({ id: id }).update({...newValues}).
+
+2. Complete the Settings Page (/settings)
+The settings page is currently a placeholder. We can quickly make it functional by adding:
+Wipe Data Option: A highly requested feature in finance apps. A simple "Reset App" button that calls db.collection('alltransactions').delete() with a JavaScript confirmation dialog.
+Export/Import JSON (Data Backup): Because data is strictly local, if a user clears their browser cache, they lose everything. We can add a button to stringify the Localbase data and trigger a .json file download, plus a file input to upload and restore data.
+Dark Mode (Finish WIP): I saw the commented-out toggle for Dark Mode! We can uncomment it and use next-themes (or just simple React context) to toggle a dark class on the html tag, utilizing Tailwind's dark:bg-slate-900 capabilities.
+
+3. Implement "Debt/Lent" Transaction Types
+Current State: In app/newtransaction/page.tsx, you noted: // debt type coming soon in version 2.
+Improvement: We can easily add "debt" to the transaction_types array. It just requires adding an icon for it, mapping it to the UI, and updating the Dashboard calculations (e.g., treating "debt" similarly to an expense in the balance but visualizing it separately in the Pie Charts).
+
+4. Date Filtering for History & Stats
+Current State: The /history and /stats pages fetch all transactions ever made. As the app grows, this will clutter the UI and distort monthly budgeting.
+Improvement: We can add a simple "Current Month" filter. When fetching the array from Localbase, we just run a quick .filter() to only show and calculate transactions where the createdAt date falls in the current month/year.
+
+5. Fix the Auto-Refresh Bug on Deletion
+Current State: When deleting an item in TransCardTools, you call router.refresh(). In the Next.js App Router, this doesn't reliably trigger a re-fetch of client-side state inside a useEffect.
+Improvement: We should lift the state up, or dispatch a custom window event / pass a callback function so that the parent component (History/Dashboard) knows to immediately remove the item from the React state without a full page reload.

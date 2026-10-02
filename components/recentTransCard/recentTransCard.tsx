@@ -1,32 +1,18 @@
 import Image from "next/image";
-import styles from "./recentTransCard.module.css";
-// ICONS
-import TravelIcon from "@/assets/travelicon.png";
-import FoodIcon from "@/assets/foodicon.png";
-import MoviesIcon from "@/assets/entertainmenticon.png";
-import MedicineIcon from "@/assets/medicine.png";
-import HaircutIcon from "@/assets/haircut.png";
-import SalaryIcon from "@/assets/salary.png";
+import { CATEGORY_ICONS, DEFAULT_CATEGORY_ICON } from "@/constants";
 
-import OthersIcon from "@/assets/others.png";
-
-export default function RecentTransCard({ amount, catogory, type}: { amount: Number, catogory: String, type: String}) {
-
-    const iconsheat: any = {
-        'travel': TravelIcon,
-        'food': FoodIcon,
-        'movies': MoviesIcon,
-        'medicine': MedicineIcon,
-        'haircut': HaircutIcon,
-        'salary': SalaryIcon,
-    }
-
+export default function RecentTransCard({ amount, catogory, type, description }: { amount: Number, catogory: String, type: String, description?: String }) {
 
     return (
-        <div className={styles.recentexpense_card}>
-            <div className="flex px-1 items-center justify-evenly">
-                { catogory === 'no transactions yet' ? false : <Image src={(Object.hasOwn(iconsheat, `${catogory}`)) ? iconsheat[`${catogory}`] : OthersIcon} width={26} height={26} alt="travel icon" />}
-                <span className={`px-3 ${ catogory === 'no transactions yet' ? 'text-sm font-light text-gray-500' : 'font-semibold capitalize' }`}>{ catogory || 'Transaction' }</span>
+        <div className="flex items-center justify-between w-[85%] mx-auto my-5 px-7 py-7 cursor-pointer rounded-lg border border-gray-200 dark:border-slate-800 bg-[#f1f1f1] dark:bg-slate-900 text-black dark:text-white shadow-[0_4px_10px_-1px_rgba(0,0,0,0.1),_0_2px_6px_-2px_rgba(0,0,0,0.2)] transition-colors duration-200">
+            <div className="flex items-center gap-4 min-w-0 flex-1">
+                { catogory !== 'no transactions yet' && <Image src={CATEGORY_ICONS[catogory as string] || DEFAULT_CATEGORY_ICON} width={26} height={26} alt={`${catogory} icon`} className="dark:invert shrink-0" />}
+                <div className="flex flex-col min-w-0 flex-1">
+                    <span className={`${ catogory === 'no transactions yet' ? 'text-sm font-light text-gray-500' : 'font-semibold capitalize' } truncate`}>{ catogory || 'Transaction' }</span>
+                    {description && (
+                        <span className="text-xs text-gray-500 dark:text-gray-400 truncate mt-0.5">{description}</span>
+                    )}
+                </div>
             </div>
             <span className={`${ type === 'income' ? 'text-green-500' : 'text-red-500' } font-bold`}>{ `₹ ${ amount }` }</span>
         </div>

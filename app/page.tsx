@@ -1,35 +1,19 @@
 'use client'
 import Link from "next/link";
-import './styles/styles.css';
 import Image from "next/image";
 import BrandLogo from "@/assets/logo.png";
 import { useRouter } from "next/navigation";
-import Localbase from "localbase";
 import { useEffect } from "react";
 import Head from "next/head";
-
+import { dbService } from "@/services/db";
 
 export default function Home() {
 
   const router = useRouter();
 
   useEffect(() => {
-
-    
-    function initDefaultDB(collectionName: string) {
-      console.log('creating new db!');
-      let db = new Localbase('kaayidb'); // create db
-      db.collection(collectionName).get().then((data: any) => {
-        if (data.length === 0) {
-          console.log(`db created successfuly! with ${collectionName}`);
-        } else {
-          console.log('unable to create db!')
-        }
-      });
-    }
-
     // init db
-    initDefaultDB('alltransactions');
+    dbService.initDefaultDB();
   
   setTimeout(function() {
     router.push('/dashboard');
@@ -49,7 +33,7 @@ export default function Home() {
       <main className="mainpage">
           <div className="fullscreenimg">
             <Link href="/dashboard">
-                <Image priority={true} id="brandlogo" src={BrandLogo} width={120} height={120} alt="brand logo" />
+                <Image priority={true} id="brandlogo" src={BrandLogo} width={120} height={120} alt="brand logo" className="dark:invert" />
             </Link>
           </div>
       </main>
