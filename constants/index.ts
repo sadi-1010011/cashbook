@@ -6,6 +6,9 @@ import HaircutIcon from "@/assets/haircut.png";
 import SalaryIcon from "@/assets/salary.png";
 import MoneyIcon from "@/assets/money.png";
 import OthersIcon from "@/assets/others.png";
+import EmiIcon from "@/assets/emi.png";
+import RechargeIcon from "@/assets/recharge.png";
+import BeautyIcon from "@/assets/beauty.png";
 import { StaticImageData } from "next/image";
 
 export const CATEGORY_ICONS: Record<string, StaticImageData> = {
@@ -19,11 +22,14 @@ export const CATEGORY_ICONS: Record<string, StaticImageData> = {
     'other income': OthersIcon,
     'salary': SalaryIcon,
     'tip': MoneyIcon,
+    'emi': EmiIcon,
+    'recharge': RechargeIcon,
+    'beauty': BeautyIcon,
 };
 
 export const DEFAULT_CATEGORY_ICON = OthersIcon;
 
-export const EXPENSE_CATEGORIES = ["food", "travel", "movies", "haircut", "medicine", "other expense"];
+export const EXPENSE_CATEGORIES = ["food", "travel", "movies", "haircut", "medicine", "emi", "recharge", "beauty", "other expense"];
 export const INCOME_CATEGORIES = ["salary", "tip", "other income"];
 export const DEBT_CATEGORIES = ["borrowed", "lent"];
 export const TRANSACTION_TYPES = ["income", "expense", "debt"];

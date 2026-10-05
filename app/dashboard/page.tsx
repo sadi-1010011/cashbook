@@ -8,54 +8,36 @@ import RupeeIcon from "@/assets/rupee.png";
 import Image from "next/image";
 import Link from "next/link";
 import { useTransactionStore } from "@/store/transactionStore";
+import { useBudgetStore } from "@/store/budgetStore";
 
 export default function Dashboard() {
-    const { transactions: allTransactions, fetchTransactions, isInitialized, isLoading } = useTransactionStore();
-
-    let totalIncomeSum: number = 0;
-    let totalExpenseSum: number = 0;
+    const { transactions: allTransactions, fetchTransactions, isInitialized, isLoading, getStats } = useTransactionStore();
+    const { budgetLimit, budgetInitialized, fetchBudget } = useBudgetStore();
 
     useEffect(() => {
         if (!isInitialized) {
             fetchTransactions();
         }
-    }, [isInitialized, fetchTransactions]);
-
-
-    // calculate income, expense
-    let topCategory = "None";
-    let topCategoryAmount = 0;
-    let largestExpense = 0;
-
-    if (allTransactions && allTransactions.length > 0) {
-        let lastRecentTransactionUpto = 3;
-        const categoryTotals: any = {};
-
-        allTransactions.forEach((transaction: any) => {
-            const amt = Number(transaction.amount);
-            if (transaction.transactiontype === "income") {
-                totalIncomeSum = amt + totalIncomeSum;
-            }
-            if (transaction.transactiontype === "expense" || transaction.transactiontype === "debt") {
-                totalExpenseSum = amt + totalExpenseSum;
-                
-                // only track insights for actual expenses, not debt (or optionally track both)
-                if (transaction.transactiontype === "expense") {
-                    categoryTotals[transaction.catogory] = (categoryTotals[transaction.catogory] || 0) + amt;
-                    if (amt > largestExpense) {
-                        largestExpense = amt;
-                    }
-                }
-            }
-        });
-
-        for (const cat in categoryTotals) {
-            if (categoryTotals[cat] > topCategoryAmount) {
-                topCategoryAmount = categoryTotals[cat];
-                topCategory = cat;
-            }
+        if (!budgetInitialized) {
+            fetchBudget();
         }
-    }
+    }, [isInitialized, fetchTransactions, budgetInitialized, fetchBudget]);
+
+    const {
+        totalIncomeSum,
+        totalExpenseSum,
+        todayExpenseSum,
+        thisMonthExpenseSum,
+        // topCategory,
+        // topCategoryAmount,
+        largestExpense
+    } = getStats();
+
+    // Budget progress helpers
+    const budgetPercent = budgetLimit ? Math.min((thisMonthExpenseSum / budgetLimit) * 100, 100) : 0;
+    const budgetOverflow = budgetLimit ? thisMonthExpenseSum > budgetLimit : false;
+    const budgetBarColor = budgetPercent >= 90 ? 'bg-red-500' : budgetPercent >= 75 ? 'bg-amber-500' : 'bg-emerald-500';
+    const budgetTextColor = budgetPercent >= 90 ? 'text-red-600 dark:text-red-400' : budgetPercent >= 75 ? 'text-amber-600 dark:text-amber-400' : 'text-emerald-600 dark:text-emerald-400';
 
 
     return (
@@ -116,23 +98,58 @@ export default function Dashboard() {
                     }
                 </section>
 
+
                 {/* Insights */}
                 {(allTransactions && allTransactions.length > 0) && (
                     <section className="w-full mt-2 mb-6 px-6">
                         <h2 className="font-bold text-lg text-black dark:text-white mb-1 text-center">Insights</h2>
                         <div className="flex flex-col w-full">
-                            <RecentTransCard 
+                            {/* <RecentTransCard 
                                 catogory={topCategory} 
                                 amount={topCategoryAmount} 
                                 type="expense" 
                                 description="Top Spend Category" 
+                            /> */}
+                            <RecentTransCard
+                                catogory="Today's Total"
+                                amount={todayExpenseSum}
+                                type="expense"
+                                description="Today's Expense"
                             />
-                            <RecentTransCard 
-                                catogory="Highest Transaction" 
-                                amount={largestExpense} 
-                                type="expense" 
-                                description="Largest Single Item" 
+                            <RecentTransCard
+                                catogory="Highest Transaction"
+                                amount={largestExpense}
+                                type="expense"
+                                description="Largest Single Item"
                             />
+                        </div>
+                    </section>
+                )}
+
+                {/* Budget Progress */}
+                {budgetLimit !== null && (
+                    <section className="px-5 mb-8 mt-5 w-[85%] mx-auto">
+                        <div className="w-full bg-[#f1f1f1] dark:bg-slate-900 border border-gray-200 dark:border-slate-800 p-5 rounded-lg shadow-[0_4px_10px_-1px_rgba(0,0,0,0.1),_0_2px_6px_-2px_rgba(0,0,0,0.2)] transition-colors duration-200">
+                            <div className="flex items-center justify-between mb-2">
+                                <h3 className="font-semibold text-sm text-black dark:text-white">Monthly Budget</h3>
+                                <span className={`text-xs font-bold ${budgetTextColor}`}>
+                                    {budgetOverflow ? 'Over Budget!' : `${budgetPercent.toFixed(0)}% used`}
+                                </span>
+                            </div>
+                            <div className="w-full h-3 bg-gray-200 dark:bg-slate-700 rounded-full overflow-hidden">
+                                <div
+                                    className={`h-full rounded-full transition-all duration-500 ease-out ${budgetBarColor}`}
+                                    style={{ width: `${budgetPercent}%` }}
+                                />
+                            </div>
+                            <div className="flex items-center justify-between mt-2">
+                                <span className="text-xs text-slate-500 dark:text-slate-400">
+                                    ₹{thisMonthExpenseSum.toLocaleString('en-IN')}
+                                </span>
+                                <span className="text-xs text-slate-500 dark:text-slate-400">
+                                    ₹{budgetLimit.toLocaleString('en-IN')}
+                                </span>
+                            </div>
                         </div>
                     </section>
                 )}

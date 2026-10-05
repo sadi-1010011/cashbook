@@ -12,6 +12,15 @@ interface TransactionState {
     deleteTransaction: (id: string) => Promise<void>;
     deleteAllTransactions: () => Promise<void>;
     setAllTransactions: (transactions: TransactionType[]) => Promise<void>;
+    getStats: () => {
+        totalIncomeSum: number;
+        totalExpenseSum: number;
+        todayExpenseSum: number;
+        thisMonthExpenseSum: number;
+        topCategory: string;
+        topCategoryAmount: number;
+        largestExpense: number;
+    };
 }
 
 export const useTransactionStore = create<TransactionState>((set, get) => ({
@@ -81,5 +90,72 @@ export const useTransactionStore = create<TransactionState>((set, get) => ({
         } catch (error) {
             console.error("Failed to set all transactions", error);
         }
+    },
+
+    getStats: () => {
+        const transactions = get().transactions;
+        let totalIncomeSum = 0;
+        let totalExpenseSum = 0;
+        let todayExpenseSum = 0;
+        let thisMonthExpenseSum = 0;
+        let topCategory = "None";
+        let topCategoryAmount = 0;
+        let largestExpense = 0;
+        const categoryTotals: Record<string, number> = {};
+
+        const today = new Date();
+
+        if (transactions && transactions.length > 0) {
+            transactions.forEach((transaction) => {
+                const amt = Number(transaction.amount) || 0;
+                
+                if (transaction.transactiontype === "income") {
+                    totalIncomeSum += amt;
+                }
+                
+                if (transaction.transactiontype === "expense" || transaction.transactiontype === "debt") {
+                    totalExpenseSum += amt;
+                    
+                    if (transaction.transactiontype === "expense") {
+                        const txDate = new Date(transaction.createdAt);
+                        const isToday = txDate.getDate() === today.getDate() &&
+                                        txDate.getMonth() === today.getMonth() &&
+                                        txDate.getFullYear() === today.getFullYear();
+                        const isThisMonth = txDate.getMonth() === today.getMonth() &&
+                                            txDate.getFullYear() === today.getFullYear();
+                                        
+                        if (isToday) {
+                            todayExpenseSum += amt;
+                        }
+
+                        if (isThisMonth) {
+                            thisMonthExpenseSum += amt;
+                        }
+
+                        categoryTotals[transaction.catogory] = (categoryTotals[transaction.catogory] || 0) + amt;
+                        if (amt > largestExpense) {
+                            largestExpense = amt;
+                        }
+                    }
+                }
+            });
+
+            for (const cat in categoryTotals) {
+                if (categoryTotals[cat] > topCategoryAmount) {
+                    topCategoryAmount = categoryTotals[cat];
+                    topCategory = cat;
+                }
+            }
+        }
+
+        return {
+            totalIncomeSum,
+            totalExpenseSum,
+            todayExpenseSum,
+            thisMonthExpenseSum,
+            topCategory,
+            topCategoryAmount,
+            largestExpense
+        };
     }
 }));

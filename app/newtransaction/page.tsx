@@ -173,6 +173,20 @@ export default function NewTransaction() {
                   } else {
                     await useTransactionStore.getState().addTransaction(newtransaction as any);
                   }
+
+                  // Budget warning check
+                  if (newtransaction.transactiontype === "expense") {
+                      const { useBudgetStore } = await import("@/store/budgetStore");
+                      const budgetLimit = useBudgetStore.getState().budgetLimit;
+                      if (budgetLimit !== null) {
+                          const { thisMonthExpenseSum } = useTransactionStore.getState().getStats();
+                          if (thisMonthExpenseSum > budgetLimit) {
+                              toast.error(`⚠️ You've exceeded your monthly budget of ₹${budgetLimit.toLocaleString('en-IN')}!`, { duration: 4000 });
+                          } else if (thisMonthExpenseSum >= budgetLimit * 0.8) {
+                              toast(`⚡ You've used ${((thisMonthExpenseSum / budgetLimit) * 100).toFixed(0)}% of your monthly budget.`, { icon: '⚠️', duration: 3000 });
+                          }
+                      }
+                  }
                   
                   toast.success("Transaction saved successfully!");
                   router.push("/dashboard"); 

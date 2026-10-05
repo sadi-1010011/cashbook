@@ -3,17 +3,30 @@
 import { useTheme } from "next-themes";
 import { useEffect, useRef, useState } from "react";
 import { useTransactionStore } from "@/store/transactionStore";
+import { useBudgetStore } from "@/store/budgetStore";
 import Header from "@/components/header/header";
+import toast from "react-hot-toast";
 
 export default function Settings() {
     const { resolvedTheme, setTheme } = useTheme();
     const [mounted, setMounted] = useState(false);
     const { transactions, deleteAllTransactions, setAllTransactions } = useTransactionStore();
+    const { budgetLimit, budgetInitialized, fetchBudget, setBudgetLimit, clearBudgetLimit } = useBudgetStore();
+    const [budgetInput, setBudgetInput] = useState("");
     const fileInputRef = useRef<HTMLInputElement>(null);
 
     useEffect(() => {
         setMounted(true);
-    }, []);
+        if (!budgetInitialized) {
+            fetchBudget();
+        }
+    }, [budgetInitialized, fetchBudget]);
+
+    useEffect(() => {
+        if (budgetLimit !== null) {
+            setBudgetInput(String(budgetLimit));
+        }
+    }, [budgetLimit]);
 
     const handleWipeData = async () => {
         if (confirm("Are you sure you want to wipe all your data? This action cannot be undone.")) {
@@ -58,6 +71,22 @@ export default function Settings() {
         reader.readAsText(file);
     };
 
+    const handleBudgetSave = async () => {
+        const amount = Number(budgetInput);
+        if (!budgetInput || isNaN(amount) || amount <= 0) {
+            toast.error("Enter a valid budget amount.");
+            return;
+        }
+        await setBudgetLimit(amount);
+        toast.success(`Monthly budget set to ₹${amount.toLocaleString('en-IN')}`);
+    };
+
+    const handleBudgetClear = async () => {
+        await clearBudgetLimit();
+        setBudgetInput("");
+        toast.success("Budget limit removed.");
+    };
+
     return (
         <div className="flex flex-col h-screen bg-[#f6f5f5] dark:bg-slate-950 transition-colors duration-200 animate-fade-in">
             <Header />
@@ -87,6 +116,45 @@ export default function Settings() {
                                     />
                                     <div className="relative w-11 h-6 bg-gray-300 peer-focus:outline-none rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
                                 </label>
+                            )}
+                        </div>
+
+                        {/* Budget Preferences */}
+                        <div className="flex flex-col gap-3 w-full bg-[#f1f1f1] dark:bg-slate-900 border border-gray-200 dark:border-slate-800 p-5 rounded-lg shadow-[0_4px_10px_-1px_rgba(0,0,0,0.1),_0_2px_6px_-2px_rgba(0,0,0,0.2)] transition-colors duration-200">
+                            <div>
+                                <h3 className="font-semibold text-lg text-black dark:text-white">Budget Preferences</h3>
+                                <p className="text-sm text-slate-500 dark:text-slate-400">Set your monthly spending limit to track your budget.</p>
+                            </div>
+                            <div className="flex items-center gap-3 mt-2">
+                                <div className="relative flex-1">
+                                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 font-semibold">₹</span>
+                                    <input
+                                        type="number"
+                                        value={budgetInput}
+                                        onChange={(e) => setBudgetInput(e.target.value)}
+                                        placeholder="e.g. 20000"
+                                        className="w-full pl-8 pr-3 py-2.5 rounded-lg bg-white dark:bg-slate-800 border border-gray-300 dark:border-slate-700 text-black dark:text-white text-sm font-medium outline-none focus:ring-2 focus:ring-blue-500 transition-all"
+                                    />
+                                </div>
+                                <button
+                                    onClick={handleBudgetSave}
+                                    className="px-4 py-2.5 bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300 rounded-lg font-medium hover:opacity-80 transition-opacity shadow-sm text-sm"
+                                >
+                                    Save
+                                </button>
+                            </div>
+                            {budgetLimit !== null && (
+                                <div className="flex items-center justify-between mt-1">
+                                    <p className="text-xs text-slate-500 dark:text-slate-400">
+                                        Current limit: <span className="font-bold text-black dark:text-white">₹{budgetLimit.toLocaleString('en-IN')}</span>/month
+                                    </p>
+                                    <button
+                                        onClick={handleBudgetClear}
+                                        className="text-xs text-red-500 dark:text-red-400 font-medium hover:underline"
+                                    >
+                                        Remove
+                                    </button>
+                                </div>
                             )}
                         </div>
 
