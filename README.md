@@ -1,6 +1,6 @@
 # CashBook - Personal Finance Management App
 
-Live UI can be visited at: [https://kaayi.vercel.app/](https://kaayi.vercel.app/)
+Live UI can be visited at: [https://kaayi2.vercel.app/](https://kaayi2.vercel.app/)
 
 CashBook is a personal finance management web application designed to track incomes and expenses. It is built as an offline-first Progressive Web App (PWA) using modern web technologies, allowing users to seamlessly record and monitor their financial activities directly from their browser without needing a centralized backend database.
 

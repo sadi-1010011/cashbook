@@ -6,6 +6,7 @@ import { useTransactionStore } from "@/store/transactionStore";
 import { useBudgetStore } from "@/store/budgetStore";
 import Header from "@/components/header/header";
 import toast from "react-hot-toast";
+import { useForm, ValidationError } from '@formspree/react';
 
 export default function Settings() {
     const { resolvedTheme, setTheme } = useTheme();
@@ -14,6 +15,7 @@ export default function Settings() {
     const { budgetLimit, budgetInitialized, fetchBudget, setBudgetLimit, clearBudgetLimit } = useBudgetStore();
     const [budgetInput, setBudgetInput] = useState("");
     const fileInputRef = useRef<HTMLInputElement>(null);
+    const [state, handleSubmit] = useForm(process.env.NEXT_PUBLIC_FORMSPREE_PROJECT_ID || '');
 
     useEffect(() => {
         setMounted(true);
@@ -90,15 +92,19 @@ export default function Settings() {
     return (
         <div className="flex flex-col h-screen bg-[#f6f5f5] dark:bg-slate-950 transition-colors duration-200 animate-fade-in">
             <Header />
-            <div className="flex flex-col items-center overflow-y-auto flex-1 w-full pt-4 pb-28">
-                <div className="w-[85%] mx-auto flex flex-col gap-6 mt-4 animate-fade-in-up" style={{ animationDelay: '0.1s' }}>
-                    {/* Header */}
-                    <div className="flex items-center justify-between w-full mx-auto py-8 px-8 bg-[#121212e2] text-white rounded-[22px] backdrop-blur-sm shadow-[0_4px_10px_-1px_rgba(0,0,0,0.1),_0_2px_6px_-2px_rgba(0,0,0,0.2)]">
+            {/* Scrollable content area */}
+            <main className="flex-1 overflow-y-auto pb-28 sleek-scrollbar">
+                
+                {/* Header — sticky within scroll */}
+                <div className="sticky top-0 z-10 flex justify-center pt-5 pb-3 bg-[#f6f5f5]/80 dark:bg-slate-950/80 backdrop-blur-lg">
+                    <div className="flex items-center justify-between w-4/5 py-8 px-8 bg-[#121212e2] text-white rounded-[22px] shadow-[0_4px_10px_-1px_rgba(0,0,0,0.1),_0_2px_6px_-2px_rgba(0,0,0,0.2)]">
                         <h1 className="font-bold text-2xl flex items-center">
                             Settings
                         </h1>
                     </div>
+                </div>
 
+                <div className="w-[85%] mx-auto flex flex-col gap-6 mt-4 animate-fade-in-up" style={{ animationDelay: '0.1s' }}>
                     <div className="flex flex-col gap-4 w-full mt-2">
                         {/* Dark Mode */}
                         <div className="flex items-center justify-between w-full bg-[#f1f1f1] dark:bg-slate-900 border border-gray-200 dark:border-slate-800 p-5 rounded-lg shadow-[0_4px_10px_-1px_rgba(0,0,0,0.1),_0_2px_6px_-2px_rgba(0,0,0,0.2)] transition-colors duration-200">
@@ -181,6 +187,43 @@ export default function Settings() {
                             </div>
                         </div>
 
+                        {/* Feedback Form */}
+                        <div className="flex flex-col gap-3 w-full bg-[#f1f1f1] dark:bg-slate-900 border border-gray-200 dark:border-slate-800 p-5 rounded-lg shadow-[0_4px_10px_-1px_rgba(0,0,0,0.1),_0_2px_6px_-2px_rgba(0,0,0,0.2)] transition-colors duration-200">
+                            <div>
+                                <h3 className="font-semibold text-lg text-black dark:text-white">Feedback</h3>
+                                <p className="text-sm text-slate-500 dark:text-slate-400">Send us your thoughts or report an issue.</p>
+                            </div>
+                            {state.succeeded ? (
+                                <p className="text-sm text-green-600 dark:text-green-500 mt-2 font-medium">Thanks for your feedback!</p>
+                            ) : (
+                                <form onSubmit={handleSubmit} className="flex flex-col gap-3 mt-2">
+                                    <input 
+                                        type="email" 
+                                        name="email" 
+                                        required 
+                                        placeholder="Your email"
+                                        className="w-full px-3 py-2.5 rounded-lg bg-white dark:bg-slate-800 border border-gray-300 dark:border-slate-700 text-black dark:text-white text-sm outline-none focus:ring-2 focus:ring-blue-500 transition-all"
+                                    />
+                                    <ValidationError prefix="Email" field="email" errors={state.errors} className="text-xs text-red-500" />
+                                    <textarea 
+                                        name="message" 
+                                        required 
+                                        placeholder="Your message"
+                                        rows={3}
+                                        className="w-full px-3 py-2.5 rounded-lg bg-white dark:bg-slate-800 border border-gray-300 dark:border-slate-700 text-black dark:text-white text-sm outline-none focus:ring-2 focus:ring-blue-500 transition-all resize-none"
+                                    />
+                                    <ValidationError prefix="Message" field="message" errors={state.errors} className="text-xs text-red-500" />
+                                    <button 
+                                        type="submit" 
+                                        disabled={state.submitting}
+                                        className="w-fit px-4 py-2 mt-1 bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300 rounded-lg font-medium hover:opacity-80 transition-opacity shadow-sm disabled:opacity-50"
+                                    >
+                                        Send Feedback
+                                    </button>
+                                </form>
+                            )}
+                        </div>
+
                         {/* Danger Zone */}
                         <div className="flex flex-col gap-3 w-full bg-[#f1f1f1] dark:bg-slate-900 border border-gray-200 dark:border-slate-800 p-5 rounded-lg shadow-[0_4px_10px_-1px_rgba(0,0,0,0.1),_0_2px_6px_-2px_rgba(0,0,0,0.2)] transition-colors duration-200">
                             <div>
@@ -193,7 +236,7 @@ export default function Settings() {
                         </div>
                     </div>
                 </div>
-            </div>
+            </main>
         </div>
     )
 }
