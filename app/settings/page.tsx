@@ -15,7 +15,7 @@ export default function Settings() {
     const { budgetLimit, budgetInitialized, fetchBudget, setBudgetLimit, clearBudgetLimit } = useBudgetStore();
     const [budgetInput, setBudgetInput] = useState("");
     const fileInputRef = useRef<HTMLInputElement>(null);
-    const [state, handleSubmit] = useForm(process.env.NEXT_PUBLIC_FORMSPREE_PROJECT_ID || '');
+    const [state, handleSubmit] = useForm(process.env.NEXT_PUBLIC_FORMSPREE_PROJECT_ID || 'dummy_key');
 
     useEffect(() => {
         setMounted(true);
