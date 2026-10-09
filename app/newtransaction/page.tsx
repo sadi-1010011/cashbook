@@ -39,18 +39,18 @@ export default function NewTransaction() {
     <div className="flex flex-col items-center w-full h-full bg-[#f6f5f5] dark:bg-slate-950 transition-colors duration-200 animate-fade-in pb-24 overflow-y-auto">
       <Header />
 
-      <form className="w-4/5 pt-4 mx-auto my-3 text-center animate-fade-in-up" style={{ animationDelay: '0.1s' }}>
+      <form className="w-[90%] max-w-md pt-4 mx-auto my-3 text-center animate-fade-in-up" style={{ animationDelay: '0.1s' }}>
 
         {/* DATA- TRANSACTION TYPE */}
 
         <div className="w-full flex">
-          <div className="inline-flex items-center justify-center w-[70%] mx-auto my-2.5 mb-3 p-0.5 rounded-md">
+          <div className="inline-flex items-center justify-center w-full max-w-xs mx-auto my-2.5 mb-3 p-1 rounded-2xl bg-gray-200/50 dark:bg-slate-800">
             {
               TRANSACTION_TYPES.map((item, index) => 
-                <div key={index} className={`px-4 py-3.5 mx-px text-center capitalize text-sm font-bold w-full rounded-md cursor-pointer transition-colors duration-200 ${
+                <div key={index} className={`px-4 py-3 mx-1 text-center capitalize text-sm font-bold w-full rounded-xl cursor-pointer transition-all duration-200 active:scale-95 ${
                   newtransaction.transactiontype === item 
-                    ? 'text-white bg-black dark:text-black dark:bg-white' 
-                    : 'text-black bg-white dark:text-white dark:bg-slate-900'
+                    ? 'text-white bg-black dark:text-black dark:bg-white shadow-sm' 
+                    : 'text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100'
                 }`} onClick={
                   e => {
                     const value = e.currentTarget.textContent;
@@ -70,12 +70,11 @@ export default function NewTransaction() {
         {/* DATA- AMOUNT */}
 
         <input
-          className="block border-none outline-none w-[90%] mx-auto my-1 px-3 py-4 text-2xl font-extrabold text-center bg-transparent border-b-2 border-gray-300 dark:border-gray-600 text-black dark:text-white"
-          style={{ borderBottom: '2px solid lightgrey' }}
+          className="block border-none outline-none w-[90%] mx-auto my-2 px-3 py-4 text-3xl font-extrabold text-center bg-transparent border-b-2 border-gray-200 focus:border-black dark:border-gray-700 dark:focus:border-white text-black dark:text-white transition-colors placeholder:text-gray-300 dark:placeholder:text-gray-600"
           type="number"
           name="amount"
           value={newtransaction.amount}
-          placeholder="₹ Amount.."
+          placeholder="₹ 0"
           onChange={ e => {
             const { value } = e.currentTarget;
             if (Number(value) < 0) { 
@@ -94,18 +93,18 @@ export default function NewTransaction() {
 
         {/* DATA- CATOGORY */}
 
-        <div className="px-3 py-10">
-          <h3 className="capitalize text-lg font-bold text-center text-black dark:text-white">
+        <div className="px-1 py-8">
+          <h3 className="capitalize text-[15px] font-bold text-center text-gray-800 dark:text-gray-200">
             { newtransaction.transactiontype === 'expense' ? 'expense made for' : newtransaction.transactiontype === 'income' ? 'income from' : 'debt/lent details' }
           </h3>
-          <div className="grid grid-cols-3 grid-rows-2 gap-2.5 mt-8">
+          <div className="grid grid-cols-3 grid-rows-2 gap-3 mt-6">
             {
               (newtransaction.transactiontype === 'expense' ? EXPENSE_CATEGORIES : newtransaction.transactiontype === 'income' ? INCOME_CATEGORIES : DEBT_CATEGORIES).map((item, index) => 
                 <div key={index}
-                     className={`capitalize py-4 rounded-lg text-center transition-colors duration-200 cursor-pointer ${
+                     className={`capitalize py-4 rounded-3xl text-center transition-all duration-200 cursor-pointer active:scale-95 ${
                        newtransaction.catogory == item 
-                         ? 'text-black bg-gray-300 dark:text-white dark:bg-slate-700' 
-                         : 'text-black bg-[#edecec] dark:text-white dark:bg-slate-800'
+                         ? 'text-black bg-white dark:text-white dark:bg-slate-900 shadow-md border border-black dark:border-white ring-1 ring-black dark:ring-white' 
+                         : 'text-gray-700 bg-white dark:text-gray-300 dark:bg-slate-900 border border-gray-100 dark:border-slate-800 shadow-sm hover:shadow-md'
                      }`}
                      onClick={ (e) => {
                       let value = e.currentTarget.textContent;
@@ -116,8 +115,8 @@ export default function NewTransaction() {
                         }
                       })  
                     } }>
-                  <Image src={ CATEGORY_ICONS[item] || DEFAULT_CATEGORY_ICON } width={25} height={25} className="m-auto dark:invert" alt="catogory" />
-                  <span className="mt-1 text-sm">{ item }</span>
+                  <Image src={ CATEGORY_ICONS[item] || DEFAULT_CATEGORY_ICON } width={24} height={24} className={`m-auto dark:invert transition-all duration-200 ${newtransaction.catogory == item ? 'opacity-100 scale-110' : 'opacity-60'}`} alt="catogory" />
+                  <span className={`mt-2 block text-[13px] ${newtransaction.catogory == item ? 'font-bold' : 'font-medium'}`}>{ item }</span>
                 </div>) 
             }
           </div>
@@ -128,10 +127,9 @@ export default function NewTransaction() {
         <div>
           <input
             type="text"
-            className="block border-none outline-none w-[90%] h-auto mx-auto my-1 px-3 py-4 pb-3 text-lg text-center bg-transparent text-black dark:text-white"
-            style={{ borderBottom: '2px solid lightgrey' }}
+            className="block border-none outline-none w-[90%] mx-auto my-2 px-3 py-4 text-[16px] font-medium text-center bg-transparent border-b-2 border-gray-200 focus:border-black dark:border-gray-700 dark:focus:border-white text-black dark:text-white transition-colors placeholder:text-gray-400 dark:placeholder:text-gray-500"
             value={newtransaction.description}
-            placeholder="Add descripion.."
+            placeholder="Add description..."
             onChange={ (e) => {
               const { value } = e.target;
               setNewtransaction(previousdata => {
@@ -194,7 +192,7 @@ export default function NewTransaction() {
                   toast.error("Failed to save transaction.");
                   event.currentTarget.disabled = false;
               }
-            }} className="text-green-600 mt-8 mx-auto py-3 px-6 font-bold bg-green-200 dark:bg-green-900 dark:text-green-300 rounded-md hover:bg-green-400 hover:text-green-50 transition-colors duration-200">Save</button>
+            }} className="w-[80%] mx-auto text-white dark:text-black mt-8 py-3.5 px-6 font-bold bg-black dark:bg-white rounded-2xl hover:bg-gray-800 dark:hover:bg-gray-200 hover:shadow-lg active:scale-[0.98] transition-all duration-200 shadow-md">Save Transaction</button>
 
       </form>
 

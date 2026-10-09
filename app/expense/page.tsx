@@ -30,19 +30,20 @@ export default function Expense() {
         (transaction_expense_history) ?
             (<div className="container bg-[#f6f5f5] dark:bg-slate-950 min-h-full text-black dark:text-white transition-colors duration-200">
                 <Header />
-                <div className="flex items-center flex-col my-2 mx-auto py-2 px-4">
+                <div className="flex flex-col gap-3 my-4 mx-auto w-[90%] max-w-md animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
 
-                    <h2 className="capitalize font-bold text-lg my-2">Expense history</h2>
+                    <h2 className="capitalize font-bold text-xl my-2 text-center tracking-tight text-gray-900 dark:text-gray-100">Expense History</h2>
 
-                    <MishalToggle active="daily" />
+                    <div className="flex justify-center w-full mb-4">
+                        <MishalToggle active="daily" />
+                    </div>
 
                     {
-                        // (transaction_income_history.length)
-                        // ?
+                        (transaction_expense_history.length)
+                        ?
                         transaction_expense_history.map((transaction: any) => <TransCard key={transaction.id} id={transaction.id} amount={Number(transaction.amount)} date={transaction.createdAt} type={transaction.transactiontype} catogory={transaction.catogory} description={transaction.description} />)
-                        // :
-                        // <span className="capitalize font-semibold text-lg w-full my-10 text-center text-slate-500">no transactions made yet</span>
-
+                        :
+                        <span className="capitalize font-semibold text-[15px] w-full my-10 text-center text-slate-500">No transactions made yet</span>
                     }
 
                 </div>

@@ -4,17 +4,23 @@ import { CATEGORY_ICONS, DEFAULT_CATEGORY_ICON } from "@/constants";
 export default function RecentTransCard({ amount, catogory, type, description }: { amount: Number, catogory: String, type: String, description?: String }) {
 
     return (
-        <div className="flex items-center justify-between w-[85%] mx-auto my-5 px-7 py-7 cursor-pointer rounded-lg border border-gray-200 dark:border-slate-800 bg-[#f1f1f1] dark:bg-slate-900 text-black dark:text-white shadow-[0_4px_10px_-1px_rgba(0,0,0,0.1),_0_2px_6px_-2px_rgba(0,0,0,0.2)] transition-colors duration-200">
-            <div className="flex items-center gap-4 min-w-0 flex-1">
-                { catogory !== 'no transactions yet' && <Image src={CATEGORY_ICONS[catogory as string] || DEFAULT_CATEGORY_ICON} width={26} height={26} alt={`${catogory} icon`} className="dark:invert shrink-0" />}
-                <div className="flex flex-col min-w-0 flex-1">
-                    <span className={`${ catogory === 'no transactions yet' ? 'text-sm font-light text-gray-500' : 'font-semibold capitalize' } truncate`}>{ catogory || 'Transaction' }</span>
+        <div className="flex items-center justify-between w-full mx-auto p-4 cursor-pointer rounded-3xl border border-gray-100 dark:border-slate-800 bg-white dark:bg-slate-900 text-black dark:text-white shadow-sm hover:shadow-md transition-all duration-200 active:scale-[0.98]">
+            <div className="flex items-center gap-3.5 min-w-0 flex-1">
+                { catogory !== 'no transactions yet' && (
+                    <div className="w-12 h-12 bg-gray-50 dark:bg-slate-800 rounded-2xl flex items-center justify-center shrink-0">
+                        <Image src={CATEGORY_ICONS[catogory as string] || DEFAULT_CATEGORY_ICON} width={22} height={22} alt={`${catogory} icon`} className="dark:invert opacity-80" />
+                    </div>
+                )}
+                <div className="flex flex-col min-w-0 flex-1 justify-center">
+                    <span className={`${ catogory === 'no transactions yet' ? 'text-[13px] font-medium text-gray-400' : 'text-[15px] font-semibold text-gray-800 dark:text-gray-100 capitalize' } truncate`}>{ catogory || 'Transaction' }</span>
                     {description && (
-                        <span className="text-xs text-gray-500 dark:text-gray-400 truncate mt-0.5">{description}</span>
+                        <span className="text-[12px] text-gray-500 dark:text-gray-400 truncate mt-0.5">{description}</span>
                     )}
                 </div>
             </div>
-            <span className={`${ type === 'income' ? 'text-green-500' : 'text-red-500' } font-bold`}>{ `₹ ${ amount }` }</span>
+            <span className={`${ type === 'income' ? 'text-emerald-500' : 'text-rose-500' } font-bold text-[16px]`}>
+                { type === 'expense' ? '- ' : '' }₹{ Number(amount).toLocaleString('en-IN') }
+            </span>
         </div>
     )
 }

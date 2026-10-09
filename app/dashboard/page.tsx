@@ -48,13 +48,13 @@ export default function Dashboard() {
             <main className="flex-1 overflow-y-auto pb-28 sleek-scrollbar">
 
                 {/* Balance card — sticky within scroll */}
-                <div className="sticky top-0 z-10 flex justify-center pt-5 pb-3 bg-[#f6f5f5]/80 dark:bg-slate-950/80 backdrop-blur-lg">
-                    <div className="flex items-center justify-between w-4/5 py-14 px-8 bg-[#121212e2] text-2xl font-extrabold rounded-[22px] backdrop-blur-sm shadow-[0_4px_10px_-1px_rgba(0,0,0,0.1),_0_2px_6px_-2px_rgba(0,0,0,0.2)]">
-                        <h1 className="text-white inline-flex items-center justify-center">
-                            <Image src={RupeeIcon} alt="rupee icon" width={22} height={22} className="mx-1" />
+                <div className="sticky top-0 z-10 flex justify-center pt-5 pb-3 bg-[#f6f5f5]/90 dark:bg-slate-950/90 backdrop-blur-md">
+                    <div className="flex items-center justify-between w-[90%] max-w-md py-8 px-8 bg-[#1a1a1a] text-2xl font-extrabold rounded-3xl shadow-xl border border-gray-800 transition-all">
+                        <h1 className="text-white flex items-center text-3xl tracking-tight">
+                            <Image src={RupeeIcon} alt="rupee icon" width={24} height={24} className="mr-1.5 opacity-90" />
                             {`${getIncomeExpenseDiff(totalIncomeSum, totalExpenseSum) || '0'}`}
                         </h1>
-                        <span className="text-white text-lg leading-relaxed">INR</span>
+                        <span className="text-gray-400 text-sm font-medium tracking-wider">INR</span>
                     </div>
                 </div>
 
@@ -73,11 +73,11 @@ export default function Dashboard() {
                 </div> */}
 
                 {/* Recent Transactions */}
-                <section className="px-6 mt-4">
-                    <div className="relative flex items-center justify-center mb-3">
-                        <h2 className="font-bold text-lg text-black dark:text-white text-center">Recent Transactions</h2>
+                <section className="px-5 mt-6 w-[90%] max-w-md mx-auto">
+                    <div className="flex items-center justify-between mb-4 px-1">
+                        <h2 className="font-bold text-[17px] text-gray-800 dark:text-gray-100">Recent Transactions</h2>
                         {allTransactions && allTransactions.length > 6 && (
-                            <Link href="/history" className="absolute right-0 text-blue-600 dark:text-blue-400 text-xs font-semibold hover:underline transition-colors duration-200">
+                            <Link href="/history" className="text-blue-500 dark:text-blue-400 text-xs font-semibold hover:text-blue-600 transition-colors">
                                 View all →
                             </Link>
                         )}
@@ -85,13 +85,13 @@ export default function Dashboard() {
 
                     {
                         (allTransactions && allTransactions.length > 0) ? (
-                            <div className="max-h-[380px] overflow-y-auto sleek-scrollbar">
+                            <div className="flex flex-col gap-3 max-h-[360px] overflow-y-auto sleek-scrollbar pb-1">
                                 {allTransactions.slice(0, 6).map((item: any) => (
                                     <RecentTransCard key={item.id} catogory={String(item.catogory)} amount={Number(item.amount)} type={item.transactiontype} description={item.description} />
                                 ))}
                             </div>
                         ) : isLoading ? (
-                            <div className="w-full text-center py-8 text-gray-500 dark:text-gray-400">Loading...</div>
+                            <div className="w-full text-center py-8 text-gray-400 text-sm font-medium">Loading transactions...</div>
                         ) : (
                             <RecentTransCard catogory={'no transactions yet'} amount={0} type={'income'} />
                         )
@@ -101,9 +101,9 @@ export default function Dashboard() {
 
                 {/* Insights */}
                 {(allTransactions && allTransactions.length > 0) && (
-                    <section className="w-full mt-2 mb-6 px-6">
-                        <h2 className="font-bold text-lg text-black dark:text-white mb-1 text-center">Insights</h2>
-                        <div className="flex flex-col w-full">
+                    <section className="px-5 mt-8 mb-4 w-[90%] max-w-md mx-auto">
+                        <h2 className="font-bold text-[17px] text-gray-800 dark:text-gray-100 mb-4 px-1">Insights</h2>
+                        <div className="flex flex-col gap-3">
                             {/* <RecentTransCard 
                                 catogory={topCategory} 
                                 amount={topCategoryAmount} 
@@ -128,26 +128,26 @@ export default function Dashboard() {
 
                 {/* Budget Progress */}
                 {budgetLimit !== null && (
-                    <section className="px-5 mb-8 mt-5 w-[85%] mx-auto">
-                        <div className="w-full bg-[#f1f1f1] dark:bg-slate-900 border border-gray-200 dark:border-slate-800 p-5 rounded-lg shadow-[0_4px_10px_-1px_rgba(0,0,0,0.1),_0_2px_6px_-2px_rgba(0,0,0,0.2)] transition-colors duration-200">
-                            <div className="flex items-center justify-between mb-2">
-                                <h3 className="font-semibold text-sm text-black dark:text-white">Monthly Budget</h3>
-                                <span className={`text-xs font-bold ${budgetTextColor}`}>
+                    <section className="px-5 mt-8 mb-6 w-[90%] max-w-md mx-auto">
+                        <div className="w-full bg-white dark:bg-slate-900 border border-gray-100 dark:border-slate-800 p-5 rounded-3xl shadow-sm transition-colors duration-200">
+                            <div className="flex items-center justify-between mb-3">
+                                <h3 className="font-bold text-[15px] text-gray-800 dark:text-gray-100">Monthly Budget</h3>
+                                <span className={`text-xs font-bold px-2 py-1 rounded-md bg-gray-100 dark:bg-slate-800 ${budgetTextColor}`}>
                                     {budgetOverflow ? 'Over Budget!' : `${budgetPercent.toFixed(0)}% used`}
                                 </span>
                             </div>
-                            <div className="w-full h-3 bg-gray-200 dark:bg-slate-700 rounded-full overflow-hidden">
+                            <div className="w-full h-2.5 bg-gray-100 dark:bg-slate-800 rounded-full overflow-hidden">
                                 <div
-                                    className={`h-full rounded-full transition-all duration-500 ease-out ${budgetBarColor}`}
+                                    className={`h-full rounded-full transition-all duration-700 ease-out ${budgetBarColor}`}
                                     style={{ width: `${budgetPercent}%` }}
                                 />
                             </div>
-                            <div className="flex items-center justify-between mt-2">
-                                <span className="text-xs text-slate-500 dark:text-slate-400">
-                                    ₹{thisMonthExpenseSum.toLocaleString('en-IN')}
+                            <div className="flex items-center justify-between mt-3">
+                                <span className="text-[12px] font-semibold text-gray-500 dark:text-gray-400">
+                                    ₹{thisMonthExpenseSum.toLocaleString('en-IN')} <span className="font-normal">spent</span>
                                 </span>
-                                <span className="text-xs text-slate-500 dark:text-slate-400">
-                                    ₹{budgetLimit.toLocaleString('en-IN')}
+                                <span className="text-[12px] font-semibold text-gray-500 dark:text-gray-400">
+                                    ₹{budgetLimit.toLocaleString('en-IN')} <span className="font-normal">limit</span>
                                 </span>
                             </div>
                         </div>
@@ -155,26 +155,26 @@ export default function Dashboard() {
                 )}
 
                 {/* Quick Actions / Shortcuts */}
-                <section className="px-5 mb-8 w-[85%] mx-auto">
+                <section className="px-5 mb-10 w-[90%] max-w-md mx-auto">
                     <div className="grid grid-cols-2 gap-4">
                         {/* Bills */}
-                        <Link href="/bills" className="flex flex-col items-center justify-center py-5 px-4 bg-[#f1f1f1] dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-2xl shadow-[0_4px_10px_-1px_rgba(0,0,0,0.1),_0_2px_6px_-2px_rgba(0,0,0,0.2)] hover:opacity-80 transition-opacity cursor-pointer">
-                            <div className="w-12 h-12 bg-blue-100 dark:bg-blue-900/40 rounded-full flex items-center justify-center mb-3">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-6 h-6 text-blue-600 dark:text-blue-400">
+                        <Link href="/bills" className="flex flex-col items-center justify-center py-5 px-4 bg-white dark:bg-slate-900 border border-gray-100 dark:border-slate-800 rounded-3xl shadow-sm hover:shadow-md transition-all active:scale-[0.98] cursor-pointer">
+                            <div className="w-12 h-12 bg-blue-50 dark:bg-blue-900/30 rounded-2xl flex items-center justify-center mb-3">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-6 h-6 text-blue-600 dark:text-blue-400">
                                     <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m3.75 9v6m3-3H9m1.5-12H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
                                 </svg>
                             </div>
-                            <span className="text-sm font-semibold text-black dark:text-white tracking-wide">Bills</span>
+                            <span className="text-[14px] font-semibold text-gray-800 dark:text-gray-100 tracking-wide">Bills</span>
                         </Link>
 
                         {/* Subscriptions */}
-                        <Link href="/subscriptions" className="flex flex-col items-center justify-center py-5 px-4 bg-[#f1f1f1] dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-2xl shadow-[0_4px_10px_-1px_rgba(0,0,0,0.1),_0_2px_6px_-2px_rgba(0,0,0,0.2)] hover:opacity-80 transition-opacity cursor-pointer">
-                            <div className="w-12 h-12 bg-purple-100 dark:bg-purple-900/40 rounded-full flex items-center justify-center mb-3">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-6 h-6 text-purple-600 dark:text-purple-400">
+                        <Link href="/subscriptions" className="flex flex-col items-center justify-center py-5 px-4 bg-white dark:bg-slate-900 border border-gray-100 dark:border-slate-800 rounded-3xl shadow-sm hover:shadow-md transition-all active:scale-[0.98] cursor-pointer">
+                            <div className="w-12 h-12 bg-purple-50 dark:bg-purple-900/30 rounded-2xl flex items-center justify-center mb-3">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-6 h-6 text-purple-600 dark:text-purple-400">
                                     <path strokeLinecap="round" strokeLinejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" />
                                 </svg>
                             </div>
-                            <span className="text-sm font-semibold text-black dark:text-white tracking-wide">Subscriptions</span>
+                            <span className="text-[14px] font-semibold text-gray-800 dark:text-gray-100 tracking-wide">Subscriptions</span>
                         </Link>
                     </div>
                 </section>

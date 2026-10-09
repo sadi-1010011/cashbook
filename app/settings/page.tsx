@@ -96,21 +96,21 @@ export default function Settings() {
             <main className="flex-1 overflow-y-auto pb-28 sleek-scrollbar">
                 
                 {/* Header — sticky within scroll */}
-                <div className="sticky top-0 z-10 flex justify-center pt-5 pb-3 bg-[#f6f5f5]/80 dark:bg-slate-950/80 backdrop-blur-lg">
-                    <div className="flex items-center justify-between w-4/5 py-8 px-8 bg-[#121212e2] text-white rounded-[22px] shadow-[0_4px_10px_-1px_rgba(0,0,0,0.1),_0_2px_6px_-2px_rgba(0,0,0,0.2)]">
-                        <h1 className="font-bold text-2xl flex items-center">
+                <div className="sticky top-0 z-10 flex justify-center pt-5 pb-3 bg-[#f6f5f5]/90 dark:bg-slate-950/90 backdrop-blur-md">
+                    <div className="flex items-center justify-between w-[90%] max-w-md py-8 px-8 bg-[#1a1a1a] text-white rounded-3xl shadow-xl border border-gray-800 transition-all">
+                        <h1 className="font-bold text-2xl flex items-center tracking-tight">
                             Settings
                         </h1>
                     </div>
                 </div>
 
-                <div className="w-[85%] mx-auto flex flex-col gap-6 mt-4 animate-fade-in-up" style={{ animationDelay: '0.1s' }}>
+                <div className="w-[90%] max-w-md mx-auto flex flex-col gap-6 mt-4 animate-fade-in-up" style={{ animationDelay: '0.1s' }}>
                     <div className="flex flex-col gap-4 w-full mt-2">
                         {/* Dark Mode */}
-                        <div className="flex items-center justify-between w-full bg-[#f1f1f1] dark:bg-slate-900 border border-gray-200 dark:border-slate-800 p-5 rounded-lg shadow-[0_4px_10px_-1px_rgba(0,0,0,0.1),_0_2px_6px_-2px_rgba(0,0,0,0.2)] transition-colors duration-200">
+                        <div className="flex items-center justify-between w-full bg-white dark:bg-slate-900 border border-gray-100 dark:border-slate-800 p-5 rounded-3xl shadow-sm hover:shadow-md transition-all duration-200">
                             <div>
-                                <h3 className="font-semibold text-lg text-black dark:text-white">Dark Mode</h3>
-                                <p className="text-sm text-slate-500 dark:text-slate-400">Toggle dark mode theme</p>
+                                <h3 className="font-bold text-[15px] text-gray-800 dark:text-gray-100">Dark Mode</h3>
+                                <p className="text-[13px] text-slate-500 dark:text-slate-400">Toggle dark mode theme</p>
                             </div>
                             {mounted && (
                                 <label className="inline-flex items-center cursor-pointer">
@@ -120,16 +120,16 @@ export default function Settings() {
                                         checked={resolvedTheme === 'dark'}
                                         onChange={() => setTheme(resolvedTheme === 'dark' ? 'light' : 'dark')}
                                     />
-                                    <div className="relative w-11 h-6 bg-gray-300 peer-focus:outline-none rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
+                                    <div className="relative w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-500"></div>
                                 </label>
                             )}
                         </div>
 
                         {/* Budget Preferences */}
-                        <div className="flex flex-col gap-3 w-full bg-[#f1f1f1] dark:bg-slate-900 border border-gray-200 dark:border-slate-800 p-5 rounded-lg shadow-[0_4px_10px_-1px_rgba(0,0,0,0.1),_0_2px_6px_-2px_rgba(0,0,0,0.2)] transition-colors duration-200">
+                        <div className="flex flex-col gap-3 w-full bg-white dark:bg-slate-900 border border-gray-100 dark:border-slate-800 p-5 rounded-3xl shadow-sm hover:shadow-md transition-all duration-200">
                             <div>
-                                <h3 className="font-semibold text-lg text-black dark:text-white">Budget Preferences</h3>
-                                <p className="text-sm text-slate-500 dark:text-slate-400">Set your monthly spending limit to track your budget.</p>
+                                <h3 className="font-bold text-[15px] text-gray-800 dark:text-gray-100">Budget Preferences</h3>
+                                <p className="text-[13px] text-slate-500 dark:text-slate-400">Set your monthly spending limit to track your budget.</p>
                             </div>
                             <div className="flex items-center gap-3 mt-2">
                                 <div className="relative flex-1">
@@ -165,10 +165,10 @@ export default function Settings() {
                         </div>
 
                         {/* Data Backup */}
-                        <div className="flex flex-col gap-3 w-full bg-[#f1f1f1] dark:bg-slate-900 border border-gray-200 dark:border-slate-800 p-5 rounded-lg shadow-[0_4px_10px_-1px_rgba(0,0,0,0.1),_0_2px_6px_-2px_rgba(0,0,0,0.2)] transition-colors duration-200">
+                        <div className="flex flex-col gap-3 w-full bg-white dark:bg-slate-900 border border-gray-100 dark:border-slate-800 p-5 rounded-3xl shadow-sm hover:shadow-md transition-all duration-200">
                             <div>
-                                <h3 className="font-semibold text-lg text-black dark:text-white">Data Backup</h3>
-                                <p className="text-sm text-slate-500 dark:text-slate-400">Export or import your transactions data.</p>
+                                <h3 className="font-bold text-[15px] text-gray-800 dark:text-gray-100">Data Backup</h3>
+                                <p className="text-[13px] text-slate-500 dark:text-slate-400">Export or import your transactions data.</p>
                             </div>
                             <div className="flex gap-3 mt-2">
                                 <button onClick={handleExport} className="px-4 py-2 bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300 rounded-lg font-medium hover:opacity-80 transition-opacity shadow-sm">
@@ -188,10 +188,10 @@ export default function Settings() {
                         </div>
 
                         {/* Feedback Form */}
-                        <div className="flex flex-col gap-3 w-full bg-[#f1f1f1] dark:bg-slate-900 border border-gray-200 dark:border-slate-800 p-5 rounded-lg shadow-[0_4px_10px_-1px_rgba(0,0,0,0.1),_0_2px_6px_-2px_rgba(0,0,0,0.2)] transition-colors duration-200">
+                        <div className="flex flex-col gap-3 w-full bg-white dark:bg-slate-900 border border-gray-100 dark:border-slate-800 p-5 rounded-3xl shadow-sm hover:shadow-md transition-all duration-200">
                             <div>
-                                <h3 className="font-semibold text-lg text-black dark:text-white">Feedback</h3>
-                                <p className="text-sm text-slate-500 dark:text-slate-400">Send us your thoughts or report an issue.</p>
+                                <h3 className="font-bold text-[15px] text-gray-800 dark:text-gray-100">Feedback</h3>
+                                <p className="text-[13px] text-slate-500 dark:text-slate-400">Send us your thoughts or report an issue.</p>
                             </div>
                             {state.succeeded ? (
                                 <p className="text-sm text-green-600 dark:text-green-500 mt-2 font-medium">Thanks for your feedback!</p>
@@ -225,10 +225,10 @@ export default function Settings() {
                         </div>
 
                         {/* Danger Zone */}
-                        <div className="flex flex-col gap-3 w-full bg-[#f1f1f1] dark:bg-slate-900 border border-gray-200 dark:border-slate-800 p-5 rounded-lg shadow-[0_4px_10px_-1px_rgba(0,0,0,0.1),_0_2px_6px_-2px_rgba(0,0,0,0.2)] transition-colors duration-200">
+                        <div className="flex flex-col gap-3 w-full bg-white dark:bg-slate-900 border border-gray-100 dark:border-slate-800 p-5 rounded-3xl shadow-sm hover:shadow-md transition-all duration-200">
                             <div>
-                                <h3 className="font-semibold text-lg text-red-600 dark:text-red-500">Danger Zone</h3>
-                                <p className="text-sm text-slate-500 dark:text-slate-400">Permanently delete all your transactions.</p>
+                                <h3 className="font-bold text-[15px] text-rose-600 dark:text-rose-500">Danger Zone</h3>
+                                <p className="text-[13px] text-slate-500 dark:text-slate-400">Permanently delete all your transactions.</p>
                             </div>
                             <button onClick={handleWipeData} className="w-fit px-4 py-2 mt-2 bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400 rounded-lg font-medium hover:opacity-80 transition-opacity shadow-sm">
                                 Reset App

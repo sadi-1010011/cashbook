@@ -140,45 +140,45 @@ export default function Stats() {
                 <div className="animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
                     {/* EXPENSE SECTION */}
                     {totalExpense > 0 ? (
-                        <div className="flex w-11/12 max-w-md h-64 my-6 mx-auto px-2 py-4 bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-gray-100 dark:border-slate-800 transition-colors duration-200">
+                        <div className="flex w-[90%] max-w-md h-64 my-6 mx-auto px-2 py-4 bg-white dark:bg-slate-900 rounded-3xl shadow-sm hover:shadow-md border border-gray-100 dark:border-slate-800 transition-all duration-200">
                             <canvas id="expensechart" className="m-auto" ref={expensecanvas}></canvas>
                         </div>
                     ) : (
-                        <div className="flex flex-col items-center justify-center w-11/12 max-w-md h-48 my-6 mx-auto px-4 py-4 bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-gray-100 dark:border-slate-800 transition-colors duration-200">
+                        <div className="flex flex-col items-center justify-center w-[90%] max-w-md h-48 my-6 mx-auto px-4 py-4 bg-white dark:bg-slate-900 rounded-3xl shadow-sm hover:shadow-md border border-gray-100 dark:border-slate-800 transition-all duration-200">
                             <span className="text-gray-400 dark:text-slate-500 mb-2">📉</span>
-                            <p className="text-sm text-gray-500 dark:text-slate-400 font-medium">No expenses this month</p>
+                            <p className="text-[14px] text-gray-500 dark:text-slate-400 font-medium">No expenses this month</p>
                         </div>
                     )}
 
                     {/* INCOME SECTION */}
                     {totalIncome > 0 ? (
-                        <div className="flex w-11/12 max-w-md h-64 my-6 mx-auto px-2 py-4 bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-gray-100 dark:border-slate-800 transition-colors duration-200">
+                        <div className="flex w-[90%] max-w-md h-64 my-6 mx-auto px-2 py-4 bg-white dark:bg-slate-900 rounded-3xl shadow-sm hover:shadow-md border border-gray-100 dark:border-slate-800 transition-all duration-200">
                             <canvas id="incomechart" className="m-auto" ref={incomecanvas}></canvas>
                         </div>
                     ) : (
-                        <div className="flex flex-col items-center justify-center w-11/12 max-w-md h-48 my-6 mx-auto px-4 py-4 bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-gray-100 dark:border-slate-800 transition-colors duration-200">
+                        <div className="flex flex-col items-center justify-center w-[90%] max-w-md h-48 my-6 mx-auto px-4 py-4 bg-white dark:bg-slate-900 rounded-3xl shadow-sm hover:shadow-md border border-gray-100 dark:border-slate-800 transition-all duration-200">
                             <span className="text-gray-400 dark:text-slate-500 mb-2">📈</span>
-                            <p className="text-sm text-gray-500 dark:text-slate-400 font-medium">No income this month</p>
+                            <p className="text-[14px] text-gray-500 dark:text-slate-400 font-medium">No income this month</p>
                         </div>
                     )}
 
                     {/* DEBT SECTION */}
                     {totalDebt > 0 && (
-                        <div className="flex w-11/12 max-w-md h-64 my-6 mx-auto px-2 py-4 bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-gray-100 dark:border-slate-800 transition-colors duration-200">
+                        <div className="flex w-[90%] max-w-md h-64 my-6 mx-auto px-2 py-4 bg-white dark:bg-slate-900 rounded-3xl shadow-sm hover:shadow-md border border-gray-100 dark:border-slate-800 transition-all duration-200">
                             <canvas id="debtchart" className="m-auto" ref={debtcanvas}></canvas>
                         </div>
                     )}
 
                     {/* TOTAL IN-EX SUMMARY PILLS */}
-                    <div className="flex items-center justify-evenly my-5 mx-auto px-3 w-full max-w-md capitalize">
-                        <div className="my-1 mx-1 py-5 bg-green-100/70 dark:bg-green-900/30 w-1/2 text-center rounded-xl hover:bg-green-200 dark:hover:bg-green-900/50 transition-colors duration-200 border border-green-200 dark:border-green-800">
-                            <Link href="/income" className="text-xs uppercase tracking-wider font-bold text-green-700 dark:text-green-400">Total Income</Link>
-                            <h2 className="font-extrabold text-xl py-1.5 text-black dark:text-white">{ `₹ ${ totalIncome }` }</h2>
-                        </div>
-                        <div className="my-1 mx-1 py-5 bg-red-100/70 dark:bg-red-900/30 w-1/2 text-center rounded-xl hover:bg-red-200 dark:hover:bg-red-900/50 transition-colors duration-200 border border-red-200 dark:border-red-800">
-                            <Link href="/expense" className="text-xs uppercase tracking-wider font-bold text-red-700 dark:text-red-400">Total Expense</Link>
-                            <h2 className="font-extrabold text-xl py-1.5 text-black dark:text-white">{ `₹ ${ totalExpense }` }</h2>
-                        </div>
+                    <div className="flex items-center justify-between gap-4 my-5 mx-auto w-[90%] max-w-md capitalize">
+                        <Link href="/income" className="flex flex-col items-center justify-center py-5 bg-emerald-50 dark:bg-emerald-900/20 w-1/2 text-center rounded-3xl hover:bg-emerald-100 dark:hover:bg-emerald-900/40 transition-all duration-200 border border-emerald-100 dark:border-emerald-800 shadow-sm hover:shadow-md cursor-pointer active:scale-[0.98]">
+                            <span className="text-[11px] uppercase tracking-wider font-bold text-emerald-600 dark:text-emerald-400">Total Income</span>
+                            <h2 className="font-extrabold text-xl py-1 text-black dark:text-white">{ `₹ ${ totalIncome }` }</h2>
+                        </Link>
+                        <Link href="/expense" className="flex flex-col items-center justify-center py-5 bg-rose-50 dark:bg-rose-900/20 w-1/2 text-center rounded-3xl hover:bg-rose-100 dark:hover:bg-rose-900/40 transition-all duration-200 border border-rose-100 dark:border-rose-800 shadow-sm hover:shadow-md cursor-pointer active:scale-[0.98]">
+                            <span className="text-[11px] uppercase tracking-wider font-bold text-rose-600 dark:text-rose-400">Total Expense</span>
+                            <h2 className="font-extrabold text-xl py-1 text-black dark:text-white">{ `₹ ${ totalExpense }` }</h2>
+                        </Link>
                     </div>
                     
                     <div className="flex justify-center mt-6">
