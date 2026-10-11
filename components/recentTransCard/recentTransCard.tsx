@@ -1,7 +1,11 @@
+"use client"
+
 import Image from "next/image";
 import { CATEGORY_ICONS, DEFAULT_CATEGORY_ICON } from "@/constants";
+import { useCurrencyStore } from "@/store/currencyStore";
 
 export default function RecentTransCard({ amount, catogory, type, description }: { amount: Number, catogory: String, type: String, description?: String }) {
+    const { format } = useCurrencyStore();
 
     return (
         <div className="flex items-center justify-between w-full mx-auto p-4 cursor-pointer rounded-3xl border border-gray-100 dark:border-slate-800 bg-white dark:bg-slate-900 text-black dark:text-white shadow-sm hover:shadow-md transition-all duration-200 active:scale-[0.98]">
@@ -19,8 +23,8 @@ export default function RecentTransCard({ amount, catogory, type, description }:
                 </div>
             </div>
             <span className={`${ type === 'income' ? 'text-emerald-500' : 'text-rose-500' } font-bold text-[16px]`}>
-                { type === 'expense' ? '- ' : '' }₹{ Number(amount).toLocaleString('en-IN') }
+                { type === 'expense' && Number(amount) !== 0 ? '- ' : '' }{ format(Number(amount)) }
             </span>
         </div>
-    )
+    );
 }

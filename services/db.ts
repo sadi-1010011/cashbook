@@ -44,10 +44,7 @@ export const dbService = {
     },
     
     initDefaultDB: async (): Promise<void> => {
-        const data = await db.collection(COLLECTION).get();
-        if (!data || data.length === 0) {
-            console.log(`db created successfuly! with ${COLLECTION}`);
-        }
+        await db.collection(COLLECTION).get();
     },
 
     // Budget methods

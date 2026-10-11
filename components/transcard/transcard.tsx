@@ -1,44 +1,28 @@
 "use client"
 
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import Image from "next/image";
 import EditIcon from "@/assets/edit.png";
 import DeleteIcon from "@/assets/delete.png";
-import { usePathname, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { getDateSliced, getDateTimeSliced } from "@/utils/getDateTime";
 import { useTransactionStore } from "@/store/transactionStore";
+import { useCurrencyStore } from "@/store/currencyStore";
 
 
 export default function TransCard({ id, amount=0, date="", type="", catogory="", description="", expanded=false}: any ) {
 
-    const router = useRouter();
-    const toggleref: any = useRef(null);
+    const { format } = useCurrencyStore();
     const [togglestate, setTogglestate] = useState(expanded);
 
     const dateInFormat = getDateSliced(date);
     const dateTimeInFormat = getDateTimeSliced(date);
 
-    useEffect(() => {
-        router.refresh();
-    }, [togglestate]);
-   
-    function expandedInfo(isToggleON: Boolean) {
-        
-        if (!isToggleON && toggleref.current) {
-            console.log('expand transaction info !', isToggleON);
-            // animated expansion
-            toggleref.current.style.padding = "1.25rem";
-            setTogglestate(true); // flip toggle
-        }
-
-        if (isToggleON && toggleref.current) {
-            toggleref.current.style.padding = "1rem";
-            setTogglestate(false);
-        }
-    }
-   
     return (
-        <div className="flex flex-col w-full mx-auto p-4 rounded-3xl transition-all duration-300 shadow-sm hover:shadow-md bg-white dark:bg-slate-900 text-black dark:text-white border border-gray-100 dark:border-slate-800 cursor-pointer active:scale-[0.98]" onClick={ () => expandedInfo(togglestate) } ref={toggleref as any} style={{ padding: togglestate ? '1.25rem' : '1rem' }}>
+        <div 
+            className={`flex flex-col w-full mx-auto rounded-3xl transition-all duration-300 shadow-sm hover:shadow-md bg-white dark:bg-slate-900 text-black dark:text-white border border-gray-100 dark:border-slate-800 cursor-pointer active:scale-[0.98] ${togglestate ? 'p-5' : 'p-4'}`} 
+            onClick={() => setTogglestate(!togglestate)}
+        >
 
             <div className="flex items-center justify-between w-full">
                 <div className="flex flex-col min-w-0 flex-1 justify-center">
@@ -48,7 +32,7 @@ export default function TransCard({ id, amount=0, date="", type="", catogory="",
                     <span className="text-[13px] font-medium text-gray-500 dark:text-gray-400 capitalize mt-0.5 truncate">{ catogory }</span>
                 </div>
                 <span className={`${ type === "expense" ? 'text-rose-500' : 'text-emerald-500' } font-bold text-[16px] whitespace-nowrap`}>
-                    { type === "expense" ? '- ' : '+ ' }₹{ Number(amount).toLocaleString('en-IN') }
+                    { type === "expense" && Number(amount) !== 0 ? '- ' : type === "income" ? '+ ' : '' }{ format(Number(amount)) }
                 </span>
             </div>
 
@@ -63,16 +47,21 @@ export default function TransCard({ id, amount=0, date="", type="", catogory="",
 
 export function TransCardTools({ id, date, time }: any) {
     const router = useRouter();
-    const currentPath = usePathname();
 
     return (
-        <>
-            <div className="inline-flex items-center w-full mt-4 pt-4 border-t border-gray-100 dark:border-slate-800">
+        <div className="inline-flex items-center w-full mt-4 pt-4 border-t border-gray-100 dark:border-slate-800">
                 <div className="w-full inline-flex items-center justify-between px-1 text-sm capitalize">
-                    <Image src={EditIcon} width={20} height={20} alt="edit icon" className="dark:invert cursor-pointer opacity-70 hover:opacity-100" onClick={ (e) => {
-                        e.stopPropagation();
-                        router.push(`/newtransaction?editId=${id}`);
-                    }} />
+                    <button 
+                        type="button"
+                        aria-label="Edit transaction"
+                        className="p-2 rounded-xl hover:bg-gray-100 dark:hover:bg-slate-800 transition-all active:scale-90 cursor-pointer"
+                        onClick={ (e) => {
+                            e.stopPropagation();
+                            router.push(`/newtransaction?editId=${id}`);
+                        }}
+                    >
+                        <Image src={EditIcon} width={18} height={18} alt="edit icon" className="dark:invert opacity-70 hover:opacity-100" />
+                    </button>
                     <div className="text-center">
                         <span className="text-[12px] font-semibold text-slate-400 whitespace-nowrap">
                                 { date || 'date unavailable' }
@@ -82,13 +71,18 @@ export function TransCardTools({ id, date, time }: any) {
                                 { time || 'time unavailable' }
                         </span>
                     </div>
-                    <Image src={DeleteIcon} width={20} height={20} alt="delete icon" className="dark:invert cursor-pointer opacity-70 hover:opacity-100" onClick={ async (e) => {
-                        e.stopPropagation();
-                        console.log('deleting ',id)
-                        await useTransactionStore.getState().deleteTransaction(id);
-                    } } />
+                    <button 
+                        type="button"
+                        aria-label="Delete transaction"
+                        className="p-2 rounded-xl hover:bg-rose-50 dark:hover:bg-rose-950/40 text-rose-500 transition-all active:scale-90 cursor-pointer"
+                        onClick={ async (e) => {
+                            e.stopPropagation();
+                            await useTransactionStore.getState().deleteTransaction(id);
+                        } }
+                    >
+                        <Image src={DeleteIcon} width={18} height={18} alt="delete icon" className="dark:invert opacity-70 hover:opacity-100" />
+                    </button>
                 </div>
             </div>
-        </>
     );
 }

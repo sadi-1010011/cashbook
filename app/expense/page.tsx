@@ -1,54 +1,64 @@
 "use client"
 
 import Header from "@/components/header/header";
+import PageHeader from "@/components/pageHeader/pageHeader";
 import TransCard from "@/components/transcard/transcard";
 import MishalToggle from "@/components/mishaltoggle/mishalToggle";
 import Loading from "@/components/loading/Loading";
-import { useEffect, useState } from "react";
-import Localbase from "localbase";
-
+import { useEffect, useMemo } from "react";
+import { useTransactionStore } from "@/store/transactionStore";
 
 export default function Expense() {
-
-    const db = new Localbase('kaayidb');
-    db.config.debug = false
-    const [transaction_expense_history, setTransaction_expense_history] = useState<any>(0);
+    const { transactions, fetchTransactions, isInitialized, isLoading } = useTransactionStore();
 
     useEffect(() => {
-        try {
-            db.collection('alltransactions').orderBy('createdAt', 'desc').get().then((transactions: any) => {
-                const expensetransactions = transactions.filter((item: any) => item.transactiontype === 'expense')
-                if (transactions) setTransaction_expense_history(expensetransactions);
-            });
-        } catch (error) {
-            console.log(error);
-            setTransaction_expense_history(0);
+        if (!isInitialized) {
+            fetchTransactions();
         }
-    }, []);
+    }, [isInitialized, fetchTransactions]);
+
+    const expenseTransactions = useMemo(() => {
+        if (!transactions) return [];
+        return transactions.filter((item: any) => item.transactiontype === 'expense');
+    }, [transactions]);
 
     return (
-        (transaction_expense_history) ?
-            (<div className="container bg-[#f6f5f5] dark:bg-slate-950 min-h-full text-black dark:text-white transition-colors duration-200">
+        !isLoading ? (
+            <div className="flex flex-col h-screen bg-[#f6f5f5] dark:bg-slate-950 transition-colors duration-200 animate-fade-in">
                 <Header />
-                <div className="flex flex-col gap-3 my-4 mx-auto w-[90%] max-w-md animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
+                <main className="flex-1 overflow-y-auto pb-28 sleek-scrollbar">
+                    <PageHeader 
+                        title="Expense History" 
+                        badge={`${expenseTransactions.length} ${expenseTransactions.length === 1 ? 'record' : 'records'}`} 
+                    />
 
-                    <h2 className="capitalize font-bold text-xl my-2 text-center tracking-tight text-gray-900 dark:text-gray-100">Expense History</h2>
-
-                    <div className="flex justify-center w-full mb-4">
+                    <div className="w-[90%] max-w-md mx-auto flex flex-col gap-4 mt-4 pb-12 animate-fade-in-up" style={{ animationDelay: '0.1s' }}>
                         <MishalToggle active="daily" />
+
+                        <div className="flex flex-col gap-3 mt-1">
+                            {expenseTransactions.length > 0 ? (
+                                expenseTransactions.map((transaction: any) => (
+                                    <TransCard 
+                                        key={transaction.id} 
+                                        id={transaction.id} 
+                                        amount={Number(transaction.amount)} 
+                                        date={String(transaction.updatedAt || transaction.createdAt)} 
+                                        type={transaction.transactiontype} 
+                                        catogory={transaction.catogory} 
+                                        description={transaction.description} 
+                                    />
+                                ))
+                            ) : (
+                                <div className="text-center py-12 bg-white dark:bg-slate-900 border border-gray-100 dark:border-slate-800 rounded-3xl shadow-sm">
+                                    <p className="text-gray-500 dark:text-gray-400 text-sm font-medium">No expense transactions found.</p>
+                                </div>
+                            )}
+                        </div>
                     </div>
-
-                    {
-                        (transaction_expense_history.length)
-                        ?
-                        transaction_expense_history.map((transaction: any) => <TransCard key={transaction.id} id={transaction.id} amount={Number(transaction.amount)} date={transaction.createdAt} type={transaction.transactiontype} catogory={transaction.catogory} description={transaction.description} />)
-                        :
-                        <span className="capitalize font-semibold text-[15px] w-full my-10 text-center text-slate-500">No transactions made yet</span>
-                    }
-
-                </div>
-            </div>)
-            :
+                </main>
+            </div>
+        ) : (
             <Loading />
+        )
     );
 }

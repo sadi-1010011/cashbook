@@ -17,8 +17,6 @@ interface TransactionState {
         totalExpenseSum: number;
         todayExpenseSum: number;
         thisMonthExpenseSum: number;
-        topCategory: string;
-        topCategoryAmount: number;
         largestExpense: number;
     };
 }
@@ -98,10 +96,7 @@ export const useTransactionStore = create<TransactionState>((set, get) => ({
         let totalExpenseSum = 0;
         let todayExpenseSum = 0;
         let thisMonthExpenseSum = 0;
-        let topCategory = "None";
-        let topCategoryAmount = 0;
         let largestExpense = 0;
-        const categoryTotals: Record<string, number> = {};
 
         const today = new Date();
 
@@ -132,20 +127,12 @@ export const useTransactionStore = create<TransactionState>((set, get) => ({
                             thisMonthExpenseSum += amt;
                         }
 
-                        categoryTotals[transaction.catogory] = (categoryTotals[transaction.catogory] || 0) + amt;
                         if (amt > largestExpense) {
                             largestExpense = amt;
                         }
                     }
                 }
             });
-
-            for (const cat in categoryTotals) {
-                if (categoryTotals[cat] > topCategoryAmount) {
-                    topCategoryAmount = categoryTotals[cat];
-                    topCategory = cat;
-                }
-            }
         }
 
         return {
@@ -153,8 +140,6 @@ export const useTransactionStore = create<TransactionState>((set, get) => ({
             totalExpenseSum,
             todayExpenseSum,
             thisMonthExpenseSum,
-            topCategory,
-            topCategoryAmount,
             largestExpense
         };
     }
