@@ -22,7 +22,7 @@ export default function NewTransaction() {
   const [newtransaction, setNewtransaction] = useState<TransactionType>({
     id: uuidv4(),
     amount: "",
-    catogory: "", 
+    catogory: "",
     description: "",
     createdAt: new Date(),
     updatedAt: new Date(),
@@ -146,93 +146,155 @@ export default function NewTransaction() {
           badge={currencyInfo.code} 
         />
 
-        <form className="w-[90%] max-w-md mx-auto flex flex-col gap-4 mt-4 pb-12 animate-fade-in-up" style={{ animationDelay: '0.1s' }}>
+        <form 
+          onSubmit={(e) => {
+            e.preventDefault();
+            if (!isSubmitting) {
+              handleSave();
+            }
+          }}
+          className="w-[90%] max-w-md mx-auto flex flex-col gap-4 mt-4 pb-12 animate-fade-in-up" 
+          style={{ animationDelay: '0.1s' }}
+        >
 
           {/* DATA- TRANSACTION TYPE */}
           <div className="w-full flex">
-            <div className="inline-flex items-center justify-center w-full max-w-xs mx-auto p-1 rounded-2xl bg-gray-200/50 dark:bg-slate-800">
+            <div 
+              role="radiogroup"
+              aria-label="Transaction Type"
+              className="inline-flex items-center justify-center w-full max-w-xs mx-auto p-1 rounded-2xl bg-gray-200/50 dark:bg-slate-800"
+            >
               {
                 TRANSACTION_TYPES.map((item, index) => 
-                  <button type="button" key={index} className={`px-4 py-2.5 mx-0.5 text-center capitalize text-sm font-bold w-full rounded-xl cursor-pointer transition-all duration-200 active:scale-95 ${
-                  newtransaction.transactiontype === item 
-                    ? 'text-white bg-black dark:text-black dark:bg-white shadow-sm' 
-                    : 'text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100'
-                }`} onClick={
-                  e => {
-                    const value = e.currentTarget.textContent;
-                    setNewtransaction((previousdata: any) => {
-                      return {
-                        ...previousdata,
-                        transactiontype: value
-                      }
-                    })
-                  }
-                }>{ item }</button>
-              )
-            }
-          </div>
-        </div>
-
-        {/* DATA- AMOUNT */}
-
-        <input
-          className="block border-none outline-none w-[90%] mx-auto my-2 px-3 py-4 text-3xl font-extrabold text-center bg-transparent border-b-2 border-gray-200 focus:border-black dark:border-gray-700 dark:focus:border-white text-black dark:text-white transition-colors placeholder:text-gray-300 dark:placeholder:text-gray-600"
-          type="number"
-          name="amount"
-          value={newtransaction.amount}
-          placeholder={`${currencyInfo.symbol.trim()} 0`}
-          onChange={ e => {
-            const { value } = e.currentTarget;
-            if (Number(value) < 0) { 
-                e.currentTarget.value = ''; 
-                toast.error('Amount must be a positive number.');
-                return; 
-            }
-            setNewtransaction(previousdata => {
-              return {
-                ...previousdata,
-                amount: value
+                  <button 
+                    type="button" 
+                    key={index}
+                    role="radio"
+                    aria-checked={newtransaction.transactiontype === item}
+                    className={`px-4 py-2.5 mx-0.5 text-center capitalize text-sm font-bold w-full rounded-xl cursor-pointer transition-all duration-200 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-900 ${
+                      newtransaction.transactiontype === item 
+                        ? 'text-white bg-black dark:text-black dark:bg-white shadow-sm' 
+                        : 'text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100'
+                    }`} 
+                    onClick={() => {
+                      setNewtransaction((prev) => ({
+                        ...prev,
+                        transactiontype: item
+                      }));
+                    }}
+                  >
+                    { item }
+                  </button>
+                )
               }
-            })
-          }}
-        />
-
-        {/* DATA- CATOGORY */}
-
-        <div className="px-1 py-8">
-          <h3 className="capitalize text-[15px] font-bold text-center text-gray-800 dark:text-gray-200">
-            { newtransaction.transactiontype === 'expense' ? 'expense made for' : newtransaction.transactiontype === 'income' ? 'income from' : 'debt/lent details' }
-          </h3>
-          <div className="grid grid-cols-3 grid-rows-2 gap-3 mt-6">
-            {
-              (newtransaction.transactiontype === 'expense' ? EXPENSE_CATEGORIES : newtransaction.transactiontype === 'income' ? INCOME_CATEGORIES : DEBT_CATEGORIES).map((item, index) => 
-                <div key={index}
-                     className={`capitalize py-4 rounded-3xl text-center transition-all duration-200 cursor-pointer active:scale-95 ${
-                       newtransaction.catogory == item 
-                         ? 'text-black bg-white dark:text-white dark:bg-slate-900 shadow-md border border-black dark:border-white ring-1 ring-black dark:ring-white' 
-                         : 'text-gray-700 bg-white dark:text-gray-300 dark:bg-slate-900 border border-gray-100 dark:border-slate-800 shadow-sm hover:shadow-md'
-                     }`}
-                     onClick={ (e) => {
-                      let value = e.currentTarget.textContent;
-                      setNewtransaction((previousdata: any) => {
-                        return {
-                          ...previousdata,
-                          catogory: value
-                        }
-                      })  
-                    } }>
-                  <Image src={ CATEGORY_ICONS[item] || DEFAULT_CATEGORY_ICON } width={24} height={24} className={`m-auto dark:invert transition-all duration-200 ${newtransaction.catogory == item ? 'opacity-100 scale-110' : 'opacity-60'}`} alt="catogory" />
-                  <span className={`mt-2 block text-[13px] ${newtransaction.catogory == item ? 'font-bold' : 'font-medium'}`}>{ item }</span>
-                </div>) 
-            }
+            </div>
           </div>
-        </div>
+
+          {/* DATA- AMOUNT */}
+          <div className="w-full">
+            <label htmlFor="transaction-amount" className="sr-only">
+              Transaction Amount
+            </label>
+            <input
+              id="transaction-amount"
+              className="block border-none outline-none w-[90%] mx-auto my-2 px-3 py-4 text-3xl font-extrabold text-center bg-transparent border-b-2 border-gray-200 focus:border-black dark:border-gray-700 dark:focus:border-white text-black dark:text-white transition-colors placeholder:text-gray-300 dark:placeholder:text-gray-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:rounded-2xl"
+              type="number"
+              name="amount"
+              aria-label="Transaction Amount"
+              value={newtransaction.amount}
+              placeholder={`${currencyInfo.symbol.trim()} 0`}
+              onChange={ e => {
+                const { value } = e.currentTarget;
+                if (Number(value) < 0) { 
+                    e.currentTarget.value = ''; 
+                    toast.error('Amount must be a positive number.');
+                    return; 
+                }
+                setNewtransaction(previousdata => {
+                  return {
+                    ...previousdata,
+                    amount: value
+                  }
+                })
+              }}
+            />
+          </div>
+
+          {/* DATA- CATOGORY */}
+          <div className="px-1 py-8">
+            <h3 id="category-section-label" className="capitalize text-[15px] font-bold text-center text-gray-800 dark:text-gray-200">
+              { newtransaction.transactiontype === 'expense' ? 'expense made for' : newtransaction.transactiontype === 'income' ? 'income from' : 'debt/lent details' }
+            </h3>
+            <div 
+              role="radiogroup" 
+              aria-labelledby="category-section-label"
+              className="grid grid-cols-3 grid-rows-2 gap-3 mt-6"
+            >
+              {
+                (newtransaction.transactiontype === 'expense' ? EXPENSE_CATEGORIES : newtransaction.transactiontype === 'income' ? INCOME_CATEGORIES : DEBT_CATEGORIES).map((item, index, arr) => 
+                  <button 
+                    key={index}
+                    id={`category-item-${index}`}
+                    type="button"
+                    role="radio"
+                    aria-checked={newtransaction.catogory == item}
+                    aria-label={`Category ${item}`}
+                    tabIndex={0}
+                    className={`capitalize py-4 rounded-3xl text-center transition-all duration-200 cursor-pointer active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-950 ${
+                      newtransaction.catogory == item 
+                        ? 'text-black bg-white dark:text-white dark:bg-slate-900 shadow-md border border-black dark:border-white ring-1 ring-black dark:ring-white' 
+                        : 'text-gray-700 bg-white dark:text-gray-300 dark:bg-slate-900 border border-gray-100 dark:border-slate-800 shadow-sm hover:shadow-md'
+                    }`}
+                    onKeyDown={(e) => {
+                      let nextIndex = -1;
+                      if (e.key === ' ' || e.key === 'Enter') {
+                        e.preventDefault();
+                        setNewtransaction((prev) => ({ ...prev, catogory: item }));
+                      } else if (e.key === 'ArrowRight') {
+                        e.preventDefault();
+                        nextIndex = (index + 1) % arr.length;
+                      } else if (e.key === 'ArrowLeft') {
+                        e.preventDefault();
+                        nextIndex = (index - 1 + arr.length) % arr.length;
+                      } else if (e.key === 'ArrowDown') {
+                        e.preventDefault();
+                        if (index + 3 < arr.length) nextIndex = index + 3;
+                      } else if (e.key === 'ArrowUp') {
+                        e.preventDefault();
+                        if (index - 3 >= 0) nextIndex = index - 3;
+                      }
+                      if (nextIndex !== -1) {
+                        const nextCat = arr[nextIndex];
+                        setNewtransaction((prev) => ({ ...prev, catogory: nextCat }));
+                        const nextEl = document.getElementById(`category-item-${nextIndex}`);
+                        nextEl?.focus();
+                      }
+                    }}
+                    onClick={() => {
+                      setNewtransaction((prev) => ({
+                        ...prev,
+                        catogory: item
+                      }));
+                    }}
+                  >
+                    <Image src={ CATEGORY_ICONS[item] || DEFAULT_CATEGORY_ICON } width={24} height={24} className={`m-auto dark:invert transition-all duration-200 ${newtransaction.catogory == item ? 'opacity-100 scale-110' : 'opacity-60'}`} alt={item} />
+                    <span className={`mt-2 block text-[13px] ${newtransaction.catogory == item ? 'font-bold' : 'font-medium'}`}>{ item }</span>
+                  </button>
+                ) 
+              }
+            </div>
+          </div>
 
           {/* DATA- DESCRIPTION */}
           <div className="w-full">
+            <label htmlFor="transaction-description" className="sr-only">
+              Transaction Description
+            </label>
             <input
+              id="transaction-description"
               type="text"
-              className="w-full px-4 py-3 rounded-2xl bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 text-black dark:text-white text-sm outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 shadow-sm transition-all placeholder:text-gray-400 dark:placeholder:text-gray-500 text-center"
+              aria-label="Transaction description (optional)"
+              className="w-full px-4 py-3 rounded-2xl bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 text-black dark:text-white text-sm outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 dark:focus-visible:ring-blue-400 shadow-sm transition-all placeholder:text-gray-400 dark:placeholder:text-gray-500 text-center"
               value={newtransaction.description}
               placeholder="Add description (optional)..."
               onChange={ (e) => {
@@ -247,17 +309,13 @@ export default function NewTransaction() {
             />
           </div>
       
-        <button
-          type="button"
-          disabled={isSubmitting}
-          onClick={(e) => {
-            e.preventDefault();
-            handleSave();
-          }} 
-          className="w-full py-3.5 px-6 font-semibold text-sm bg-black text-white dark:bg-white dark:text-black rounded-2xl hover:opacity-90 active:scale-95 transition-all shadow-sm cursor-pointer mt-3 disabled:opacity-50"
-        >
-          {isSubmitting ? "Saving..." : isEditing ? "Update Transaction" : "Save Transaction"}
-        </button>
+          <button
+            type="submit"
+            disabled={isSubmitting}
+            className="w-full py-3.5 px-6 font-semibold text-sm bg-black text-white dark:bg-white dark:text-black rounded-2xl hover:opacity-90 active:scale-95 transition-all shadow-sm cursor-pointer mt-3 disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-950"
+          >
+            {isSubmitting ? "Saving..." : isEditing ? "Update Transaction" : "Save Transaction"}
+          </button>
 
       </form>
     </main>

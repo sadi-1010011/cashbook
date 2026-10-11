@@ -3,24 +3,46 @@
 import Header from "@/components/header/header";
 import PageHeader from "@/components/pageHeader/pageHeader";
 import Link from "next/link";
-import MishalToggle from "@/components/mishaltoggle/mishalToggle";
-import { useEffect, useRef, useState, useMemo } from "react";
+import MishalToggle, { TimeframeOption } from "@/components/mishaltoggle/mishalToggle";
+import { useEffect, useState, useMemo } from "react";
 import Loading from "@/components/loading/Loading";
-import PlotPieChart, { ChartTypeOption } from "@/utils/plotPieChart";
 import { useTransactionStore } from "@/store/transactionStore";
-import { useTheme } from "next-themes";
 import { useCurrencyStore } from "@/store/currencyStore";
+import CountUp from "react-countup";
+import StatsFilterModal from "@/components/statsFilterModal/statsFilterModal";
+import { StatsFilterState, TransactionType } from "@/types";
+import { INITIAL_FILTER_STATE } from "@/constants";
+import { CloseIcon, FilterIcon } from "@/components/icons";
+import { StatChartCard } from "@/components";
 
 export default function Stats() {
     const { transactions: storeTransactions, fetchTransactions, isInitialized, isLoading } = useTransactionStore();
-    const { resolvedTheme } = useTheme();
-    const { currentCurrency, currencyInfo, convert, format } = useCurrencyStore();
+    const { currencyInfo, format } = useCurrencyStore();
+    const [timeframe, setTimeframe] = useState<TimeframeOption | null>(null);
+    const [filterModalOpen, setFilterModalOpen] = useState(false);
+    const [filters, setFilters] = useState<StatsFilterState>(INITIAL_FILTER_STATE);
 
     useEffect(() => {
         if (!isInitialized) {
             fetchTransactions();
         }
     }, [isInitialized, fetchTransactions]);
+
+    const availableCategories = useMemo(() => {
+        if (!storeTransactions) return [];
+        const set = new Set<string>();
+        storeTransactions.forEach((t: TransactionType) => {
+            if (t.catogory) set.add(t.catogory.trim());
+        });
+        return Array.from(set).sort();
+    }, [storeTransactions]);
+
+    const hasActiveFilters = 
+        filters.type !== 'all' || 
+        filters.category !== 'all' || 
+        Boolean(filters.minAmount) || 
+        Boolean(filters.maxAmount) || 
+        filters.dateRange !== 'all';
 
     const { allTransactions, totalIncome, totalExpense, totalDebt, incomeCategories, expenseCategories, debtCategories } = useMemo(() => {
         let incSum = 0;
@@ -29,15 +51,71 @@ export default function Stats() {
         const incCats: Record<string, number> = {};
         const expCats: Record<string, number> = {};
         const debtCats: Record<string, number> = {};
-        let filtered: any[] = [];
+        let filtered: TransactionType[] = [];
 
         if (storeTransactions) {
-            const currentMonth = new Date().getMonth();
-            const currentYear = new Date().getFullYear();
-            
-            filtered = storeTransactions.filter((t: any) => {
-                const date = new Date(t.createdAt);
-                return date.getMonth() === currentMonth && date.getFullYear() === currentYear;
+            filtered = storeTransactions.filter((t: TransactionType) => {
+                const date = new Date(t.createdAt || t.updatedAt);
+                if (isNaN(date.getTime())) return false;
+
+                // 1. Transaction Type filter
+                if (filters.type !== "all" && t.transactiontype !== filters.type) {
+                    return false;
+                }
+
+                // 2. Category filter
+                if (filters.category !== "all") {
+                    if (!t.catogory || t.catogory.toLowerCase() !== filters.category.toLowerCase()) {
+                        return false;
+                    }
+                }
+
+                // 3. Amount filter
+                const amt = Number(t.amount);
+                if (filters.minAmount !== "" && !isNaN(Number(filters.minAmount))) {
+                    if (amt < Number(filters.minAmount)) return false;
+                }
+                if (filters.maxAmount !== "" && !isNaN(Number(filters.maxAmount))) {
+                    if (amt > Number(filters.maxAmount)) return false;
+                }
+
+                // 4. Date filter
+                if (filters.dateRange === "year") {
+                    if (date.getFullYear() !== new Date().getFullYear()) {
+                        return false;
+                    }
+                } else if (filters.dateRange === "custom") {
+                    if (filters.startDate) {
+                        const start = new Date(filters.startDate);
+                        start.setHours(0, 0, 0, 0);
+                        if (date < start) return false;
+                    }
+                    if (filters.endDate) {
+                        const end = new Date(filters.endDate);
+                        end.setHours(23, 59, 59, 999);
+                        if (date > end) return false;
+                    }
+                } else {
+                    // Timeframe from top toggle
+                    if (timeframe === "daily") {
+                        const now = new Date();
+                        const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0, 0);
+                        const endOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59, 999);
+                        return date >= startOfToday && date <= endOfToday;
+                    }
+                    if (timeframe === "weekly") {
+                        const now = new Date();
+                        const startOfWeek = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 6, 0, 0, 0, 0);
+                        const endOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59, 999);
+                        return date >= startOfWeek && date <= endOfToday;
+                    }
+                    if (timeframe === "monthly") {
+                        const now = new Date();
+                        return date.getMonth() === now.getMonth() && date.getFullYear() === now.getFullYear();
+                    }
+                }
+
+                return true;
             });
 
             for (const record of filtered) {
@@ -66,78 +144,22 @@ export default function Stats() {
             expenseCategories: expCats,
             debtCategories: debtCats
         };
-    }, [storeTransactions]);
+    }, [storeTransactions, timeframe, filters]);
 
-    const incomecanvas = useRef<HTMLCanvasElement>(null);
-    const expensecanvas = useRef<HTMLCanvasElement>(null);
-    const debtcanvas = useRef<HTMLCanvasElement>(null);
 
-    const [expenseChartType, setExpenseChartType] = useState<ChartTypeOption>('doughnut');
-    const [incomeChartType, setIncomeChartType] = useState<ChartTypeOption>('doughnut');
-    const [debtChartType, setDebtChartType] = useState<ChartTypeOption>('doughnut');
+    const getPeriodLabel = () => {
+        if (filters.dateRange === "year") return "this year";
+        if (filters.dateRange === "custom") return "in date range";
+        if (timeframe === "daily") return "today";
+        if (timeframe === "weekly") return "this week";
+        if (timeframe === "monthly") return "this month";
+        return "recorded";
+    };
 
-    // CHARTS REPRESENTATION
-    useEffect(() => {
-        if (isLoading || !isInitialized) return;
-
-        const isDark = resolvedTheme === 'dark';
-        let expChart: any;
-        let incChart: any;
-        let debtChart: any;
-
-        // EXPENSE CHART
-        if (expensecanvas.current && totalExpense > 0) {
-            expChart = PlotPieChart(
-                expensecanvas.current, 
-                'expensechart', 
-                'Expenses', 
-                Object.keys(expenseCategories), 
-                Object.values(expenseCategories).map(v => convert(v)),
-                isDark,
-                currencyInfo.symbol,
-                currencyInfo.locale,
-                expenseChartType
-            );
-        }
-
-        // INCOME CHART
-        if (incomecanvas.current && totalIncome > 0) {
-            incChart = PlotPieChart(
-                incomecanvas.current, 
-                'incomechart', 
-                'Income', 
-                Object.keys(incomeCategories), 
-                Object.values(incomeCategories).map(v => convert(v)),
-                isDark,
-                currencyInfo.symbol,
-                currencyInfo.locale,
-                incomeChartType
-            );
-        }
-
-        // DEBT CHART
-        if (debtcanvas.current && totalDebt > 0) {
-            debtChart = PlotPieChart(
-                debtcanvas.current, 
-                'debtchart', 
-                'Debt/Lent', 
-                Object.keys(debtCategories), 
-                Object.values(debtCategories).map(v => convert(v)),
-                isDark,
-                currencyInfo.symbol,
-                currencyInfo.locale,
-                debtChartType
-            );
-        }
-
-        return () => {
-            if (expChart) expChart.destroy();
-            if (incChart) incChart.destroy();
-            if (debtChart) debtChart.destroy();
-        };
-
-    }, [totalIncome, totalExpense, totalDebt, incomeCategories, expenseCategories, debtCategories, isLoading, isInitialized, resolvedTheme, currentCurrency, currencyInfo, convert, expenseChartType, incomeChartType, debtChartType]);
-
+    const handleClearAll = () => {
+        setTimeframe(null);
+        setFilters(INITIAL_FILTER_STATE);
+    };
 
     return (
         <div className="flex flex-col h-screen bg-[#f6f5f5] dark:bg-slate-950 transition-colors duration-200 animate-fade-in">
@@ -146,65 +168,160 @@ export default function Stats() {
             <main className="flex-1 overflow-y-auto pb-28 sleek-scrollbar">
                 <PageHeader 
                     title="Analytics & Stats" 
-                    badge={`${allTransactions.length} ${allTransactions.length === 1 ? 'record' : 'records'}`} 
+                    badge={
+                        <span>
+                            <CountUp end={allTransactions.length} duration={0.6} preserveValue /> {allTransactions.length === 1 ? 'record' : 'records'}
+                        </span>
+                    } 
                 />
 
-                <div className="w-[90%] max-w-md mx-auto flex flex-col gap-4 mt-4 pb-12 animate-fade-in-up" style={{ animationDelay: '0.1s' }}>
-                    <MishalToggle active="daily" />
+                <div className="w-[90%] max-w-md mx-auto flex flex-col gap-3 mt-4 pb-12 animate-fade-in-up" style={{ animationDelay: '0.1s' }}>
+                    {/* Filter Controls Row */}
+                    <div className="flex items-center justify-center gap-2 w-full">
+                        {/* Clear Button */}
+                        <button
+                            type="button"
+                            onClick={handleClearAll}
+                            disabled={!timeframe && !hasActiveFilters}
+                            title={timeframe || hasActiveFilters ? "Clear all filters" : "No filter active"}
+                            aria-label="Clear filter"
+                            className={`h-11 w-11 shrink-0 flex items-center justify-center rounded-2xl transition-all duration-200 ${
+                                timeframe || hasActiveFilters
+                                    ? "bg-gray-200/60 hover:bg-rose-50 text-gray-600 hover:text-rose-600 dark:bg-slate-800 dark:hover:bg-rose-950/40 dark:text-gray-300 dark:hover:text-rose-400 active:scale-95 cursor-pointer shadow-xs"
+                                    : "bg-gray-200/60 text-gray-300 dark:bg-slate-800/40 dark:text-slate-600 cursor-not-allowed opacity-70"
+                            }`}
+                        >
+                            <CloseIcon className="w-[15px] h-[15px]" strokeWidth={2.4} />
+                        </button>
+
+                        {/* MishalToggle */}
+                        <div className="min-w-0 flex-1 max-w-xs">
+                            <MishalToggle 
+                                active={timeframe} 
+                                onChange={(tab) => {
+                                    setTimeframe(tab);
+                                    if (filters.dateRange !== "all") {
+                                        setFilters(f => ({ ...f, dateRange: "all" }));
+                                    }
+                                }} 
+                                allowDeselect 
+                                onClear={() => setTimeframe(null)} 
+                            />
+                        </div>
+
+                        {/* Filter Button */}
+                        <button
+                            type="button"
+                            onClick={() => setFilterModalOpen(true)}
+                            title={hasActiveFilters ? "Filters active" : "Filter options"}
+                            aria-label="Filter options"
+                            className={`h-11 w-11 shrink-0 relative flex items-center justify-center rounded-2xl transition-all duration-200 active:scale-95 cursor-pointer shadow-xs ${
+                                hasActiveFilters
+                                    ? "bg-black text-white dark:bg-white dark:text-black shadow-md ring-2 ring-black/10 dark:ring-white/20"
+                                    : "bg-gray-200/60 hover:bg-gray-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-gray-600 hover:text-black dark:text-gray-300 dark:hover:text-white"
+                            }`}
+                        >
+                            <FilterIcon className="w-4 h-4" strokeWidth={2.2} />
+                            {hasActiveFilters && (
+                                <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-rose-500 rounded-full ring-2 ring-white dark:ring-slate-900" />
+                            )}
+                        </button>
+                    </div>
+
+                    {/* Active Filter Chips */}
+                    {hasActiveFilters && (
+                        <div className="flex flex-wrap items-center gap-1.5 px-1 animate-fade-in text-[11px]">
+                            {filters.type !== "all" && (
+                                <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-blue-50 dark:bg-blue-950/40 text-blue-700 dark:text-blue-300 border border-blue-200/60 dark:border-blue-900/50 font-medium capitalize">
+                                    Type: {filters.type}
+                                    <button 
+                                        type="button" 
+                                        onClick={() => setFilters(f => ({ ...f, type: "all" }))}
+                                        className="hover:text-rose-500 font-bold ml-0.5 cursor-pointer"
+                                        aria-label="Remove type filter"
+                                    >×</button>
+                                </span>
+                            )}
+                            {filters.category !== "all" && (
+                                <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 border border-emerald-200/60 dark:border-emerald-900/50 font-medium capitalize">
+                                    Cat: {filters.category}
+                                    <button 
+                                        type="button" 
+                                        onClick={() => setFilters(f => ({ ...f, category: "all" }))}
+                                        className="hover:text-rose-500 font-bold ml-0.5 cursor-pointer"
+                                        aria-label="Remove category filter"
+                                    >×</button>
+                                </span>
+                            )}
+                            {(filters.minAmount || filters.maxAmount) && (
+                                <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-amber-50 dark:bg-amber-950/40 text-amber-700 dark:text-amber-300 border border-amber-200/60 dark:border-amber-900/50 font-medium">
+                                    Amount: {filters.minAmount ? `≥${currencyInfo.symbol.trim()}${filters.minAmount}` : ''} {filters.maxAmount ? `≤${currencyInfo.symbol.trim()}${filters.maxAmount}` : ''}
+                                    <button 
+                                        type="button" 
+                                        onClick={() => setFilters(f => ({ ...f, minAmount: "", maxAmount: "" }))}
+                                        className="hover:text-rose-500 font-bold ml-0.5 cursor-pointer"
+                                        aria-label="Remove amount filter"
+                                    >×</button>
+                                </span>
+                            )}
+                            {filters.dateRange !== "all" && (
+                                <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-purple-50 dark:bg-purple-950/40 text-purple-700 dark:text-purple-300 border border-purple-200/60 dark:border-purple-900/50 font-medium">
+                                    {filters.dateRange === "year" ? "This Year" : `${filters.startDate || ''} → ${filters.endDate || ''}`}
+                                    <button 
+                                        type="button" 
+                                        onClick={() => setFilters(f => ({ ...f, dateRange: "all", startDate: "", endDate: "" }))}
+                                        className="hover:text-rose-500 font-bold ml-0.5 cursor-pointer"
+                                        aria-label="Remove date range filter"
+                                    >×</button>
+                                </span>
+                            )}
+                        </div>
+                    )}
 
                     { isLoading || !isInitialized ? (
-                        <div style={{ minHeight: '40vh', display: "flex", alignItems: 'center', justifyContent: 'center' }} className="animate-fade-in">
-                            <Loading />
+                        <div className="w-full flex flex-col gap-4 mt-1 animate-fade-in">
+                            <Loading fullPage={false} type="stats" />
                         </div>
                     ) : (
-                        <div className="flex flex-col gap-4 mt-1 animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
+                        <div 
+                            key={`${timeframe || 'all'}-${filters.type}-${filters.category}-${filters.minAmount}-${filters.maxAmount}-${filters.dateRange}`} 
+                            className="flex flex-col gap-4 mt-1 animate-fade-in-up" 
+                            style={{ animationDelay: '0.2s' }}
+                        >
                             {/* EXPENSE SECTION */}
-                            {totalExpense > 0 ? (
-                                <div className="flex flex-col w-full p-5 bg-white dark:bg-slate-900 rounded-3xl shadow-sm hover:shadow-md border border-gray-100 dark:border-slate-800 transition-all duration-200">
-                                    <div className="flex items-center justify-between mb-3">
-                                        <h3 className="font-bold text-[15px] text-gray-800 dark:text-gray-100">Expenses Breakdown</h3>
-                                        <ChartTypeSwitcher currentType={expenseChartType} onChange={setExpenseChartType} />
-                                    </div>
-                                    <div className="h-60 w-full flex items-center justify-center">
-                                        <canvas id="expensechart" className="m-auto" ref={expensecanvas}></canvas>
-                                    </div>
-                                </div>
-                            ) : (
-                                <div className="flex flex-col items-center justify-center w-full h-44 p-5 bg-white dark:bg-slate-900 rounded-3xl shadow-sm hover:shadow-md border border-gray-100 dark:border-slate-800 transition-all duration-200">
-                                    <span className="text-gray-400 dark:text-slate-500 mb-2 text-2xl">📉</span>
-                                    <p className="text-[14px] text-gray-500 dark:text-slate-400 font-medium">No expenses this month</p>
-                                </div>
+                            {(filters.type === "all" || filters.type === "expense") && (
+                                <StatChartCard
+                                    title="Expenses Breakdown"
+                                    chartId="expensechart"
+                                    categories={expenseCategories}
+                                    total={totalExpense}
+                                    emptyIcon="📉"
+                                    emptyMessage={`No expenses ${getPeriodLabel()}`}
+                                />
                             )}
 
                             {/* INCOME SECTION */}
-                            {totalIncome > 0 ? (
-                                <div className="flex flex-col w-full p-5 bg-white dark:bg-slate-900 rounded-3xl shadow-sm hover:shadow-md border border-gray-100 dark:border-slate-800 transition-all duration-200">
-                                    <div className="flex items-center justify-between mb-3">
-                                        <h3 className="font-bold text-[15px] text-gray-800 dark:text-gray-100">Income Breakdown</h3>
-                                        <ChartTypeSwitcher currentType={incomeChartType} onChange={setIncomeChartType} />
-                                    </div>
-                                    <div className="h-60 w-full flex items-center justify-center">
-                                        <canvas id="incomechart" className="m-auto" ref={incomecanvas}></canvas>
-                                    </div>
-                                </div>
-                            ) : (
-                                <div className="flex flex-col items-center justify-center w-full h-44 p-5 bg-white dark:bg-slate-900 rounded-3xl shadow-sm hover:shadow-md border border-gray-100 dark:border-slate-800 transition-all duration-200">
-                                    <span className="text-gray-400 dark:text-slate-500 mb-2 text-2xl">📈</span>
-                                    <p className="text-[14px] text-gray-500 dark:text-slate-400 font-medium">No income this month</p>
-                                </div>
+                            {(filters.type === "all" || filters.type === "income") && (
+                                <StatChartCard
+                                    title="Income Breakdown"
+                                    chartId="incomechart"
+                                    categories={incomeCategories}
+                                    total={totalIncome}
+                                    emptyIcon="📈"
+                                    emptyMessage={`No income ${getPeriodLabel()}`}
+                                />
                             )}
 
                             {/* DEBT SECTION */}
-                            {totalDebt > 0 && (
-                                <div className="flex flex-col w-full p-5 bg-white dark:bg-slate-900 rounded-3xl shadow-sm hover:shadow-md border border-gray-100 dark:border-slate-800 transition-all duration-200">
-                                    <div className="flex items-center justify-between mb-3">
-                                        <h3 className="font-bold text-[15px] text-gray-800 dark:text-gray-100">Debt/Lent Breakdown</h3>
-                                        <ChartTypeSwitcher currentType={debtChartType} onChange={setDebtChartType} />
-                                    </div>
-                                    <div className="h-60 w-full flex items-center justify-center">
-                                        <canvas id="debtchart" className="m-auto" ref={debtcanvas}></canvas>
-                                    </div>
-                                </div>
+                            {(filters.type === "all" || filters.type === "debt") && totalDebt > 0 && (
+                                <StatChartCard
+                                    title="Debt/Lent Breakdown"
+                                    chartId="debtchart"
+                                    categories={debtCategories}
+                                    total={totalDebt}
+                                    emptyIcon="🤝"
+                                    emptyMessage={`No debt records ${getPeriodLabel()}`}
+                                />
                             )}
 
                             {/* TOTAL IN-EX SUMMARY PILLS */}
@@ -228,68 +345,19 @@ export default function Stats() {
                     )}
                 </div>
             </main>
+
+            {/* Filter Modal */}
+            <StatsFilterModal
+                isOpen={filterModalOpen}
+                onClose={() => setFilterModalOpen(false)}
+                filters={filters}
+                onApply={(newFilters) => setFilters(newFilters)}
+                onReset={() => setFilters(INITIAL_FILTER_STATE)}
+                availableCategories={availableCategories}
+                currencySymbol={currencyInfo.symbol}
+                matchingCount={allTransactions.length}
+            />
         </div>
     );
 }
 
-function ChartTypeSwitcher({
-    currentType,
-    onChange
-}: {
-    currentType: ChartTypeOption;
-    onChange: (type: ChartTypeOption) => void;
-}) {
-    return (
-        <div className="flex items-center gap-1 p-1 bg-gray-100/80 dark:bg-slate-800/80 rounded-2xl border border-gray-200/50 dark:border-slate-700/50">
-            <button
-                type="button"
-                onClick={() => onChange('doughnut')}
-                aria-label="Donut Chart"
-                title="Donut Chart"
-                className={`p-1.5 rounded-xl transition-all active:scale-90 cursor-pointer ${
-                    currentType === 'doughnut'
-                        ? 'bg-white dark:bg-slate-900 text-black dark:text-white shadow-xs'
-                        : 'text-gray-400 hover:text-gray-700 dark:hover:text-gray-200'
-                }`}
-            >
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M21.21 15.89A10 10 0 1 1 8 2.83" />
-                    <path d="M22 12A10 10 0 0 0 12 2v10z" />
-                </svg>
-            </button>
-            <button
-                type="button"
-                onClick={() => onChange('bar')}
-                aria-label="Bar Graph"
-                title="Bar Graph"
-                className={`p-1.5 rounded-xl transition-all active:scale-90 cursor-pointer ${
-                    currentType === 'bar'
-                        ? 'bg-white dark:bg-slate-900 text-black dark:text-white shadow-xs'
-                        : 'text-gray-400 hover:text-gray-700 dark:hover:text-gray-200'
-                }`}
-            >
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-                    <line x1="12" y1="20" x2="12" y2="10" />
-                    <line x1="18" y1="20" x2="18" y2="4" />
-                    <line x1="6" y1="20" x2="6" y2="16" />
-                </svg>
-            </button>
-            <button
-                type="button"
-                onClick={() => onChange('line')}
-                aria-label="Line Chart"
-                title="Line Chart"
-                className={`p-1.5 rounded-xl transition-all active:scale-90 cursor-pointer ${
-                    currentType === 'line'
-                        ? 'bg-white dark:bg-slate-900 text-black dark:text-white shadow-xs'
-                        : 'text-gray-400 hover:text-gray-700 dark:hover:text-gray-200'
-                }`}
-            >
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M3 3v18h18" />
-                    <path d="m19 9-5 5-4-4-3 3" />
-                </svg>
-            </button>
-        </div>
-    );
-}

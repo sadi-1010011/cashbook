@@ -2,77 +2,138 @@
 
 Live UI can be visited at: [https://kaayi2.vercel.app/](https://kaayi2.vercel.app/)
 
-CashBook is a personal finance management web application designed to track incomes and expenses. It is built as an offline-first Progressive Web App (PWA) using modern web technologies, allowing users to seamlessly record and monitor their financial activities directly from their browser without needing a centralized backend database.
+CashBook is a modern, offline-first personal finance management Progressive Web App (PWA) designed to track income, expenses, debts, bills, and subscriptions. Built with Next.js 16 and React 19, CashBook provides instant, private, client-side financial tracking directly within the browser without requiring a centralized backend server.
+
+---
 
 ## 🏗 Architecture & Tech Stack
 
-The application is built on top of a robust and modern frontend stack:
+- **Framework:** [Next.js (App Router)](https://nextjs.org/) `16.3.8` (Webpack runner for PWA service-worker compatibility).
+- **Core Library:** [React 19](https://react.dev/) `19.3.0` & React DOM `19.3.0`.
+- **Language:** TypeScript 5 with strict primitive types and complete interfaces across models.
+- **State Management:** [Zustand 5](https://github.com/pmndrs/zustand) for reactive, modular client stores (`transactionStore`, `billStore`, `subscriptionStore`, `budgetStore`, `currencyStore`).
+- **Styling:** [Tailwind CSS](https://tailwindcss.com/) with full dark mode support (`next-themes`) and curated design tokens.
+- **Client-Side Storage:** [Localbase](https://github.com/dannyconnell/localbase) (IndexedDB wrapper). Data is isolated in the `kaayidb` database with collections for `alltransactions`, `bills`, `subscriptions`, and settings.
+- **Offline & PWA:** `next-pwa` registers service workers (`/sw.js`) and precaches static assets for a 100% offline-first experience.
+- **Data Visualization & Animations:** Custom Chart.js integration, HTML5 Canvas rendering, and `react-countup` smooth balance counters.
+- **Icons & Design System:** Tailored SVG vector iconography system located in `components/icons`.
+- **Notifications & Safeguards:** `react-hot-toast` for non-blocking feedback, action confirmations, and deletion safeguards.
 
-- **Framework:** [Next.js (App Router)](https://nextjs.org/) version 14.2.3.
-- **Language:** TypeScript for strong typing and better maintainability.
-- **Styling:** Tailwind CSS combined with modular CSS (`.module.css`) for component-level styling.
-- **Client-side Storage:** [Localbase](https://github.com/dannyconnell/localbase) (an IndexedDB wrapper), which enables the app to store all transaction data locally in the user's browser. The database is named `kaayidb` and data is stored in the `alltransactions` collection.
-- **Offline Capabilities:** `next-pwa` is used to register service workers and cache assets, enabling the application to work completely offline.
-- **Data Visualization:** Uses custom HTML5 Canvas rendering (with references to Chart.js in dependencies) to draw pie charts for financial statistics.
-- **Icons & Assets:** Custom UI icons are handled via Next.js `<Image>` component for optimization.
+---
 
-## ✨ Core Features & Functionalities
+## ✨ Core Features & Routes
 
 ### 1. Dashboard (`/dashboard`)
-The central hub of the application.
-- Displays the **Total Balance** (Total Income - Total Expense).
-- Shows a list of the **Recent Transactions** (limited to the last 3 entries).
-- Automatically initializes the local database upon first visit.
+The central financial command center:
+- **Total Balance & Overview:** Displays net balance, dynamic income, expense, and debt breakdowns.
+- **Recent Activity:** Quick ledger of the last **6** transactions with instant click-to-edit.
+- **Budget Tracking:** Real-time progress bar reflecting monthly expenditure against custom budget goals.
+- **Quick Actions:** Instant shortcuts to log new transactions, view analytics, manage bills, and tune subscriptions.
 
 ### 2. Transaction Management (`/newtransaction`)
-Allows users to record new financial entries.
-- **Transaction Types:** Income or Expense.
-- **Amount & Description:** Numeric input for the amount and text input for a brief description.
-- **Categories:**
-  - *Expense Categories:* Food, Travel, Movies, Haircut, Medicine, Others.
-  - *Income Categories:* Salary, Tip, Others.
-- Generates a unique `uuid` for every transaction and stores it directly into IndexedDB.
+Record or edit income, expenses, and debts:
+- **Types:** Income, Expense, Debt.
+- **Amount & Currency:** Configurable currency symbol with real-time numeric validation.
+- **Categories:** Food, Travel, Movies, Haircut, Medicine, Salary, Tip, Loans, and Others.
+- **Editing Mode:** Supports query-param-based editing (`?editId=...`) with prefilled metadata and timestamp preservation.
 
-### 3. Statistics & Analytics (`/stats`)
-Provides a visual breakdown of the user's finances.
-- Calculates total income and total expenses.
-- Aggregates data by categories (e.g., how much was spent on Food vs. Travel).
-- Renders **Pie Charts** on HTML5 Canvas to visually represent the percentage breakdown of incomes and expenses.
+### 3. Transaction History (`/history`)
+Comprehensive financial ledger:
+- Reverse-chronological feed of all recorded transactions.
+- Filter by transaction type (Income, Expense, Debt) and search by note/category.
+- Edit and delete actions with confirmation safeguard toasts.
 
-### 4. Transaction History (`/history`)
-A comprehensive ledger of all recorded activities.
-- Fetches all records from the local `alltransactions` collection, sorted by the latest (`createdAt` descending).
-- Displays individual `TransCard` components detailing the category, amount, date, and description of each entry.
+### 4. Focused Income & Expense Views (`/income`, `/expense`)
+- Specialized views with timeframe filters (Daily, Weekly, Monthly).
+- Dynamic count badges and responsive transaction feeds.
 
-### 5. Income/Expense Views (`/income`, `/expense`)
-Dedicated pages to view filtered lists of either just incomes or just expenses.
+### 5. Statistics & Analytics (`/stats`)
+- High-level breakdown of spending and earnings by category.
+- Interactive Chart.js charts and HTML5 canvas visualizations.
+- Filter analytics across custom date ranges and timeframes.
 
-## 📂 Folder Structure
+### 6. Bill Tracker (`/bills`)
+- Track upcoming utility, credit, and recurring obligations.
+- Mark bills as paid/unpaid with real-time status badges.
+- Presets for rapid bill entry and deletion confirmation modals.
 
-- **`/app`**: Contains all the routes (Next.js App Router). Includes `dashboard`, `expense`, `history`, `income`, `newtransaction`, `stats`.
-- **`/components`**: Reusable UI components (`header`, `footer`, `loading`, `transcard`, `recentTransCard`, `mishaltoggle`).
-- **`/utils`**: Helper functions for calculations and rendering (`getIEDifference.ts`, `getPercent.ts`, `plotPieChart.ts`).
-- **`/assets`**: Static image assets and category icons.
-- **`/public`**: Public assets including the manifest (`manifest.json`) and service worker (`sw.js`) generated by `next-pwa`.
+### 7. Subscription Manager (`/subscriptions`)
+- Monitor active subscriptions, recurring commitments, and renewal dates.
+- Billing frequency management (Monthly / Yearly).
+- Calculates monthly committed burn rate.
 
-## 🚀 Key Technical Takeaways
+### 8. Settings & Data Safety (`/settings`)
+- **Budget Limits:** Configure monthly spending thresholds.
+- **Currency Selection:** Switch between global currency symbols ($, €, £, ₹, ¥, etc.).
+- **Complete JSON Backup & Restore:** Export versioned backup files containing all collections (`transactions`, `bills`, `subscriptions`, `budget`, `currency`) and safely restore them anytime.
+- **Wipe Data Safeguard:** Nuclear wipe with modal confirmation to clean-slate all IndexedDB collections.
 
-1. **Serverless / No-Backend:** The app doesn't require a backend server for data persistence. This makes it extremely fast, fully private (data never leaves the user's device), and easy to host statically on platforms like Vercel.
-2. **Offline-First:** Thanks to `next-pwa` and IndexedDB, users can add transactions even when they have no internet connection.
-3. **Client-Side Rendering:** Data fetching and database initialization are heavily executed inside `useEffect` hooks since IndexedDB is a browser API, necessitating the `"use client"` directive across most pages.
+---
 
-## Getting Started
+## 📂 Project Organization
 
-First, run the development server:
-
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+```text
+cashbook/
+├── app/                  # Next.js App Router pages, layouts, error & loading states
+│   ├── dashboard/        # Dashboard overview
+│   ├── history/          # All transaction ledger
+│   ├── income/           # Filtered income view
+│   ├── expense/          # Filtered expense view
+│   ├── bills/            # Bill tracker
+│   ├── subscriptions/    # Subscription manager
+│   ├── newtransaction/   # Create / Edit transactions
+│   ├── stats/            # Analytics & visual charts
+│   ├── settings/         # Budget, currency & backup/restore
+│   ├── error.tsx         # Global offline-first error boundary
+│   └── not-found.tsx     # 404 handler
+├── components/           # Reusable UI component library
+│   ├── icons/            # Centralized SVG vector icons
+│   ├── loading/          # Shimmering card skeleton loader
+│   ├── transcard/        # Transaction card with deletion safeguard
+│   ├── billCard/         # Bill item card
+│   ├── subscriptionCard/ # Subscription item card
+│   ├── header/ & footer/ # Application navigation bars
+│   └── modals/           # Add/confirm/wipe/filter dialogs
+├── store/                # Zustand client stores
+│   ├── transactionStore.ts
+│   ├── billStore.ts
+│   ├── subscriptionStore.ts
+│   ├── budgetStore.ts
+│   └── currencyStore.ts
+├── services/             # Storage abstraction layer
+│   └── db.ts             # Localbase IndexedDB concurrent operations
+├── hooks/                # Custom React hooks (useFilteredTransactions)
+├── constants/            # Application presets, categories, currencies
+├── types/                # TypeScript models and interfaces
+├── utils/                # Financial calculations, dates, and chart drawing
+└── public/               # Manifest, PWA service worker, static assets
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
+
+## 🚀 Getting Started
+
+### Prerequisites
+- Node.js 18.18+ or Node.js 20+
+- npm, pnpm, yarn, or bun
+
+### Installation
+
+1. Install project dependencies:
+```bash
+npm install
+```
+
+2. Start the local development server (Webpack runner enabled):
+```bash
+npm run dev
+```
+
+3. Open [http://localhost:3000](http://localhost:3000) in your browser.
+
+### Production Build
+
+```bash
+npm run build
+npm run start
+```

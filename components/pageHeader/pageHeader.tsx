@@ -1,5 +1,6 @@
 import Link from "next/link";
 import React from "react";
+import { ChevronLeftIcon } from "@/components/icons";
 
 interface PageHeaderProps {
     title: string;
@@ -23,12 +24,10 @@ export default function PageHeader({
                     {backHref && (
                         <Link 
                             href={backHref}
-                            className="w-9 h-9 shrink-0 rounded-2xl bg-white dark:bg-slate-900 border border-gray-100 dark:border-slate-800 flex items-center justify-center text-gray-700 dark:text-gray-300 shadow-sm hover:shadow-md hover:bg-gray-50 dark:hover:bg-slate-800 transition-all active:scale-95 cursor-pointer"
+                            className="w-9 h-9 shrink-0 rounded-2xl bg-white dark:bg-slate-900 border border-gray-100 dark:border-slate-800 flex items-center justify-center text-gray-700 dark:text-gray-300 shadow-sm hover:shadow-md hover:bg-gray-50 dark:hover:bg-slate-800 transition-all active:scale-95 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-950"
                             aria-label="Back"
                         >
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                                <path d="M15 18l-6-6 6-6"/>
-                            </svg>
+                            <ChevronLeftIcon className="w-[18px] h-[18px]" strokeWidth={2.5} />
                         </Link>
                     )}
                     <h1 className="font-bold text-xl text-gray-900 dark:text-gray-100 tracking-tight truncate">

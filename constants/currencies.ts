@@ -62,6 +62,16 @@ export const CURRENCY_DICTIONARY: Record<string, CurrencyInfo> = {
         rateFromBase: 0.0426,
         inrEquivalent: 23.47,
     },
+    SAR: {
+        code: 'SAR',
+        symbol: 'SAR ',
+        name: 'Saudi Riyal',
+        locale: 'en-SA',
+        flag: '🇸🇦',
+        decimals: 2,
+        rateFromBase: 0.0435,
+        inrEquivalent: 22.99,
+    },
     JPY: {
         code: 'JPY',
         symbol: '¥',
@@ -71,16 +81,6 @@ export const CURRENCY_DICTIONARY: Record<string, CurrencyInfo> = {
         decimals: 0,
         rateFromBase: 1.78,
         inrEquivalent: 0.56,
-    },
-    CAD: {
-        code: 'CAD',
-        symbol: 'C$',
-        name: 'Canadian Dollar',
-        locale: 'en-CA',
-        flag: '🇨🇦',
-        decimals: 2,
-        rateFromBase: 0.0162,
-        inrEquivalent: 61.70,
     },
     AUD: {
         code: 'AUD',

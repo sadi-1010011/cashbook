@@ -1,10 +1,33 @@
 "use client"
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
-export default function MishalToggle({ active = "daily" }: { active?: string }) {
-    const [activetab, setActivetab] = useState(active ? active : "daily");
-    const availableMishalToggles = ["daily", "weekly", "monthly"];
+export type TimeframeOption = "daily" | "weekly" | "monthly";
+
+interface MishalToggleProps {
+    active?: TimeframeOption | string | null;
+    onChange?: (tab: TimeframeOption) => void;
+    allowDeselect?: boolean;
+    onClear?: () => void;
+}
+
+export default function MishalToggle({ active = null, onChange, allowDeselect = false, onClear }: MishalToggleProps) {
+    const [activetab, setActivetab] = useState<string | null>(active ?? null);
+    const availableMishalToggles: TimeframeOption[] = ["daily", "weekly", "monthly"];
+
+    useEffect(() => {
+        setActivetab(active ?? null);
+    }, [active]);
+
+    const handleToggle = (tab: TimeframeOption) => {
+        if (allowDeselect && tab === activetab) {
+            setActivetab(null);
+            onClear?.();
+            return;
+        }
+        setActivetab(tab);
+        onChange?.(tab);
+    };
 
     return (
         <div className="flex w-full justify-center">
@@ -13,12 +36,12 @@ export default function MishalToggle({ active = "daily" }: { active?: string }) 
                     <button
                         key={mishaltoggle}
                         type="button"
-                        className={`px-4 py-2.5 mx-0.5 text-center capitalize text-sm font-bold w-full rounded-xl cursor-pointer transition-all duration-200 active:scale-95 ${
+                        className={`px-2.5 sm:px-4 py-2.5 mx-0.5 text-center capitalize text-xs sm:text-sm font-bold w-full rounded-xl cursor-pointer transition-all duration-200 active:scale-95 ${
                             mishaltoggle === activetab 
                                 ? 'text-white bg-black dark:text-black dark:bg-white shadow-sm' 
                                 : 'text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100'
                         }`}
-                        onClick={() => setActivetab(mishaltoggle)}
+                        onClick={() => handleToggle(mishaltoggle)}
                     >
                         {mishaltoggle}
                     </button>

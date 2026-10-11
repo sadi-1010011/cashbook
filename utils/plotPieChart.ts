@@ -1,9 +1,9 @@
-import Chart from 'chart.js/auto';
+import Chart, { ChartItem, TooltipItem, ChartDataset, ChartOptions } from 'chart.js/auto';
 
 export type ChartTypeOption = 'doughnut' | 'pie' | 'bar' | 'line';
 
 export default function PlotPieChart(
-    ctx: any, 
+    ctx: HTMLCanvasElement | CanvasRenderingContext2D | string, 
     chartfor: string, 
     chartname: string, 
     chartlabels: Array<string>, 
@@ -12,7 +12,7 @@ export default function PlotPieChart(
     currencySymbol: string = '₹',
     currencyLocale: string = 'en-IN',
     chartType: ChartTypeOption = 'doughnut'
-) {
+): Chart {
     const existingChart = Chart.getChart(ctx);
     if (existingChart !== undefined) {
         existingChart.destroy();
@@ -48,7 +48,7 @@ export default function PlotPieChart(
         ? 'rgba(244, 63, 94, 0.18)' 
         : 'rgba(99, 102, 241, 0.18)';
 
-    let dataset: any;
+    let dataset: ChartDataset<any>;
 
     if (chartType === 'line') {
         dataset = {
@@ -87,7 +87,7 @@ export default function PlotPieChart(
         };
     }
 
-    const options: any = {
+    const options: ChartOptions<any> = {
         responsive: true,
         maintainAspectRatio: false,
         animation: {
@@ -119,7 +119,7 @@ export default function PlotPieChart(
                 boxPadding: 4,
                 cornerRadius: 12,
                 callbacks: {
-                    label: function(context: any) {
+                    label: function(context: TooltipItem<any>) {
                         let label = context.label || '';
                         if (label) {
                             label += ': ';
@@ -152,7 +152,7 @@ export default function PlotPieChart(
                 ticks: {
                     color: textColor,
                     font: { family: 'inherit', size: 10 },
-                    callback: function(val: any) {
+                    callback: function(val: string | number) {
                         return currencySymbol.trim() + ' ' + Number(val).toLocaleString(currencyLocale);
                     }
                 }
@@ -173,5 +173,5 @@ export default function PlotPieChart(
         options: options,
     });
 
-    return chartInstance;
+    return chartInstance as unknown as Chart;
 }

@@ -8,6 +8,8 @@ import Link from "next/link";
 import { useTransactionStore } from "@/store/transactionStore";
 import { useBudgetStore } from "@/store/budgetStore";
 import { useCurrencyStore } from "@/store/currencyStore";
+import { CreditCardIcon, ReceiptIcon, RenewIcon } from "@/components/icons";
+import { TransactionType } from "@/types";
 
 export default function Dashboard() {
     const { transactions: allTransactions, fetchTransactions, isInitialized, isLoading, getStats } = useTransactionStore();
@@ -63,7 +65,7 @@ export default function Dashboard() {
                         {
                             (allTransactions && allTransactions.length > 0) ? (
                                 <div className="flex flex-col gap-3 max-h-[360px] overflow-y-auto sleek-scrollbar pb-1">
-                                    {allTransactions.slice(0, 6).map((item: any) => (
+                                    {allTransactions.slice(0, 6).map((item: TransactionType) => (
                                         <RecentTransCard key={item.id} catogory={String(item.catogory)} amount={Number(item.amount)} type={item.transactiontype} description={item.description} />
                                     ))}
                                 </div>
@@ -71,8 +73,8 @@ export default function Dashboard() {
                                 <div className="w-full text-center py-8 text-gray-400 text-sm font-medium">Loading transactions...</div>
                             ) : (
                                 <div className="flex flex-col items-center justify-center text-center p-6 bg-white dark:bg-slate-900 border border-gray-100 dark:border-slate-800 rounded-3xl shadow-sm hover:shadow-md transition-all duration-200">
-                                    <div className="w-12 h-12 rounded-2xl bg-gray-50 dark:bg-slate-800 border border-gray-100 dark:border-slate-700/60 flex items-center justify-center text-xl mb-3">
-                                        <span>💳</span>
+                                    <div className="w-14 h-14 rounded-2xl bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 border border-emerald-200/60 dark:border-emerald-900/50 flex items-center justify-center mb-3.5 shadow-xs">
+                                        <CreditCardIcon className="w-7 h-7" />
                                     </div>
                                     <h3 className="font-bold text-[15px] text-gray-800 dark:text-gray-100 mb-1">No transactions yet</h3>
                                     <p className="text-[13px] text-slate-500 dark:text-slate-400 mb-4 max-w-[260px]">
@@ -147,9 +149,7 @@ export default function Dashboard() {
                             {/* Bills */}
                             <Link href="/bills" className="flex flex-col items-center justify-center py-5 px-4 bg-white dark:bg-slate-900 border border-gray-100 dark:border-slate-800 rounded-3xl shadow-sm hover:shadow-md transition-all active:scale-[0.98] cursor-pointer">
                                 <div className="w-12 h-12 bg-blue-50 dark:bg-blue-950/40 border border-blue-200/60 dark:border-blue-900/50 rounded-2xl flex items-center justify-center mb-3">
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-6 h-6 text-blue-600 dark:text-blue-400">
-                                        <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m3.75 9v6m3-3H9m1.5-12H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
-                                    </svg>
+                                    <ReceiptIcon className="w-6 h-6 text-blue-600 dark:text-blue-400" strokeWidth={2.5} />
                                 </div>
                                 <span className="text-[14px] font-semibold text-gray-800 dark:text-gray-100 tracking-wide">Bills</span>
                             </Link>
@@ -157,9 +157,7 @@ export default function Dashboard() {
                             {/* Subscriptions */}
                             <Link href="/subscriptions" className="flex flex-col items-center justify-center py-5 px-4 bg-white dark:bg-slate-900 border border-gray-100 dark:border-slate-800 rounded-3xl shadow-sm hover:shadow-md transition-all active:scale-[0.98] cursor-pointer">
                                 <div className="w-12 h-12 bg-purple-50 dark:bg-purple-950/40 border border-purple-200/60 dark:border-purple-900/50 rounded-2xl flex items-center justify-center mb-3">
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-6 h-6 text-purple-600 dark:text-purple-400">
-                                        <path strokeLinecap="round" strokeLinejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" />
-                                    </svg>
+                                    <RenewIcon className="w-6 h-6 text-purple-600 dark:text-purple-400" strokeWidth={2.5} />
                                 </div>
                                 <span className="text-[14px] font-semibold text-gray-800 dark:text-gray-100 tracking-wide">Subscriptions</span>
                             </Link>

@@ -1,7 +1,7 @@
 {
-    "short_name": "kaayi",
-    "name": "kaayi",
-    "description": "personal finance management app",
+    "short_name": "CashBook",
+    "name": "CashBook",
+    "description": "Personal finance management offline PWA",
     "icons": [
         {
             "src": "/icons/icon-36x36.png",

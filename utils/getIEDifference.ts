@@ -1,17 +1,7 @@
-// finds income-expense difference;
+// finds income - expense difference (Total Balance)
 
-export default function getIncomeExpenseDiff(income: Number = 0, expense: Number = 0) {
-    // check for types and ensure type safety
-    const i = Number(income);
-    const e = Number(expense);
-    let difference: Number;
-
-    // if any one is empty return the other
-    if (i === 0 || e === 0) { if (i > e) { return i } else return e }
-    if (i > e) {
-        difference = i - e;
-    } else {
-        difference = 0;
-    }
-    return difference;
+export default function getIncomeExpenseDiff(income: number = 0, expense: number = 0): number {
+    const i = Number(income) || 0;
+    const e = Number(expense) || 0;
+    return i - e;
 }

@@ -4,7 +4,14 @@ import Image from "next/image";
 import { CATEGORY_ICONS, DEFAULT_CATEGORY_ICON } from "@/constants";
 import { useCurrencyStore } from "@/store/currencyStore";
 
-export default function RecentTransCard({ amount, catogory, type, description }: { amount: Number, catogory: String, type: String, description?: String }) {
+export interface RecentTransCardProps {
+    amount: number;
+    catogory: string;
+    type: string;
+    description?: string;
+}
+
+export default function RecentTransCard({ amount, catogory, type, description }: RecentTransCardProps) {
     const { format } = useCurrencyStore();
 
     return (

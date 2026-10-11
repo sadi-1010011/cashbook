@@ -67,6 +67,7 @@ export const useCurrencyStore = create<CurrencyState>()(
             onRehydrateStorage: () => (state) => {
                 if (state && state.currentCurrency) {
                     const info = CURRENCY_DICTIONARY[state.currentCurrency] || CURRENCY_DICTIONARY[BASE_CURRENCY_CODE];
+                    state.currentCurrency = info.code;
                     state.currencyInfo = info;
                 }
             },
