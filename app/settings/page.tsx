@@ -14,7 +14,20 @@ import { useForm, ValidationError } from '@formspree/react';
 import { useCurrencyStore } from "@/store/currencyStore";
 import { SUPPORTED_CURRENCIES } from "@/constants/currencies";
 import WipeDataModal from "@/components/wipeDataModal/wipeDataModal";
-import { ChevronDownIcon, DownloadIcon, UploadIcon, TrashIcon, CloseIcon, DatabaseIcon, RefreshCwIcon } from "@/components/icons";
+import Link from "next/link";
+import { 
+    ChevronDownIcon, 
+    DownloadIcon, 
+    UploadIcon, 
+    TrashIcon, 
+    CloseIcon, 
+    DatabaseIcon, 
+    RefreshCwIcon,
+    ShieldCheckIcon,
+    DocumentTextIcon,
+    CodeBracketIcon,
+    ChevronRightIcon
+} from "@/components/icons";
 import { BackupData, TransactionType, BillType, SubscriptionType } from "@/types";
 
 function formatBytes(bytes: number): string {
@@ -723,6 +736,69 @@ export default function Settings() {
                                     </button>
                                 </form>
                             )}
+                        </div>
+
+                        {/* About & Legal */}
+                        <div className="flex flex-col gap-3 w-full bg-white dark:bg-slate-900 border border-gray-100 dark:border-slate-800 p-5 rounded-3xl shadow-sm hover:shadow-md transition-all duration-200">
+                            <div className="flex items-center justify-between">
+                                <div>
+                                    <h3 className="font-bold text-[15px] text-gray-800 dark:text-gray-100">About & Legal</h3>
+                                    <p className="text-[13px] text-slate-500 dark:text-slate-400">Offline architecture, privacy policy, and developer hub.</p>
+                                </div>
+                                <span className="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">
+                                    v1.2.0
+                                </span>
+                            </div>
+
+                            <div className="flex flex-col divide-y divide-gray-100 dark:divide-slate-800/80 mt-1">
+                                <Link 
+                                    href="/privacy"
+                                    className="flex items-center justify-between py-3 group hover:opacity-90 transition-opacity"
+                                >
+                                    <div className="flex items-center gap-3">
+                                        <div className="w-8 h-8 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0">
+                                            <ShieldCheckIcon className="w-4 h-4" />
+                                        </div>
+                                        <div>
+                                            <span className="text-xs font-semibold text-gray-900 dark:text-white block group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors">Privacy Policy</span>
+                                            <span className="text-[11px] text-slate-400 dark:text-slate-500">100% on-device data · Zero tracking</span>
+                                        </div>
+                                    </div>
+                                    <ChevronRightIcon className="w-4 h-4 text-slate-400 group-hover:translate-x-0.5 transition-transform" />
+                                </Link>
+
+                                <Link 
+                                    href="/terms"
+                                    className="flex items-center justify-between py-3 group hover:opacity-90 transition-opacity"
+                                >
+                                    <div className="flex items-center gap-3">
+                                        <div className="w-8 h-8 rounded-xl bg-blue-50 dark:bg-blue-950/40 text-blue-600 dark:text-blue-400 flex items-center justify-center shrink-0">
+                                            <DocumentTextIcon className="w-4 h-4" />
+                                        </div>
+                                        <div>
+                                            <span className="text-xs font-semibold text-gray-900 dark:text-white block group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">Terms of Service</span>
+                                            <span className="text-[11px] text-slate-400 dark:text-slate-500">Software utility license & disclaimers</span>
+                                        </div>
+                                    </div>
+                                    <ChevronRightIcon className="w-4 h-4 text-slate-400 group-hover:translate-x-0.5 transition-transform" />
+                                </Link>
+
+                                <Link 
+                                    href="/support"
+                                    className="flex items-center justify-between py-3 group hover:opacity-90 transition-opacity"
+                                >
+                                    <div className="flex items-center gap-3">
+                                        <div className="w-8 h-8 rounded-xl bg-purple-50 dark:bg-purple-950/40 text-purple-600 dark:text-purple-400 flex items-center justify-center shrink-0">
+                                            <CodeBracketIcon className="w-4 h-4" />
+                                        </div>
+                                        <div>
+                                            <span className="text-xs font-semibold text-gray-900 dark:text-white block group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors">Developer Support</span>
+                                            <span className="text-[11px] text-slate-400 dark:text-slate-500">Open source docs, GitHub repo & FAQs</span>
+                                        </div>
+                                    </div>
+                                    <ChevronRightIcon className="w-4 h-4 text-slate-400 group-hover:translate-x-0.5 transition-transform" />
+                                </Link>
+                            </div>
                         </div>
 
                         {/* Danger Zone */}

@@ -642,4 +642,188 @@ export function GlobeIcon({ className = "w-5 h-5", strokeWidth = 1.75, ...props 
     );
 }
 
+/** Chevron Right (Navigation list arrow) */
+export function ChevronRightIcon({ className = "w-4 h-4", strokeWidth = 2.5, ...props }: IconProps) {
+    return (
+        <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            strokeWidth={strokeWidth}
+            stroke="currentColor"
+            className={className}
+            {...props}
+        >
+            <path strokeLinecap="round" strokeLinejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
+        </svg>
+    );
+}
+
+/** Document Text / Terms of Service / Legal Icon */
+export function DocumentTextIcon({ className = "w-5 h-5", strokeWidth = 1.75, ...props }: IconProps) {
+    return (
+        <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            strokeWidth={strokeWidth}
+            stroke="currentColor"
+            className={className}
+            {...props}
+        >
+            <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z"
+            />
+            <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 13.5h7.5m-7.5 3h4.5" />
+        </svg>
+    );
+}
+
+/** Code Bracket / Developer Icon */
+export function CodeBracketIcon({ className = "w-5 h-5", strokeWidth = 1.75, ...props }: IconProps) {
+    return (
+        <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            strokeWidth={strokeWidth}
+            stroke="currentColor"
+            className={className}
+            {...props}
+        >
+            <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M17.25 6.75 22.5 12l-5.25 5.25m-10.5 0L1.5 12l5.25-5.25m7.5-3-4.5 16.5"
+            />
+        </svg>
+    );
+}
+
+/** External Link / Arrow Out Icon */
+export function ExternalLinkIcon({ className = "w-4 h-4", strokeWidth = 2, ...props }: IconProps) {
+    return (
+        <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            strokeWidth={strokeWidth}
+            stroke="currentColor"
+            className={className}
+            {...props}
+        >
+            <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M13.5 6H5.25A2.25 2.25 0 0 0 3 8.25v10.5A2.25 2.25 0 0 0 5.25 21h10.5A2.25 2.25 0 0 0 18 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25"
+            />
+        </svg>
+    );
+}
+
+/** Lifebuoy / Support Icon */
+export function LifebuoyIcon({ className = "w-5 h-5", strokeWidth = 1.75, ...props }: IconProps) {
+    return (
+        <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            strokeWidth={strokeWidth}
+            stroke="currentColor"
+            className={className}
+            {...props}
+        >
+            <circle cx="12" cy="12" r="9" strokeLinecap="round" strokeLinejoin="round" />
+            <circle cx="12" cy="12" r="4" strokeLinecap="round" strokeLinejoin="round" />
+            <path strokeLinecap="round" strokeLinejoin="round" d="m4.93 4.93 4.24 4.24m5.66 5.66 4.24 4.24m-14.14 0 4.24-4.24m5.66-5.66 4.24-4.24" />
+        </svg>
+    );
+}
+
+/** Apple Logo Icon (iOS Safari, Mac) */
+export function AppleIcon({ className = "w-6 h-6", ...props }: React.SVGProps<SVGSVGElement>) {
+    return (
+        <svg viewBox="0 0 24 24" fill="currentColor" className={className} {...props}>
+            <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M15.97 6.37c.62-.75 1.04-1.8 1.01-2.87-.9.04-2 .6-2.65 1.34-.56.65-1.06 1.7-1 2.76 1.01.08 2.02-.51 2.64-1.23z" />
+        </svg>
+    );
+}
+
+/** Android Robot Icon (Android Chrome) */
+export function AndroidIcon({ className = "w-6 h-6", ...props }: React.SVGProps<SVGSVGElement>) {
+    return (
+        <svg viewBox="0 0 24 24" fill="currentColor" className={className} {...props}>
+            <path d="M6 18c0 .55.45 1 1 1h1v3.5c0 .83.67 1.5 1.5 1.5s1.5-.67 1.5-1.5V19h2v3.5c0 .83.67 1.5 1.5 1.5s1.5-.67 1.5-1.5V19h1c.55 0 1-.45 1-1V8H6v10zM3.5 8C2.67 8 2 8.67 2 9.5v7c0 .83.67 1.5 1.5 1.5S5 17.33 5 16.5v-7C5 8.67 4.33 8 3.5 8zm17 0c-.83 0-1.5.67-1.5 1.5v7c0 .83.67 1.5 1.5 1.5s1.5-.67 1.5-1.5v-7c0-.83-.67-1.5-1.5-1.5zm-4.97-4.84l1.3-1.3c.2-.2.2-.51 0-.71-.2-.2-.51-.2-.71 0l-1.48 1.48C13.85 2.23 12.95 2 12 2c-.96 0-1.86.23-2.66.63L7.85 1.15c-.2-.2-.51-.2-.71 0-.2.2-.2.51 0 .71l1.31 1.31C6.97 4.26 6 6.01 6 8h12c0-1.99-.97-3.75-2.47-4.84zM10 5.5c-.41 0-.75-.34-.75-.75s.34-.75.75-.75.75.34.75.75-.34.75-.75.75zm4 0c-.41 0-.75-.34-.75-.75s.34-.75.75-.75.75.34.75.75-.34.75-.75.75z" />
+        </svg>
+    );
+}
+
+/** Desktop Monitor / Computer Icon (Mac, Windows, Linux) */
+export function DesktopMonitorIcon({ className = "w-6 h-6", strokeWidth = 1.75, ...props }: IconProps) {
+    return (
+        <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            strokeWidth={strokeWidth}
+            stroke="currentColor"
+            className={className}
+            {...props}
+        >
+            <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M9 17.25v1.007a3 3 0 0 1-.879 2.122L7.5 21h9l-.621-.621A3 3 0 0 1 15 18.257V17.25m6-12v9.75a2.25 2.25 0 0 1-2.25 2.25H4.25A2.25 2.25 0 0 1 2 15V5.25m18 0A2.25 2.25 0 0 0 17.75 3H6.25A2.25 2.25 0 0 0 4 5.25m18 0H2"
+            />
+        </svg>
+    );
+}
+
+/** Sun Icon (Light Mode, Theme Toggle) */
+export function SunIcon({ className = "w-5 h-5", strokeWidth = 1.75, ...props }: IconProps) {
+    return (
+        <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            strokeWidth={strokeWidth}
+            stroke="currentColor"
+            className={className}
+            {...props}
+        >
+            <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M12 3v2.25m6.364.386-1.591 1.591M21 12h-2.25m-.386 6.364-1.591-1.591M12 18.75V21m-4.773-4.227-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0Z"
+            />
+        </svg>
+    );
+}
+
+/** Moon Icon (Dark Mode, Theme Toggle) */
+export function MoonIcon({ className = "w-5 h-5", strokeWidth = 1.75, ...props }: IconProps) {
+    return (
+        <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            strokeWidth={strokeWidth}
+            stroke="currentColor"
+            className={className}
+            {...props}
+        >
+            <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M21.752 15.002A9.72 9.72 0 0 1 18 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 0 0 3 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 0 0 9.002-5.998Z"
+            />
+        </svg>
+    );
+}
+
+
+
+
 

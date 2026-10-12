@@ -13,6 +13,10 @@ html, body {
     height: 100%;
 }
 
+html {
+    scroll-behavior: smooth;
+}
+
 body {
     font-size: medium;
     line-height: 1.2;

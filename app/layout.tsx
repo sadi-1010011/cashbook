@@ -16,8 +16,12 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  title: "CashBook",
-  description: "Personal finance management offline PWA",
+  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || 'https://kaayi2.vercel.app'),
+  title: {
+    default: "CashBook — 100% Offline Personal Finance & Expense Tracker PWA",
+    template: "%s | CashBook",
+  },
+  description: "Personal finance management offline PWA. Record expenses, automate recurring bills, monitor subscriptions, and track 8 global currencies 100% offline with zero cloud tracking.",
   manifest: "/manifest.json",
   appleWebApp: {
     capable: true,
@@ -25,9 +29,32 @@ export const metadata: Metadata = {
     title: "CashBook",
   },
   icons: {
-    icon: "/icons/icon-192x192.png",
+    icon: [
+      { url: "/icons/icon-192x192.png", sizes: "192x192", type: "image/png" },
+      { url: "/icons/icon-chrome-512x512.png", sizes: "512x512", type: "image/png" },
+    ],
     shortcut: "/icons/icon-96x96.png",
     apple: "/icons/apple-touch-icon.png",
+  },
+  openGraph: {
+    title: "CashBook — 100% Offline Personal Finance & Expense Tracker PWA",
+    description: "Personal finance management offline PWA. 100% private with zero cloud tracking and zero subscription paywalls.",
+    siteName: "CashBook",
+    images: [
+      {
+        url: "/og-image.png",
+        width: 1376,
+        height: 768,
+        alt: "CashBook — 100% Offline Personal Finance & Expense Tracker PWA",
+      },
+    ],
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "CashBook — 100% Offline Personal Finance & Expense Tracker PWA",
+    description: "Personal finance management offline PWA. 100% private with zero cloud tracking.",
+    images: ["/og-image.png"],
   },
 };
 

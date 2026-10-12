@@ -47,7 +47,7 @@
         }
     ],
     "shortcuts": [],
-    "start_url": "/",
+    "start_url": "/dashboard",
     "background_color": "#FFFFFF",
     "display": "standalone",
     "scope": "/",

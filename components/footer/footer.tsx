@@ -13,7 +13,7 @@ export default function Footer() {
     const router = useRouter();
     const { isValid, isDirty, isEditing, isSubmitting, submitHandler } = useTransactionFormStore();
 
-    if (pathname === '/') return null;
+    if (pathname === '/' || pathname === '/landing') return null;
 
     const isNewTransactionPage = pathname === '/newtransaction';
 

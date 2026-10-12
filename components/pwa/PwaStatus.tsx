@@ -76,10 +76,10 @@ export default function PwaStatus() {
                 <div 
                     role="status"
                     aria-live="polite"
-                    className="fixed top-2 left-1/2 -translate-x-1/2 z-50 flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-slate-900/95 dark:bg-slate-900/95 text-gray-200 text-xs font-medium shadow-lg backdrop-blur-md border border-slate-700/60 animate-fade-in pointer-events-none select-none"
+                    className="fixed top-2 left-1/2 -translate-x-1/2 z-50 flex items-center gap-2 px-3 py-2 rounded-full bg-slate-900/95 dark:bg-slate-900/95 text-gray-200 text-xs font-medium shadow-lg backdrop-blur-md border border-slate-700/60 animate-fade-in pointer-events-none select-none"
                 >
                     <WifiOffIcon className="w-3.5 h-3.5 text-amber-400 shrink-0" />
-                    <span>Offline mode • 100% private on-device storage</span>
+                    <span>Offline mode</span>
                 </div>
             )}
 
